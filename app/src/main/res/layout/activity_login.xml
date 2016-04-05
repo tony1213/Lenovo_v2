@@ -1,0 +1,128 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_login"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_launcher"
+            app:bootstrapBrand="success"
+            app:hasBorder="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <RelativeLayout
+            android:id="@+id/rl_register_username"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/shape_input_bottom">
+
+            <com.overtech.lenovo.widget.EditTextWithDelete
+                android:id="@+id/et_login_username"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/shape_input_bottom"
+                android:drawableLeft="@mipmap/account_login_username"
+                android:drawablePadding="5dp"
+                android:hint="@string/common_input_username"
+                android:singleLine="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_above="@+id/rl_register_password"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/main_disable" />
+
+        <RelativeLayout
+            android:id="@+id/rl_register_password"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/rl_register_username"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/shape_input_top">
+
+            <com.overtech.lenovo.widget.EditTextWithDelete
+                android:id="@+id/et_login_password"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@+id/tb_change_password"
+                android:background="@drawable/shape_input_top"
+                android:drawableLeft="@mipmap/account_login_password"
+                android:drawablePadding="8dp"
+                android:hint="@string/common_input_password"
+                android:inputType="textPassword"
+                android:maxLength="18"
+                android:singleLine="true" />
+
+            <ToggleButton
+                android:id="@+id/tb_change_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/selector_toggle_button"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_login"
+            style="@style/CommonUIButton"
+            android:layout_below="@+id/rl_register_password"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_button_orange"
+            android:text="@string/commom_login" />
+
+        <TextView
+            android:id="@+id/tv_lost_password"
+            style="@style/tv_list_white_style"
+            android:layout_alignLeft="@+id/btn_login"
+            android:layout_alignStart="@+id/btn_login"
+            android:layout_below="@+id/btn_login"
+            android:layout_marginTop="20dp"
+            android:text="@string/commom_lost_password" />
+
+        <TextView
+            android:id="@+id/tv_register_account"
+            style="@style/tv_list_white_style"
+            android:layout_alignEnd="@+id/btn_login"
+            android:layout_alignRight="@+id/btn_login"
+            android:layout_below="@+id/btn_login"
+            android:layout_marginTop="20dp"
+            android:text="@string/common_register_account" />
+    </RelativeLayout>
+
+</LinearLayout>

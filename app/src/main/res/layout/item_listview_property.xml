@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_property_item"
+    android:layout_width="match_parent"
+    android:layout_height="27dp"
+    android:orientation="horizontal" >
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_classify"
+        android:layout_width="43dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="PC" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_brand"
+        android:layout_width="43dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="联想" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_model"
+        android:layout_width="52dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="173099" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_account"
+        android:layout_width="43dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="3" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_serial"
+        android:layout_width="49dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="123445" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_final_date"
+        android:layout_width="72dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="2016-10-10" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_remark"
+        android:layout_width="35dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="断网" />
+
+</LinearLayout>

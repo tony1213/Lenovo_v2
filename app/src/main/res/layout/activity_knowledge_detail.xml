@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.business.knowledge.KnowledgeDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_knowledge_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bg_qq_blue">
+        <ImageView
+            android:id="@+id/iv_knowledge_detail_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/icon_common_back" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/tv_title_white_style"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="知识详情" />
+
+        <ImageView
+            android:id="@+id/iv_knowledge_detail_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/icon_common_share" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/webViewProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:progressDrawable="@drawable/layer_webview_progress"
+        android:layout_below="@+id/rl_knowledge_detail_title" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/webViewProgressBar" />
+
+</RelativeLayout>

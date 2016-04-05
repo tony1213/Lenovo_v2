@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.overtech.lenovo">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.business.common.SplashActivity"
+            android:theme="@style/AppFullScreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.business.common.LoginActivity" />
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.business.common.register.RegisterUserAgreementActivity" />
+        <activity android:name=".activity.business.controller.GetSmsCodeAndValicateActivity" />
+        <activity android:name=".activity.business.knowledge.KnowledgeDetailActivity" />
+        <activity android:name=".test.TestActivity" />
+        <activity android:name=".activity.business.common.password.ResetPasswordActivity" />
+        <activity android:name=".activity.business.common.password.ResetPasswordSuccessActivity" />
+        <activity android:name=".activity.business.common.register.RegisterSetPasswordActivity"/>
+        <activity android:name=".activity.business.tasklist.TaskDetailActivity"/>
+        <activity android:name=".activity.business.tasklist.TaskInformationActivity"/>
+    </application>
+
+</manifest>

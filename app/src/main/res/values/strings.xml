@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Lenovo</string>
+    <!-- Strings related to splash -->
+    <string name="splash_in">立即开启</string>
+    <string name="commom_login">登 录</string>
+    <string name="common_input_username">请输入用户名</string>
+    <string name="common_input_password">请输入密码</string>
+    <string name="commom_lost_password">忘记密码?</string>
+    <string name="common_register_account">注册新账号</string>
+    <string name="common_submit">提交</string>
+    <!-- App Common -->
+    <string name="common_title_get_sms_code">短信验证码</string>
+    <string name="common_phone_no">手机号</string>
+    <string name="common_get_sms_code">点击获取验证码</string>
+    <string name="common_after_get_sms_code">秒后重新获取</string>
+    <string name="common_input_sms_code">请输入验证码</string>
+    <string name="common_do_next">下一步</string>
+    <string name="common_new_password">新密码</string>
+    <string name="common_new_password_confirm">确认密码</string>
+    <!-- 底部导航的Tabview文案 -->
+    <string name="tab_text_tasklist">工单</string>
+    <string name="tab_text_knowledge">知识</string>
+    <string name="tab_text_information">信息</string>
+    <string name="tab_text_personal">我的</string>
+    <!-- pullToRefresh -->
+    <string name="pull_to_refresh_pull_label">刷新</string>
+    <string name="pull_to_refresh_release_label">释放刷新</string>
+    <string name="pull_to_refresh_refreshing_label">正在加载…</string>
+    <string name="pull_to_refresh_from_bottom_pull_label">@string/pull_to_refresh_pull_label</string>
+    <string name="pull_to_refresh_from_bottom_release_label">@string/pull_to_refresh_release_label</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">@string/pull_to_refresh_refreshing_label</string>
+    <!-- 忘记密码 -->
+    <string name="commom_title_lost_password">忘记密码</string>
+    <string name="commom_title_reset_password">重置密码</string>
+    <string name="commom_title_reset_password_success">重置密码成功</string>
+    <!-- 注册新用户 -->
+    <string name="common_title_register">注册</string>
+    <string name="common_title_set_password">设置密码</string>
+    <string name="commom_title_register_user_agreement">用户协议</string>
+    <string name="item_privacy">一、总则\n
+    1.1、 用户在使用24T服务前，应当仔细阅读《24T用户协议》（以下简称“本协议”）的全部内容，对于本协议中的加重字体、斜体、下划线、颜色标记等条款需重点阅读、理解。\n
+    1.2、 用户应当同意本协议的全部条款并按照页面上的提示完成全部的注册程序。用户在进行注册程序过程中点击"注册"按钮即表示用户与24T达成以下协议，完全接受本协议项下的全部条款，本协议即在用户与24T之间产生法律效力，对双方均具有法律约束力。\n
+    1.3、 用户注册成功后，24T将给予每个用户一个用户帐号及相应的密码，该用户帐号和密码由用户负责保管；用户应当对以其用户帐号进行的所有活动和事件负法律责任。\n
+    1.4、 24T用户协议、各个频道单项服务条款、全部活动条款及公告可由24T随时更新，且无需另行通知。24T有权对上述条款进行修改，修改后的协议一旦公布即有效替代原有协议。用户可随时查询最新协议。用户在使用24T提供的各项服务之前，应仔细阅读本协议及本协议不可分割的各项服务协议。用户在使用相关服务时,应关注并遵守其所适用的相关条款。用户如不同意本服务协议及/或随时对其的修改，可以主动取消24T提供的服务；用户一旦使用24T服务，即视为用户已了解并完全同意本协议及其他服务条款中的各项内容，包括24T对本协议及其他服务条款随时所做的任何修改，并成为24T用户。\n
+二、相关定义\n
+    2.1、 24T：指北京百度网讯科技有限公司运营和所有的网络交易服务平台（域名：www.nuomi.com）。北京百度网讯科技有限公司通过24T平台向用户和商户提供相关互联网端及移动端交易服务。\n
+    2.2、 团购： 指商户通过24T网平台以优惠价格发布商品或服务售卖信息，用户通过24T网平台购买，并凭电子凭证消费的商业活动。\n
+    2.3、 团购信息： 指商户通过24T网平台发布的商品或服务售卖信息，包含商品或服务的团购价格、介绍、使用说明等。\n
+    2.4、 用户： 指完成24T网平台注册程序，获得可以登陆24T网会员系统权限的正式注册会员。\n
+    2.5、 商户： 指通过24T平台发布团购信息，向用户提供团购商品或服务的自然人、法人或其他组织。\n
+    2.6、 24T券：简称“糯米券”，指用户通过24T平台购买商户的服务或商品并付款后，24T平台自动向用户以短信或其他形式发放的，用以兑换实际商品或服务的电子凭证。\n
+    2.7、 24T抵用券： 指24T通过赠送、市场推广或其他活动向用户提供的可用来抵扣部分团购价款的优惠券，不具有购物凭证的作用。\n
+    2.8、 24T储值卡：简称“储值卡”，指商户在24T平台发行和销售的单用途电子预付卡。用户通过24T平台购买特定商户储值卡并付款后，仅可在该商户用以兑换实际商品或服务的预付卡。\n
+    </string>
+    <string name="privacy_item_checkbox">我已阅读并同意使用条款和隐私政策</string>
+    <!-- 工单模块-->
+    <string name="tasklist_all">所有</string>
+    <string name="tasklist_receive">接单</string>
+    <string name="tasklist_order">预约</string>
+    <string name="tasklist_visit">上门</string>
+    <string name="tasklist_account">结单</string>
+    <string name="tasklist_evaluation">评价</string>
+    <string name="tasklist_no">单号:</string>
+    <string name="tasklist_date">时间:</string>
+    <string name="tasklist_class">分类:</string>
+    <string name="tasklist_description">描述:</string>
+    <string name="tasklist_remark">备注:</string>
+    <string name="tasklist_region">范围:</string>
+    <string name="tasklist_money">金额:</string>
+    <string name="tasklist_wait_evaluate">等待评价</string>
+    <string name="tasklist_information">工单信息</string>
+    <string name="information_default1">星巴克门店运维项目3.1正式上线，第一阶段涉及江苏、浙江、安徽三个省，欢迎大家主动承接。请联系QQ:6657468,6657468@qq.com</string>
+    <string name="information_default2">[上海招聘] 招聘T2桌面工程师一名，税前6000，五险一金，2.15到岗。有意愿者请按标准简历模板（见知识库）填写后发至hr@dajutech.com</string>
+</resources>

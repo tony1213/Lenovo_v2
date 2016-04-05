@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.fragment.KnowledgeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bg_qq_blue">
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/tv_title_white_style"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="知识" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/arrow_down_white" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ListView
+            android:id="@+id/classify_mainlist"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:cacheColorHint="#00000000"
+            android:divider="#fff"
+            android:dividerHeight="1px"
+            android:fastScrollEnabled="true"
+            android:listSelector="#00000000"
+            android:scrollbars="none" />
+
+        <ListView
+            android:id="@+id/classify_morelist"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.618"
+            android:background="#fff"
+            android:cacheColorHint="#00000000"
+            android:divider="#ffebebeb"
+            android:dividerHeight="0.5px"
+            android:fastScrollEnabled="true"
+            android:listSelector="#00000000"
+            android:scrollbars="none" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_task_information_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@mipmap/icon_common_back"
+        android:text="@string/tasklist_information"
+        android:textSize="@dimen/text_size_title" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/tv_task_information_title"
+        android:background="@color/bg_mask" />
+
+    <RelativeLayout
+        android:id="@+id/rl_task_information"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:layout_below="@id/tv_task_information_title" >
+
+        <TextView
+            android:id="@+id/tv_task_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/shape_button_orange"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="1.20 11:22:30"
+            android:textColor="@color/nifity_dialog_bg" />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="54dp"
+            android:layout_height="42dp"
+            android:layout_below="@id/tv_task_time"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <LinearLayout
+            android:id="@+id/ll_task_information_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_task_time"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@id/iv_logo"
+            android:background="@color/main_green"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="@string/tasklist_no"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_task_no"
+                    style="@style/tv_tasklist_information_item"
+                    android:text="20160122-0008"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="@string/tasklist_date" />
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="2016/1/20 11:22:30" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="@string/tasklist_class" />
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="网络问题" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="@string/tasklist_description" />
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="顾客用的WIFI网络无法正常连接" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="@string/tasklist_remark" />
+
+                <TextView
+                    style="@style/tv_tasklist_information_item"
+                    android:text="携带测线仪，备用网线，笔记本" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" >
+
+                <LinearLayout
+                    android:id="@+id/ll_task_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/tv_tasklist_information_item"
+                        android:text="@string/tasklist_region" />
+
+                    <TextView
+                        android:id="@+id/tv_task_region"
+                        style="@style/tv_tasklist_information_item"
+                        android:text="徐家汇区" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_task_region"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/tv_tasklist_information_item"
+                        android:text="@string/tasklist_money" />
+
+                    <TextView
+                        style="@style/tv_tasklist_information_item"
+                        android:text="300/单" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        style="@style/tv_tasklist_information_item"
+                        android:drawableLeft="@mipmap/icon_tasklist_map"
+                        android:text="8km" />
+
+                    <TextView
+                        style="@style/tv_tasklist_information_item"
+                        android:text="2小时上门" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,24 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- 文字大小样式 -->
+    <dimen name="text_size_xlarge">22sp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_title">18sp</dimen>
+    <dimen name="text_size_list">16sp</dimen>
+    <dimen name="text_size_info">14sp</dimen>
+    <dimen name="text_size_hint">12sp</dimen>
+    <dimen name="text_size_xsmall">10sp</dimen>
+    <dimen name="text_size_small">8sp</dimen>
+    <!-- pullToRefresh -->
+    <dimen name="indicator_right_padding">10dp</dimen>
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+    <!-- nifitydialog UI  -->
+    <dimen name="dialog_padding">35dp</dimen>
+    <dimen name="common_margin">16dip</dimen>
+    <dimen name="common_warning_line_space">5dp</dimen>
+</resources>

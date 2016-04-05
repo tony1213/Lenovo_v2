@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/bg_qq_blue">
+
+    <TextView
+        style="@style/tv_list_white_style"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:text="上海" />
+
+    <TextView
+        android:id="@+id/tv_task_list_filter"
+        style="@style/tv_title_white_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableRight="@mipmap/arrow_down_white"
+        android:text="所有工单" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/icon_common_notification" />
+</RelativeLayout>

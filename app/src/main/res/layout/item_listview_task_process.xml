@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/iv_process_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="21dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/iv_process_point"
+        android:layout_marginLeft="28dp"
+        android:background="@color/main_orange" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_process_point"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_task_process_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开单"
+            android:textColor="@color/main_orange"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/tv_task_process_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间： 2016/01/22" />
+
+        <TextView
+            android:id="@+id/tv_task_process_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单号：20160122-0008" />
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/bt_task_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/shape_button_orange"
+        android:minHeight="30dp"
+        android:minWidth="40dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="接单"
+        android:textColor="@color/bg_qq_blue" />
+
+</RelativeLayout>
