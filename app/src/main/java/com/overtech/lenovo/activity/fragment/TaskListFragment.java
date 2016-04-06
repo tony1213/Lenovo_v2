@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.app.CustomApplication;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
@@ -37,11 +39,12 @@ import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
 import com.overtech.lenovo.widget.cycleviewpager.ViewFactory;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter.OnItemClickListener;
+
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
-public class TaskListFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate,OnItemClickListener {
+public class TaskListFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, OnItemClickListener {
 
     private View convertView, titleView, popView;
     private TextView mTitleFilter;
@@ -175,7 +178,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
             @Override
             public void onImageClick(ADInfo info, int position, View imageView) {
-                ImageLoader.getInstance().displayImage(info.getUrl(),(ImageView) imageView, R.mipmap.icon_common_default_stub,R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
+                ImageLoader.getInstance().displayImage(info.getUrl(), (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
                 Utilities.showToast("您点击了图片" + position, getActivity());
             }
         });
@@ -216,22 +219,19 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             popupWindow = new PopupWindow(popView, 150, WindowManager.LayoutParams.WRAP_CONTENT);
         }
 
-        // 使其聚集
-        popupWindow.setFocusable(true);
-        // 设置允许在外点击消失
-        popupWindow.setOutsideTouchable(true);
-        // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        popupWindow.setFocusable(true);// 使其聚集
+        popupWindow.setOutsideTouchable(true); // 设置允许在外点击消失
+        popupWindow.setBackgroundDrawable(new BitmapDrawable()); // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
         WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        // 显示的位置为:屏幕的宽度的一半-PopupWindow的高度的一半
-        int xPos = windowManager.getDefaultDisplay().getWidth() / 2 - popupWindow.getWidth() / 2;
+        int xPos = windowManager.getDefaultDisplay().getWidth() / 2 - popupWindow.getWidth() / 2;// 显示的位置为:屏幕的宽度的一半-PopupWindow的高度的一半
         popupWindow.showAsDropDown(parent, xPos, 0);
         lv_group.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                Toast.makeText(getActivity(), groups.get(position), Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getActivity(), ((CustomApplication) getActivity().getApplication()).city, Toast.LENGTH_LONG).show();
+                Log.e("获取城市",((CustomApplication) getActivity().getApplication()).city);
                 if (popupWindow != null) {
                     popupWindow.dismiss();
                 }
@@ -249,6 +249,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         Bundle bundle = new Bundle();
         startActivity(intent, bundle);
     }
+
     @Override
     public void onButtonItemClick(View view, int position) {
         // TODO Auto-generated method stub
