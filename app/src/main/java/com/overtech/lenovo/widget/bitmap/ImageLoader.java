@@ -5,6 +5,8 @@ import com.overtech.lenovo.R;
 import com.overtech.lenovo.picasso.Callback;
 import com.overtech.lenovo.picasso.Picasso;
 import com.overtech.lenovo.picasso.Target;
+import com.overtech.lenovo.picasso.Transformation;
+
 import android.content.Context;
 import android.graphics.Bitmap.Config;
 import android.widget.ImageView;
@@ -12,7 +14,7 @@ import android.widget.ImageView.ScaleType;
 
 public class ImageLoader {
 	public static final int STUB_NULL = -1;// 不设置默认图
-	private static final int STUB_ID = R.mipmap.icon_common_default_stub ; // 默认图片（再不设置默认图的情况下用这个）
+	private static final int STUB_ID = R.mipmap.icon_common_default_stub; // 默认图片（再不设置默认图的情况下用这个）
 	private static final Config DEFAULT_CONFIG = Config.RGB_565;
 	private static ImageLoader imageLoader = null;
 	private Context context;
@@ -22,7 +24,7 @@ public class ImageLoader {
 	}
 
 	public void initContext(Context context) {
-		this.context=context;
+		this.context = context;
 	}
 
 	public static synchronized ImageLoader getInstance() {
@@ -122,6 +124,28 @@ public class ImageLoader {
 		}
 		Picasso.with(context).load(imageUrl).placeholder(stub_id)
 				.error(stub_id_no_img).config(config).into(imageView);
+	}
+
+	/**
+	 * 带默认的图片加载，对加载成功后的图片的处理
+	 * 
+	 * @param imageUrl
+	 * @param imageView
+	 * @param stub_id
+	 * @param stub_id_no_img
+	 * @param transformation
+	 * @param config
+	 */
+	public void displayImage(String imageUrl, ImageView imageView, int stub_id,
+			int stub_id_no_img, Transformation transformation, Config config) {
+		if (imageUrl == null || "".equals(imageUrl)) {
+			imageView.setScaleType(ScaleType.FIT_XY);
+			imageView.setImageResource(stub_id);
+			return;
+		}
+		Picasso.with(context).load(imageUrl).placeholder(stub_id)
+				.error(stub_id_no_img).transform(transformation).config(config)
+				.into(imageView);
 	}
 
 	/**
