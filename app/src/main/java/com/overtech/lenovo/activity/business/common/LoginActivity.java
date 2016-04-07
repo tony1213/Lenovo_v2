@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
-import com.overtech.lenovo.activity.business.common.register.RegisterUserAgreementActivity;
-import com.overtech.lenovo.config.Projects;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.common.Test;
 import com.squareup.okhttp.Call;
@@ -59,9 +57,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 doInvidateLogin();
                 break;
             case R.id.tv_register_account:
-                intent.setClass(this, RegisterUserAgreementActivity.class);
-                intent.putExtra("flag", Projects.REGISTER);
-                startActivity(intent);
 //                intent.setClass(this,RegisterUserAgreementActivity.class);
 //                intent.putExtra("flag", Projects.REGISTER);
 //                startActivity(intent);

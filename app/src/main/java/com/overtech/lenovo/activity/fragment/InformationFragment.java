@@ -1,6 +1,5 @@
 package com.overtech.lenovo.activity.fragment;
 
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,13 +16,15 @@ import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
-//
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
+//
+
 public class InformationFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
+
     private RecyclerView mInformation;
     private BGARefreshLayout mRefreshLayout;
     private InformationAdapter adapter;
@@ -31,10 +32,8 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
 
     @Override
     protected int getLayoutId() {
-        // TODO Auto-generated method stub
         return R.layout.fragment_infomation;
     }
-
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
@@ -47,7 +46,6 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
         mRefreshLayout.setDelegate(this);
         BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
         mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
-
         datas = new ArrayList<Information>();
         datas.add(new Information(
                 "http://avatar.csdn.net/F/C/3/1_heaimnmn.jpg",

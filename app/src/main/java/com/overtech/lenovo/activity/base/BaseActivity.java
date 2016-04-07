@@ -8,7 +8,6 @@ import com.overtech.lenovo.http.HttpEngine;
 import com.overtech.lenovo.widget.dialogeffects.NiftyDialogBuilder;
 
 
-
 public abstract class BaseActivity extends AppCompatActivity {
     public NiftyDialogBuilder dialogBuilder;
     public HttpEngine httpEngine;
@@ -16,21 +15,24 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        httpEngine = HttpEngine.getInstance();
+        httpEngine.initContext(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(getLayoutIds());
-        httpEngine=HttpEngine.getInstance();
-        httpEngine.initContext(this);
         afterCreate(savedInstanceState);
         dialogBuilder = NiftyDialogBuilder.getInstance(this);
     }
 
+
     protected abstract int getLayoutIds();
+
     protected abstract void afterCreate(Bundle savedInstanceState);
+
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        if(dialogBuilder.isShowing()){
+        if (dialogBuilder.isShowing()) {
             dialogBuilder.dismiss();
         }
     }
