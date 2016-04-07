@@ -81,7 +81,7 @@ public class SplashActivity extends Activity implements View.OnClickListener,OnP
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Logger.e("position:" + position + "====>" + "positionOffset:" + positionOffset + "=====>" + "positionOffsetPixels:" + positionOffsetPixels);
+//        Logger.e("position:" + position + "====>" + "positionOffset:" + positionOffset + "=====>" + "positionOffsetPixels:" + positionOffsetPixels);
         if (position==pics.length-1){
             mBtnGoMain.setVisibility(View.VISIBLE);
         }else {

@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rl_infomation_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/bg_qq_blue">
@@ -17,10 +18,17 @@
             android:text="信息" />
 
     </RelativeLayout>
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
+        android:id="@+id/rl_modulename_refresh_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_infomation_title">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_information"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
 
 </LinearLayout>

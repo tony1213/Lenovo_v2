@@ -1,4 +1,4 @@
-package com.overtech.lenovo.activity.business.infomation.adapter;
+package com.overtech.lenovo.activity.business.information.adapter;
 
 import java.util.List;
 

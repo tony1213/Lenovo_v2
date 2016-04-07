@@ -1,8 +1,7 @@
-package com.overtech.lenovo.activity.business.infomation.adapter;
+package com.overtech.lenovo.activity.business.information.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap.Config;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
