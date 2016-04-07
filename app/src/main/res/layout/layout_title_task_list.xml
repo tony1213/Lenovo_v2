@@ -20,6 +20,7 @@
         android:text="所有工单" />
 
     <ImageView
+        android:id="@+id/iv_task_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

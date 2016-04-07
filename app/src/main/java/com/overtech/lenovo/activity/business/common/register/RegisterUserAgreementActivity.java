@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.controller.GetSmsCodeAndValicateActivity;
@@ -20,21 +21,17 @@ public class RegisterUserAgreementActivity extends BaseActivity implements View.
     private CheckBox mCheckAgreement;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        findViewById();
-        init();
+    protected int getLayoutIds() {
+        return R.layout.activity_register;
     }
 
-    private void findViewById() {
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
         mTitleContent = (TextView) findViewById(R.id.tv_common_title_content);
         mDoBack = (ImageView) findViewById(R.id.iv_common_title_back);
         mDoNext = (Button) findViewById(R.id.btn_register_do_next_agreement);
         mCheckAgreement = (CheckBox) findViewById(R.id.cb_register_item_privacy);
-    }
 
-    private void init() {
         mTitleContent.setText(R.string.commom_title_register_user_agreement);
         mDoBack.setOnClickListener(this);
         mDoNext.setOnClickListener(this);

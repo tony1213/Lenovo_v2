@@ -11,15 +11,13 @@ import com.overtech.lenovo.activity.base.BaseActivity;
 public class TaskInformationActivity extends BaseActivity {
     private TextView mTitle;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_information);
-        init();
+    protected int getLayoutIds() {
+        return R.layout.activity_task_information;
     }
 
-    protected void init() {
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
         mTitle = (TextView) findViewById(R.id.tv_task_information_title);
 
         mTitle.setOnClickListener(new OnClickListener() {
@@ -30,5 +28,6 @@ public class TaskInformationActivity extends BaseActivity {
             }
         });
     }
+
 
 }
