@@ -78,8 +78,26 @@
     <color name="nifity_dialog_bg">#ffffff</color>
     <color name="btn_press_color">#66000000</color>
     <color name="btn_unpress_color">#22000000</color>
-    <!-- 导航栏选择后的背景色 -->
-    <color name="main_activity_navigation_selected">#0079c9</color>
     <color name="tab_main_color">#42AFF3</color>
 
+    <!-- 工单标题栏核心业务背景色 -->
+    <color name="tasklist_title_core_bg">#0079c9</color>
+    <!-- mainactivity 导航栏选择后的背景色 -->
+    <color name="main_activity_navigation_selected">#303F9F</color>
+    <!-- 工标题栏TextView选中后的颜色 -->
+    <color name="tasklist_title_tv_selected">#006bac</color>
+    <!-- 工单信息时间背景 -->
+    <color name="tasklist_information_time_bg">#ccccc5</color>
+    <color name="tasklist_item_bg">#F5F2F1</color>
+    <color name="task_information_title">#726d69</color>
+    <color name="blue">#3751B5</color>
+    <color name="tab_text_color">#A19D97</color>
+    <color name="grey">#e7e6e3</color>
+    <color name="orange">#ff4700</color>
+    <color name="simple_orange">#ff9000</color>
+    <color name="green">#00A395</color>
+    <color name="simple_green">#67d6cd</color>
+    <!-- 门店信息备注消息背景色 -->
+    <color name="store_remark_bg">#F0EFED</color>
+    <color name="black">#000000</color>
 </resources>

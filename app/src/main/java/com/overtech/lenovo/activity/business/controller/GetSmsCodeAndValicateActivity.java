@@ -9,14 +9,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.base.BaseActivity;
+import com.overtech.lenovo.activity.business.common.password.ResetPasswordActivity;
+import com.overtech.lenovo.activity.business.common.register.RegisterSetPasswordActivity;
 import com.overtech.lenovo.config.Projects;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.EditTextWithDelete;
 import com.overtech.lenovo.widget.TimeButton;
-import com.overtech.lenovo.activity.base.BaseActivity;
-import com.overtech.lenovo.activity.business.common.password.ResetPasswordActivity;
-import com.overtech.lenovo.activity.business.common.register.RegisterSetPasswordActivity;
 
 /*
 *@author Tony
@@ -33,35 +34,21 @@ public class GetSmsCodeAndValicateActivity extends BaseActivity implements View.
     private String mExtraData;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sms_code);
-        init();
-        getExtraData();
-        initEvent();
+    protected int getLayoutIds() {
+        return R.layout.activity_sms_code;
     }
 
-    private void init() {
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
         mTitleContent = (TextView) findViewById(R.id.tv_common_title_content);
         mDoBack = (ImageView) findViewById(R.id.iv_common_title_back);
         mPhoneNo = (EditTextWithDelete) findViewById(R.id.et_sms_code_phone);
         mValicateCode = (EditTextWithDelete) findViewById(R.id.et_valicate_code);
         mTimeButton = (TimeButton) findViewById(R.id.btn_get_valicate_code);
         mDoNext = (Button) findViewById(R.id.btn_valicate_sms_code);
-    }
 
-    private void getExtraData() {
-        Intent intent = getIntent();
-        if (null == intent) {
-            return;
-        }
-        mExtraData = intent.getStringExtra("flag");
-        if (TextUtils.equals("", mExtraData)) {
-            return;
-        }
-    }
+        getExtraData();
 
-    private void initEvent() {
         mTitleContent.setText(R.string.common_title_get_sms_code);
         mDoBack.setOnClickListener(this);
         mTimeButton.setTextAfter(getString(R.string.common_after_get_sms_code)).setTextBefore(getString(R.string.common_get_sms_code)).setLenght(60 * 1000);
@@ -90,6 +77,17 @@ public class GetSmsCodeAndValicateActivity extends BaseActivity implements View.
         });
     }
 
+    private void getExtraData() {
+        Intent intent = getIntent();
+        if (null == intent) {
+            return;
+        }
+        mExtraData = intent.getStringExtra("flag");
+        if (TextUtils.equals("", mExtraData)) {
+            return;
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -102,7 +100,7 @@ public class GetSmsCodeAndValicateActivity extends BaseActivity implements View.
                     intent.setClass(this, ResetPasswordActivity.class);
                 } else if (TextUtils.equals(mExtraData, Projects.REGISTER)) {
                     intent.setClass(this, RegisterSetPasswordActivity.class);
-                }else {
+                } else {
                     return;
                 }
                 startActivity(intent);

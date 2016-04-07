@@ -33,13 +33,12 @@ public class TaskDetailActivity extends BaseActivity {
     private PropertyFragment propertyFrag;// 资产
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_detail);
-        init();
+    protected int getLayoutIds() {
+        return R.layout.activity_task_detail;
     }
 
-    protected void init() {
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (CustomeViewPager) findViewById(R.id.viewPager);
         mTitle = (TextView) findViewById(R.id.tv_task_detail_title);
@@ -81,5 +80,4 @@ public class TaskDetailActivity extends BaseActivity {
             }
         });
     }
-
 }

@@ -3,25 +3,24 @@ package com.overtech.lenovo.activity.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.base.BaseFragment;
+import com.overtech.lenovo.activity.business.knowledge.KnowledgeDetailActivity;
+import com.overtech.lenovo.activity.business.knowledge.Model;
+import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMainAdapter;
+import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMoreAdapter;
+import com.overtech.lenovo.utils.Utilities;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.widget.AdapterView;
-import android.view.LayoutInflater;
-import android.support.v4.app.Fragment;
-import com.overtech.lenovo.activity.business.knowledge.KnowledgeDetailActivity;
-import com.overtech.lenovo.utils.Utilities;
-import com.overtech.lenovo.activity.business.knowledge.Model;
-import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMainAdapter;
-import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMoreAdapter;
 
-public class KnowledgeFragment extends Fragment {
+public class KnowledgeFragment extends BaseFragment {
 
-    private View convertView;
     private ListView mainlist;
     private ListView morelist;
     private List<Map<String, Object>> mainList2;
@@ -29,15 +28,20 @@ public class KnowledgeFragment extends Fragment {
     private ClassifyMoreAdapter moreAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        convertView=inflater.inflate(R.layout.fragment_knowledge, container, false);
+    protected int getLayoutId() {
+        return R.layout.fragment_knowledge;
+    }
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
         initModle();
         initView();
-        return convertView;
     }
-    private void initView(){
-        mainlist = (ListView) convertView.findViewById(R.id.classify_mainlist);
-        morelist = (ListView) convertView.findViewById(R.id.classify_morelist);
+
+
+    private void initView() {
+        mainlist = (ListView) mRootView.findViewById(R.id.classify_mainlist);
+        morelist = (ListView) mRootView.findViewById(R.id.classify_morelist);
         mainAdapter = new ClassifyMainAdapter(getActivity(), mainList2);
         mainAdapter.setSelectItem(0);
         mainlist.setAdapter(mainAdapter);
@@ -61,18 +65,20 @@ public class KnowledgeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 moreAdapter.setSelectItem(position);
                 moreAdapter.notifyDataSetChanged();
-                Utilities.showToast(parent.getItemAtPosition(position).toString(),getActivity());
-                Intent intent=new Intent(getActivity(), KnowledgeDetailActivity.class);
+                Utilities.showToast(parent.getItemAtPosition(position).toString(), getActivity());
+                Intent intent = new Intent(getActivity(), KnowledgeDetailActivity.class);
                 startActivity(intent);
             }
         });
 
     }
+
     private void initAdapter(String[] array) {
         moreAdapter = new ClassifyMoreAdapter(getActivity(), array);
         morelist.setAdapter(moreAdapter);
         moreAdapter.notifyDataSetChanged();
     }
+
     private void initModle() {
         mainList2 = new ArrayList<Map<String, Object>>();
         for (int i = 0; i < Model.LISTVIEWIMG.length; i++) {

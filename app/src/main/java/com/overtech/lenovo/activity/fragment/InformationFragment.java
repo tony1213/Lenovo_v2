@@ -1,28 +1,41 @@
 package com.overtech.lenovo.activity.fragment;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
 import android.os.AsyncTask;
+=======
+>>>>>>> origin/master
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseFragment;
+<<<<<<< HEAD
 import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter;
+=======
+import com.overtech.lenovo.activity.business.infomation.adapter.InformationAdapter;
+import com.overtech.lenovo.activity.business.infomation.adapter.InformationAdapter.OnItemButtonClickListener;
+>>>>>>> origin/master
 import com.overtech.lenovo.entity.information.Information;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
 
+<<<<<<< HEAD
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
 public class InformationFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
+=======
+import java.util.ArrayList;
+import java.util.List;
+
+public class InformationFragment extends BaseFragment {
+>>>>>>> origin/master
     private View convertView;
     private RecyclerView mInformation;
     private BGARefreshLayout mRefreshLayout;
@@ -30,6 +43,7 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     private List<Information> datas;
 
     @Override
+<<<<<<< HEAD
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         convertView = inflater.inflate(R.layout.fragment_infomation, container, false);
         initRefreshLayout();
@@ -46,6 +60,17 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     }
 
     protected void init() {
+=======
+    protected int getLayoutId() {
+        // TODO Auto-generated method stub
+        return R.layout.fragment_infomation;
+    }
+
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+>>>>>>> origin/master
         datas = new ArrayList<Information>();
 
         datas.add(new Information(
@@ -65,16 +90,20 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                         "http://www.taopic.com/uploads/allimg/110922/10023-11092211201726.jpg"},
                 213124));
         adapter = new InformationAdapter(getActivity(), datas);
-        adapter.setOnItemButtonClickListener(new InformationAdapter.OnItemButtonClickListener() {
+        adapter.setOnItemButtonClickListener(new OnItemButtonClickListener() {
 
             @Override
             public void buttonClick(View v, int position) {
+                // TODO Auto-generated method stub
                 Utilities.showToast("您评论了第" + position + "条记录", getActivity());
             }
         });
-        mInformation = (RecyclerView) convertView.findViewById(R.id.recycler_information);
-        mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mInformation.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        mInformation = (RecyclerView) mRootView
+                .findViewById(R.id.recycler_information);
+        mInformation.setLayoutManager(new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.VERTICAL, false));
+        mInformation.addItemDecoration(new DividerItemDecoration(getActivity(),
+                LinearLayoutManager.VERTICAL));
         mInformation.setAdapter(adapter);
     }
 

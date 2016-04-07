@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/bg_qq_blue" >
+        android:background="@color/blue">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -15,12 +15,12 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="27dp"
             android:layout_marginTop="13dp"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="30dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/icon_dial_phone" />
 
         <View
             android:layout_width="1dp"
@@ -100,11 +100,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/colo_grey" />
+        android:background="@color/grey" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
             android:layout_marginLeft="22dp"
             android:layout_marginTop="20dp"
             android:text="接单流程"
-            android:textColor="@color/bg_qq_blue"
+            android:textColor="@color/blue"
             android:textSize="@dimen/text_size_list" />
 
         <TextView
@@ -124,40 +124,39 @@
             android:layout_marginRight="24dp"
             android:layout_marginTop="20dp"
             android:text="￥300/单"
-            android:textColor="@color/main_orange"
+            android:textColor="@color/orange"
             android:textSize="@dimen/text_size_list" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colo_grey" />
+        android:background="@color/grey" />
 
     <ListView
         android:id="@+id/lv_task_process"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="#ffffffff" >
-    </ListView>
+        android:divider="#ffffffff"></ListView>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colo_grey" />
+        android:background="@color/grey" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="20dp"
         android:paddingLeft="28dp"
-        android:paddingTop="24dp" >
+        android:paddingTop="24dp">
 
         <ImageView
             android:id="@+id/iv_notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/icon_common_notification" />
 
         <TextView
             android:id="@+id/tv_notification"
@@ -174,7 +173,7 @@
             android:layout_below="@id/tv_notification"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/iv_notification"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"

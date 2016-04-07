@@ -50,9 +50,9 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:background="@color/main_white"
-        app1:tabIndicatorColor="@color/bg_qq_blue"
-        app1:tabSelectedTextColor="@color/bg_qq_blue"
-        app1:tabTextColor="@color/main_red" />
+        app1:tabIndicatorColor="@color/blue"
+        app1:tabSelectedTextColor="@color/blue"
+        app1:tabTextColor="@color/tab_text_color" />
 
     <com.overtech.lenovo.activity.business.tasklist.customeviewpage.CustomeViewPager
         android:id="@+id/viewPager"

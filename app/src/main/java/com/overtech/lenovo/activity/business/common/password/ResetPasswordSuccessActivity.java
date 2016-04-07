@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
@@ -20,15 +21,16 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
     private ImageView mDoBack;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password_success);
-        init();
+    protected int getLayoutIds() {
+        return R.layout.activity_reset_password_success;
     }
-    private void init(){
-        mTitleContent=(TextView)findViewById(R.id.tv_common_title_content);
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        mTitleContent = (TextView) findViewById(R.id.tv_common_title_content);
+        mDoBack = (ImageView) findViewById(R.id.iv_common_title_back);
+
         mTitleContent.setText(R.string.commom_title_reset_password_success);
-        mDoBack=(ImageView)findViewById(R.id.iv_common_title_back);
         Utilities.showToast("2秒后跳转到登录", this);
         new Handler().postDelayed(new Runnable() {
             @Override

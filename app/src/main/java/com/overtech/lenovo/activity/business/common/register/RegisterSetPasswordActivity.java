@@ -21,19 +21,31 @@ public class RegisterSetPasswordActivity extends BaseActivity implements View.On
     private EditTextWithDelete mNewPasswordConfirm;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password);
-        init();
+    protected int getLayoutIds() {
+        return R.layout.activity_reset_password;
     }
 
-    private void init() {
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
         mTitleContent = (TextView) findViewById(R.id.tv_common_title_content);
-        mTitleContent.setText(R.string.common_title_set_password);
         mNewPassword = (EditTextWithDelete) findViewById(R.id.et_reset_password_new);
         mNewPasswordConfirm = (EditTextWithDelete) findViewById(R.id.et_reset_password_confirm);
         mDoNext = (Button) findViewById(R.id.btn_reset_password);
+
+        mTitleContent.setText(R.string.common_title_set_password);
         mDoNext.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_common_title_back:
+                this.finish();
+                break;
+            case R.id.btn_reset_password:
+                valicatePassword();
+                break;
+        }
     }
 
     private void valicatePassword() {
@@ -52,18 +64,6 @@ public class RegisterSetPasswordActivity extends BaseActivity implements View.On
             }
         } else {
             Utilities.showToast("输入不能为空", this);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_common_title_back:
-                this.finish();
-                break;
-            case R.id.btn_reset_password:
-                valicatePassword();
-                break;
         }
     }
 }

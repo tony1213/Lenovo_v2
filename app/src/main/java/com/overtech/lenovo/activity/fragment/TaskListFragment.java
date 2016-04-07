@@ -1,36 +1,27 @@
 package com.overtech.lenovo.activity.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.overtech.lenovo.R;
-import com.overtech.lenovo.activity.app.CustomApplication;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
-import com.overtech.lenovo.activity.business.tasklist.adapter.TitleFilterPopWindowAdapter;
 import com.overtech.lenovo.entity.tasklist.ADInfo;
 import com.overtech.lenovo.entity.tasklist.Task;
 import com.overtech.lenovo.utils.Utilities;
@@ -38,20 +29,27 @@ import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
 import com.overtech.lenovo.widget.cycleviewpager.ViewFactory;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
-import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter.OnItemClickListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
-public class TaskListFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, OnItemClickListener {
+public class TaskListFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, View.OnClickListener, TaskListAdapter.OnItemClickListener {
 
-    private View convertView, titleView, popView;
-    private TextView mTitleFilter;
+    private View  titleView, popView;
     private PopupWindow popupWindow;
+    private ImageView mNotification;
+    private TextView mTitleFilter;
+    private TextView mTaskAll;
+    private TextView mTaskReceive;
+    private TextView mTaskOrder;
+    private TextView mTaskVisit;
+    private TextView mTaskAccount;
+    private TextView mTaskEvaluation;
     private ArrayList<String> groups;
-    private ListView lv_group;
-    private TitleFilterPopWindowAdapter adapter;
     private TaskListAdapter adapter2;
     private BGARefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -68,25 +66,30 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             "http://pic20.nipic.com/20120409/9188247_091601398179_2.jpg",};
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        convertView = inflater.inflate(R.layout.fragment_task_list, container, false);
-        findViewById();
-        initRefreshLayout();
-        initRecyclerView();
-        initCycleViewPager();
-        initEvent();
-        return convertView;
+    protected int getLayoutId() {
+        // TODO Auto-generated method stub
+        return R.layout.fragment_task_list;
     }
 
-    private void findViewById() {
-        titleView = (View) convertView.findViewById(R.id.rl_task_list_title);
-        mTitleFilter = (TextView) convertView.findViewById(R.id.tv_task_list_filter);
-        mRecyclerView = (RecyclerView) convertView.findViewById(R.id.recyclerView);
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        findViewById();
+        initRefreshLayout();//下拉刷新
+        initRecyclerView();
+        initCycleViewPager();//轮播图
+        initEvent();
+    }
 
+
+    private void findViewById() {
+        titleView = (View) mRootView.findViewById(R.id.rl_task_list_title);
+        mTitleFilter = (TextView) mRootView.findViewById(R.id.tv_task_list_filter);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
+        mNotification=(ImageView) mRootView.findViewById(R.id.iv_task_notification);
     }
 
     private void initRefreshLayout() {
-        mRefreshLayout = (BGARefreshLayout) convertView.findViewById(R.id.rl_modulename_refresh);
+        mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh);
         mRefreshLayout.setDelegate(this);
         BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
         mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
@@ -94,34 +97,16 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
     private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.VERTICAL_LIST));// 实现分割线
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));// 实现分割线
         datas = new ArrayList<Task>();
-        Task task1 = new Task("", "20160309-0001", "2016-03-11  11:30", "网络问题",
-                "WIFI无法正常使用", "携带装备", "langitude", "longitude", "2小时上门", "1",
-                "接单");
-        Task task2 = new Task("", "20160309-0002", "2016-03-12  12:30",
-                "POS软件问题", "pos无法正常使用", "携带装备", "langitude", "longitude",
-                "6小时上门", "0", "评价");
-        Task task3 = new Task("", "20160309-0003", "2016-03-13  13:30", "网络问题",
-                "哈哈无法正常使用", "携带装备", "langitude", "longitude", "2小时上门", "0",
-                "接单");
-        Task task4 = new Task("", "20160309-0004", "2016-03-14  14:30", "网络问题",
-                "pos无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "1",
-                "评价");
-        Task task5 = new Task("", "20160309-0005", "2016-03-15  15:30", "网络问题",
-                "设备无法正常使用", "携带装备", "langitude", "longitude", "4小时上门", "0",
-                "接单");
-        Task task6 = new Task("", "20160309-0006", "2016-03-16  16:30", "网络问题",
-                "设备无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "0",
-                "评价");
-        Task task7 = new Task("", "20160309-0007", "2016-03-17  17:30", "网络问题",
-                "设备无法正常使用", "携带装备", "langitude", "longitude", "1小时上门", "0",
-                "接单");
-        Task task8 = new Task("", "20160309-0008", "2016-03-18  18:30", "网络问题",
-                "设备无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "0",
-                "评价");
-
+        Task task1 = new Task("", "20160309-0001", "2016-03-11  11:30", "网络问题", "WIFI无法正常使用", "携带装备", "langitude", "longitude", "2小时上门", "1", "接单");
+        Task task2 = new Task("", "20160309-0002", "2016-03-12  12:30", "POS软件问题", "pos无法正常使用", "携带装备", "langitude", "longitude", "6小时上门", "0", "评价");
+        Task task3 = new Task("", "20160309-0003", "2016-03-13  13:30", "网络问题", "哈哈无法正常使用", "携带装备", "langitude", "longitude", "2小时上门", "0", "接单");
+        Task task4 = new Task("", "20160309-0004", "2016-03-14  14:30", "网络问题", "pos无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "1", "评价");
+        Task task5 = new Task("", "20160309-0005", "2016-03-15  15:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "4小时上门", "0", "接单");
+        Task task6 = new Task("", "20160309-0006", "2016-03-16  16:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "0", "评价");
+        Task task7 = new Task("", "20160309-0007", "2016-03-17  17:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "1小时上门", "0", "接单");
+        Task task8 = new Task("", "20160309-0008", "2016-03-18  18:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "0", "评价");
         datas.add(task1);
         datas.add(task2);
         datas.add(task3);
@@ -136,7 +121,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         adapter2.setHeader(LayoutInflater.from(getContext()).inflate(R.layout.item_recyclerview_header, null));
         adapter2.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter2);
-
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -154,26 +138,21 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     private void initCycleViewPager() {
         ImageLoader.getInstance().initContext(getActivity());// 初始化ImageView;
         // cycleViewPager = (CycleViewPager) getChildFragmentManager()//
-        // 绝对不能用getActivity().getSupportFragmentManager()
-        // .findFragmentById(R.id.fragment_cycle_viewpager_content);//因为fragment标签不再在fragment中，所以此处不再需要
+        // 绝对不能用getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);//因为fragment标签不再在fragment中，所以此处不再需要
 
         cycleViewPager = (CycleViewPager) getFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);
-
         handler = cycleViewPager.getHandler();
         runnable = cycleViewPager.getRunnable();
-
         for (int i = 0; i < imageUrls.length; i++) {
             ADInfo info = new ADInfo();
             info.setUrl(imageUrls[i]);
             info.setContent("图片-->" + i);
             infos.add(info);
         }
-
         for (int i = 0; i < infos.size(); i++) {
             views.add(ViewFactory.getImageView(getActivity(), infos.get(i)
                     .getUrl()));
         }
-
         cycleViewPager.setData(views, infos, new CycleViewPager.ImageCycleViewListener() {
 
             @Override
@@ -182,20 +161,14 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 Utilities.showToast("您点击了图片" + position, getActivity());
             }
         });
-        // 设置轮播时间，默认5000ms
-        cycleViewPager.setTime(2000);
-        // 设置圆点指示图标组居中显示，默认靠右
-        cycleViewPager.setIndicatorCenter();
+        cycleViewPager.setTime(2000); // 设置轮播时间，默认5000ms
+        cycleViewPager.setIndicatorCenter();// 设置圆点指示图标组居中显示，默认靠右
     }
 
 
     private void initEvent() {
-        mTitleFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showWindow(titleView);
-            }
-        });
+        mTitleFilter.setOnClickListener(this);
+        mNotification.setOnClickListener(this);
     }
 
     private void showWindow(View parent) {
@@ -203,41 +176,30 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         if (popupWindow == null) {
             LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             popView = layoutInflater.inflate(R.layout.layout_pop_task_list, null);
-            lv_group = (ListView) popView.findViewById(R.id.lvGroup);
-            // 加载数据
-            groups = new ArrayList<String>();
-            groups.add("所有工单");
-            groups.add("接单");
-            groups.add("预约");
-            groups.add("上门");
-            groups.add("结单");
-            groups.add("评价");
-            adapter = new TitleFilterPopWindowAdapter(getActivity(), groups);
-
-            lv_group.setAdapter(adapter);
             // 创建一个PopuWidow对象
-            popupWindow = new PopupWindow(popView, 150, WindowManager.LayoutParams.WRAP_CONTENT);
+            popupWindow = new PopupWindow(popView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+            //初始化popupwindow的内容
+            mTaskAll = (TextView) popView.findViewById(R.id.tv_task_all);
+            mTaskReceive = (TextView) popView.findViewById(R.id.tv_task_receive);
+            mTaskOrder = (TextView) popView.findViewById(R.id.tv_task_order);
+            mTaskVisit = (TextView) popView.findViewById(R.id.tv_task_visit);
+            mTaskAccount = (TextView) popView.findViewById(R.id.tv_task_account);
+            mTaskEvaluation = (TextView) popView.findViewById(R.id.tv_task_evaluation);
+
+            mTaskAll.setOnClickListener(this);
+            mTaskReceive.setOnClickListener(this);
+            mTaskOrder.setOnClickListener(this);
+            mTaskVisit.setOnClickListener(this);
+            mTaskAccount.setOnClickListener(this);
+            mTaskEvaluation.setOnClickListener(this);
         }
-
-
         popupWindow.setFocusable(true);// 使其聚集
         popupWindow.setOutsideTouchable(true); // 设置允许在外点击消失
         popupWindow.setBackgroundDrawable(new BitmapDrawable()); // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
-        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        int xPos = windowManager.getDefaultDisplay().getWidth() / 2 - popupWindow.getWidth() / 2;// 显示的位置为:屏幕的宽度的一半-PopupWindow的高度的一半
-        popupWindow.showAsDropDown(parent, xPos, 0);
-        lv_group.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        int yPos = titleView.getHeight() / 2 - mTitleFilter.getHeight() / 2;
+        popupWindow.showAsDropDown(parent, 0, yPos);
 
-                Toast.makeText(getActivity(), ((CustomApplication) getActivity().getApplication()).city, Toast.LENGTH_LONG).show();
-                Log.e("获取城市",((CustomApplication) getActivity().getApplication()).city);
-                if (popupWindow != null) {
-                    popupWindow.dismiss();
-                }
-                mTitleFilter.setText(groups.get(position));
-            }
-        });
 
     }
 
@@ -313,5 +275,39 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         }.execute();
 
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_task_list_filter:
+                showWindow(mTitleFilter);
+                break;
+            case R.id.iv_task_notification:
+                mNotification.setImageResource(R.drawable.anim_task_notification);
+                AnimationDrawable anmation=(AnimationDrawable) mNotification.getDrawable();
+                anmation.start();;
+                break;
+            case R.id.tv_task_all:
+                mTitleFilter.setText(mTaskAll.getText());
+                break;
+            case R.id.tv_task_receive:
+                mTitleFilter.setText(mTaskReceive.getText());
+                break;
+            case R.id.tv_task_order:
+                mTitleFilter.setText(mTaskOrder.getText());
+                break;
+            case R.id.tv_task_visit:
+                mTitleFilter.setText(mTaskVisit.getText());
+                break;
+            case R.id.tv_task_account:
+                mTitleFilter.setText(mTaskAccount.getText());
+                break;
+            case R.id.tv_task_evaluation:
+                mTitleFilter.setText(mTaskAccount.getText());
+                break;
+
+        }
+
     }
 }
