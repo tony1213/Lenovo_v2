@@ -1,5 +1,7 @@
 package com.overtech.lenovo.activity.fragment;
 
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,18 +9,23 @@ import android.view.View;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseFragment;
-import com.overtech.lenovo.activity.business.infomation.adapter.InformationAdapter;
-import com.overtech.lenovo.activity.business.infomation.adapter.InformationAdapter.OnItemButtonClickListener;
+import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter;
+import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter.OnItemButtonClickListener;
 import com.overtech.lenovo.entity.information.Information;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+//
 
-public class InformationFragment extends BaseFragment {
-    private View convertView;
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
+import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
+import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
+
+public class InformationFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
     private RecyclerView mInformation;
+    private BGARefreshLayout mRefreshLayout;
     private InformationAdapter adapter;
     private List<Information> datas;
 
@@ -32,8 +39,16 @@ public class InformationFragment extends BaseFragment {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        datas = new ArrayList<Information>();
+        mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
+        mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
 
+        mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mInformation.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        mRefreshLayout.setDelegate(this);
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
+        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+
+        datas = new ArrayList<Information>();
         datas.add(new Information(
                 "http://avatar.csdn.net/F/C/3/1_heaimnmn.jpg",
                 "李小姐",
@@ -59,12 +74,56 @@ public class InformationFragment extends BaseFragment {
                 Utilities.showToast("您评论了第" + position + "条记录", getActivity());
             }
         });
-        mInformation = (RecyclerView) mRootView
-                .findViewById(R.id.recycler_information);
-        mInformation.setLayoutManager(new LinearLayoutManager(getActivity(),
-                LinearLayoutManager.VERTICAL, false));
-        mInformation.addItemDecoration(new DividerItemDecoration(getActivity(),
-                LinearLayoutManager.VERTICAL));
         mInformation.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
+        // 在这里加载最新数据
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                // 加载完毕后在UI线程结束下拉刷新
+                mRefreshLayout.endRefreshing();
+            }
+        }.execute();
+    }
+
+    @Override
+    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+        // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                // 加载完毕后在UI线程结束加载更多
+                mRefreshLayout.endLoadingMore();
+            }
+        }.execute();
+
+        return true;
     }
 }
