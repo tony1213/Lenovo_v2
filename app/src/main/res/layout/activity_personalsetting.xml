@@ -61,6 +61,7 @@
                     android:text="基本信息" />
 
                 <TextView
+                    android:id="@+id/tv_edit_basic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -132,12 +133,13 @@
                     android:text="手机号码"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_phone"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_phone"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="153123123123" />
+                    android:hint="153123123123" />
             </LinearLayout>
 
             <LinearLayout
@@ -153,12 +155,13 @@
                     android:text="QQ账号"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_qq"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_qq"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="350533684" />
+                    android:hint="350533684" />
             </LinearLayout>
 
             <LinearLayout
@@ -174,12 +177,13 @@
                     android:text="微信账号"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_wechat"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_wechat"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="3247298789" />
+                    android:hint="3247298789" />
             </LinearLayout>
 
             <LinearLayout
@@ -195,12 +199,13 @@
                     android:text="邮箱地址"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_email"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_email"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="57896934@qq.com" />
+                    android:hint="57896934@qq.com" />
             </LinearLayout>
 
             <LinearLayout
@@ -216,12 +221,13 @@
                     android:text="所在城市"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_city"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_city"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="上海" />
+                    android:hint="上海" />
             </LinearLayout>
 
             <LinearLayout
@@ -238,12 +244,13 @@
                     android:text="详细地址"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_address"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_address"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="上海市徐家汇区广元西路309" />
+                    android:hint="上海市徐家汇区广元西路309" />
             </LinearLayout>
 
             <View
@@ -265,6 +272,7 @@
                     android:text="技能信息" />
 
                 <TextView
+                    android:id="@+id/tv_edit_tec"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -287,11 +295,13 @@
                     android:text="学历"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_edu"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
-                    android:text="本科" />
+                    android:enabled="false"
+                    android:hint="本科" />
             </LinearLayout>
 
             <LinearLayout
@@ -307,11 +317,13 @@
                     android:text="英语能力"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_english"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
-                    android:text="一般" />
+                    android:enabled="false"
+                    android:hint="一般" />
             </LinearLayout>
 
             <LinearLayout
@@ -327,11 +339,13 @@
                     android:text="工作年限"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_work_years"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="2年" />
+                    android:hint="2年" />
             </LinearLayout>
 
             <LinearLayout
@@ -348,11 +362,13 @@
                     android:text="自我定位"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_identity"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="硬件工程师/数据库工程师" />
+                    android:hint="硬件工程师/数据库工程师" />
             </LinearLayout>
 
             <View
@@ -374,6 +390,7 @@
                     android:text="认证信息" />
 
                 <TextView
+                    android:id="@+id/tv_edit_ca"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -395,9 +412,11 @@
                     android:text="身份证类型"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_persoanl_id"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
                     android:text="二代身份证" />
             </LinearLayout>
@@ -415,11 +434,13 @@
                     android:text="身份证号"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_personal_idcard"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:text="4115221908008080808" />
+                    android:hint="4115221908008080808" />
             </LinearLayout>
 
             <LinearLayout
