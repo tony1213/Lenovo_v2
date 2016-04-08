@@ -8,9 +8,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.common.Test;
+import com.overtech.lenovo.test.TestActivity;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -45,10 +47,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.btn_login:
-//                intent.setClass(this, TestActivity.class);
-//                intent.setClass(this, MainActivity.class);
-//                startActivity(intent);
-                doLogin();
+                intent.setClass(this, TestActivity.class);
+                intent.setClass(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+//                doLogin();
                 break;
             case R.id.tv_lost_password:
 //                intent.setClass(this, GetSmsCodeAndValicateActivity.class);

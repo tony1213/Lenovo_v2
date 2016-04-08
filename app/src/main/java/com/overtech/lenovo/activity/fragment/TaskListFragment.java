@@ -22,6 +22,7 @@ import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.tasklist.ADInfo;
 import com.overtech.lenovo.entity.tasklist.Task;
 import com.overtech.lenovo.utils.Utilities;
@@ -39,7 +40,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
 public class TaskListFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, View.OnClickListener, TaskListAdapter.OnItemClickListener {
 
-    private View  titleView, popView;
+    private View titleView, contentView;
     private PopupWindow popupWindow;
     private ImageView mNotification;
     private TextView mTitleFilter;
@@ -85,7 +86,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         titleView = (View) mRootView.findViewById(R.id.rl_task_list_title);
         mTitleFilter = (TextView) mRootView.findViewById(R.id.tv_task_list_filter);
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
-        mNotification=(ImageView) mRootView.findViewById(R.id.iv_task_notification);
+        mNotification = (ImageView) mRootView.findViewById(R.id.iv_task_notification);
     }
 
     private void initRefreshLayout() {
@@ -171,37 +172,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         mNotification.setOnClickListener(this);
     }
 
-    private void showWindow(View parent) {
-
-        if (popupWindow == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            popView = layoutInflater.inflate(R.layout.layout_pop_task_list, null);
-            // 创建一个PopuWidow对象
-            popupWindow = new PopupWindow(popView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-
-            //初始化popupwindow的内容
-            mTaskAll = (TextView) popView.findViewById(R.id.tv_task_all);
-            mTaskReceive = (TextView) popView.findViewById(R.id.tv_task_receive);
-            mTaskOrder = (TextView) popView.findViewById(R.id.tv_task_order);
-            mTaskVisit = (TextView) popView.findViewById(R.id.tv_task_visit);
-            mTaskAccount = (TextView) popView.findViewById(R.id.tv_task_account);
-            mTaskEvaluation = (TextView) popView.findViewById(R.id.tv_task_evaluation);
-
-            mTaskAll.setOnClickListener(this);
-            mTaskReceive.setOnClickListener(this);
-            mTaskOrder.setOnClickListener(this);
-            mTaskVisit.setOnClickListener(this);
-            mTaskAccount.setOnClickListener(this);
-            mTaskEvaluation.setOnClickListener(this);
-        }
-        popupWindow.setFocusable(true);// 使其聚集
-        popupWindow.setOutsideTouchable(true); // 设置允许在外点击消失
-        popupWindow.setBackgroundDrawable(new BitmapDrawable()); // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
-        int yPos = titleView.getHeight() / 2 - mTitleFilter.getHeight() / 2;
-        popupWindow.showAsDropDown(parent, 0, yPos);
-
-
-    }
 
     @Override
     public void onItemClick(View view, int position) {
@@ -281,12 +251,13 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_task_list_filter:
-                showWindow(mTitleFilter);
+                showWindow(titleView);
                 break;
             case R.id.iv_task_notification:
                 mNotification.setImageResource(R.drawable.anim_task_notification);
-                AnimationDrawable anmation=(AnimationDrawable) mNotification.getDrawable();
-                anmation.start();;
+                AnimationDrawable anmation = (AnimationDrawable) mNotification.getDrawable();
+                anmation.start();
+                ;
                 break;
             case R.id.tv_task_all:
                 mTitleFilter.setText(mTaskAll.getText());
@@ -308,6 +279,40 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 break;
 
         }
+
+    }
+
+    private void showWindow(View parent) {
+
+        if (popupWindow == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            contentView = layoutInflater.inflate(R.layout.layout_pop_task_list, null);
+            contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            // 创建一个PopuWidow对象
+            popupWindow = new PopupWindow(contentView, contentView.getMeasuredWidth(), contentView.getMeasuredHeight(), true);
+
+            //初始化popupwindow的内容
+            mTaskAll = (TextView) contentView.findViewById(R.id.tv_task_all);
+            mTaskReceive = (TextView) contentView.findViewById(R.id.tv_task_receive);
+            mTaskOrder = (TextView) contentView.findViewById(R.id.tv_task_order);
+            mTaskVisit = (TextView) contentView.findViewById(R.id.tv_task_visit);
+            mTaskAccount = (TextView) contentView.findViewById(R.id.tv_task_account);
+            mTaskEvaluation = (TextView) contentView.findViewById(R.id.tv_task_evaluation);
+
+            mTaskAll.setOnClickListener(this);
+            mTaskReceive.setOnClickListener(this);
+            mTaskOrder.setOnClickListener(this);
+            mTaskVisit.setOnClickListener(this);
+            mTaskAccount.setOnClickListener(this);
+            mTaskEvaluation.setOnClickListener(this);
+        }
+        popupWindow.setFocusable(true);// 使其聚集
+        popupWindow.setOutsideTouchable(true); // 设置允许在外点击消失
+        popupWindow.setBackgroundDrawable(new BitmapDrawable()); // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
+        int xPos = titleView.getWidth() / 2 - popupWindow.getWidth() / 2;
+        Logger.e("popupWindow的宽度" + popupWindow.getWidth() + "   contentView的宽度" + contentView.getWidth());
+        Utilities.showToast("popupwindow中间的位置" + popupWindow.getWidth(), getActivity());
+        popupWindow.showAsDropDown(parent, xPos, 0);
 
     }
 }

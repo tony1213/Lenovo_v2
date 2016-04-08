@@ -32,7 +32,7 @@
             android:value="XYvfKQuUDMMwodBroX02SAHCifpPPyN8" />
         <!-- http://lbsyun.baidu.com/apiconsole/key -->
         <activity
-            android:name=".activity.business.common.SplashActivity"
+            android:name=".activity.business.common.WelcomeActivity"
             android:theme="@style/AppFullScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,6 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.business.common.SplashActivity" />
         <activity android:name=".activity.business.common.LoginActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.business.common.register.RegisterUserAgreementActivity" />

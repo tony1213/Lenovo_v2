@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.ViewPagerAdapter;
+import com.overtech.lenovo.utils.SharePreferencesUtils;
+import com.overtech.lenovo.utils.SharedPreferencesKeys;
 
 import java.util.ArrayList;
 
@@ -85,9 +87,11 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_splash_next:
+                SharePreferencesUtils.put(this, SharedPreferencesKeys.FIRSTLOGIN,false);
                 Intent intent = new Intent();
                 intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
     }
