@@ -70,6 +70,7 @@ public class TaskDetailActivity extends BaseActivity {
                 listFragment, listTitle);
 
         mViewPager.setAdapter(adapter);
+        mViewPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mViewPager);
 
         mTitle.setOnClickListener(new OnClickListener() {

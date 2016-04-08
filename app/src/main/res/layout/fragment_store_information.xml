@@ -40,14 +40,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_green">
+            android:background="@color/store_remark_bg">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="18dp"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/icon_store_remark" />
 
             <LinearLayout
                 android:layout_width="match_parent"

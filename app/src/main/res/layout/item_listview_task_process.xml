@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_process_point"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/iv_process_point"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_task_process_state"
@@ -52,12 +52,12 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/shape_button_orange"
+        android:background="@drawable/shape_task_info_frag_button_bg"
         android:minHeight="30dp"
         android:minWidth="40dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:text="接单"
-        android:textColor="@color/bg_qq_blue" />
+        android:textColor="@color/blue" />
 
 </RelativeLayout>
