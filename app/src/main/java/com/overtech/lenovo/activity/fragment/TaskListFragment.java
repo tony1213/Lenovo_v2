@@ -257,7 +257,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mNotification.setImageResource(R.drawable.anim_task_notification);
                 AnimationDrawable anmation = (AnimationDrawable) mNotification.getDrawable();
                 anmation.start();
-                ;
                 break;
             case R.id.tv_task_all:
                 mTitleFilter.setText(mTaskAll.getText());
