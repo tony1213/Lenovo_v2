@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/main_white">
+
+        <ImageView
+            android:id="@+id/imageView_knowledge_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/icon_common_back_blue" />
+
+        <com.overtech.lenovo.widget.EditTextWithDelete
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_toRightOf="@+id/imageView_knowledge_back"
+            android:background="@drawable/shape_input_gray"
+            android:drawableLeft="@mipmap/icon_navigation_search"
+            android:drawablePadding="10dp"
+            android:hint="项目名称、关键字"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_knowledge_search_hot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="热门搜词" />
+
+    <GridView
+        android:id="@+id/gridView_knowledge_search_hot"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/tv_knowledge_search_hot"
+        android:background="@color/main_white"
+        android:horizontalSpacing="10dp"
+        android:numColumns="3"
+        android:verticalSpacing="10dp">
+
+
+    </GridView>
+
+    <ListView
+        android:id="@+id/lv_knowledge_search_hot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayout" />
+
+
+</RelativeLayout>
