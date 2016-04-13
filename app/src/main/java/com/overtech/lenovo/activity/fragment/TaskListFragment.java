@@ -12,24 +12,31 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
 import com.overtech.lenovo.debug.Logger;
-import com.overtech.lenovo.entity.tasklist.ADInfo;
-import com.overtech.lenovo.entity.tasklist.Task;
+import com.overtech.lenovo.entity.RequestBody;
+import com.overtech.lenovo.entity.Requester;
+import com.overtech.lenovo.entity.tasklist.taskbean.AD;
+import com.overtech.lenovo.entity.tasklist.taskbean.Task;
+import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
+import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.SharePreferencesUtils;
+import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
 import com.overtech.lenovo.widget.cycleviewpager.ViewFactory;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
+import com.overtech.lenovo.widget.progressdialog.CustomProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,21 +57,17 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     private TextView mTaskVisit;
     private TextView mTaskAccount;
     private TextView mTaskEvaluation;
-    private ArrayList<String> groups;
     private TaskListAdapter adapter2;
     private BGARefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
     private CycleViewPager cycleViewPager;
     private List<Task> datas;
     private List<ImageView> views = new ArrayList<ImageView>();
-    private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private List<String> adImgs = new ArrayList<String>();
     private Handler handler;// cyclerviewpager的handler
     private Runnable runnable;// cyclerviewpager的runnable
-    private String[] imageUrls = {
-            "http://tupian.enterdesk.com/2012/1103/gha/1/enterdesk%20%2812%29.jpg",
-            "http://img1.3lian.com/img013/v4/81/d/71.jpg",
-            "http://img1.3lian.com/img013/v4/81/d/66.jpg",
-            "http://pic20.nipic.com/20120409/9188247_091601398179_2.jpg",};
+    private UIHandler uiHandler;
+
 
     @Override
     protected int getLayoutId() {
@@ -74,20 +77,16 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        findViewById();
-        initRefreshLayout();//下拉刷新
-        initRecyclerView();
-        initCycleViewPager();//轮播图
-        initEvent();
-    }
-
-
-    private void findViewById() {
         titleView = (View) mRootView.findViewById(R.id.rl_task_list_title);
         mTitleFilter = (TextView) mRootView.findViewById(R.id.tv_task_list_filter);
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
         mNotification = (ImageView) mRootView.findViewById(R.id.iv_task_notification);
+        uiHandler = new UIHandler(getActivity());
+        initRefreshLayout();//下拉刷新
+        initRecyclerView();
+        initEvent();
     }
+
 
     private void initRefreshLayout() {
         mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh);
@@ -97,73 +96,67 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     }
 
     private void initRecyclerView() {
+        startProgress("加载中");
+
+        Requester requester = new Requester();
+        requester.cmd = 10001;
+        requester.uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, null);
+        RequestBody body = new RequestBody();
+        body.taskSchedule = "all";
+        requester.body.put("data", body);
+//        Logger.e(new Gson().toJson(requester));
+//        Request request=httpEngine.createRequest("urlurlurl",requester.toString());
+//        Call call=httpEngine.createRequestCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Request request, IOException e) {
+//
+//            }
+//
+//            @Override
+//            public void onResponse(Response response) throws IOException {
+//
+//            }
+//        });
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));// 实现分割线
-        datas = new ArrayList<Task>();
-        Task task1 = new Task("", "20160309-0001", "2016-03-11  11:30", "网络问题", "WIFI无法正常使用", "携带装备", "langitude", "longitude", "2小时上门", "1", "接单");
-        Task task2 = new Task("", "20160309-0002", "2016-03-12  12:30", "POS软件问题", "pos无法正常使用", "携带装备", "langitude", "longitude", "6小时上门", "0", "评价");
-        Task task3 = new Task("", "20160309-0003", "2016-03-13  13:30", "网络问题", "哈哈无法正常使用", "携带装备", "langitude", "longitude", "2小时上门", "0", "接单");
-        Task task4 = new Task("", "20160309-0004", "2016-03-14  14:30", "网络问题", "pos无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "1", "评价");
-        Task task5 = new Task("", "20160309-0005", "2016-03-15  15:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "4小时上门", "0", "接单");
-        Task task6 = new Task("", "20160309-0006", "2016-03-16  16:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "0", "评价");
-        Task task7 = new Task("", "20160309-0007", "2016-03-17  17:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "1小时上门", "0", "接单");
-        Task task8 = new Task("", "20160309-0008", "2016-03-18  18:30", "网络问题", "设备无法正常使用", "携带装备", "langitude", "longitude", "3小时上门", "0", "评价");
-        datas.add(task1);
-        datas.add(task2);
-        datas.add(task3);
-        datas.add(task4);
-        datas.add(task5);
-        datas.add(task6);
-        datas.add(task7);
-        datas.add(task8);
 
+        String json ="{\"body\":{\"data\":{\"ad\":{\"imageUrl1\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\",\"imageUrl2\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\",\"imageUrl3\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\",\"imageUrl4\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"},\"details\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]}},\"msg\":\"success\",\"st\":0}";
+        Logger.e(json);
+        Gson gson = new Gson();
+        TaskBean bean = gson.fromJson(json, TaskBean.class);
+        datas = bean.body.data.details;
         adapter2 = new TaskListAdapter(getActivity());
         adapter2.setDatas(datas);
         adapter2.setHeader(LayoutInflater.from(getContext()).inflate(R.layout.item_recyclerview_header, null));
-        adapter2.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter2);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
 
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {// 目前recyclerview的第一个item是轮播图，所以在此判断当第一个可见的是轮播图时，并且空闲时清除之前的任务重新开始新的任务
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-    }
-
-    private void initCycleViewPager() {
-        ImageLoader.getInstance().initContext(getActivity());// 初始化ImageView;
-        // cycleViewPager = (CycleViewPager) getChildFragmentManager()//
-        // 绝对不能用getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);//因为fragment标签不再在fragment中，所以此处不再需要
-
+        AD ad = bean.body.data.ad;
+        adImgs.add(ad.imageUrl1);
+        adImgs.add(ad.imageUrl2);
+        adImgs.add(ad.imageUrl3);
+        adImgs.add(ad.iamgeUrl4);
         cycleViewPager = (CycleViewPager) getFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);
         handler = cycleViewPager.getHandler();
         runnable = cycleViewPager.getRunnable();
-        for (int i = 0; i < imageUrls.length; i++) {
-            ADInfo info = new ADInfo();
-            info.setUrl(imageUrls[i]);
-            info.setContent("图片-->" + i);
-            infos.add(info);
+        for (int i = 0; i < adImgs.size(); i++) {
+            views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i)));
         }
-        for (int i = 0; i < infos.size(); i++) {
-            views.add(ViewFactory.getImageView(getActivity(), infos.get(i)
-                    .getUrl()));
-        }
-        cycleViewPager.setData(views, infos, new CycleViewPager.ImageCycleViewListener() {
+        cycleViewPager.setData(views, adImgs, new CycleViewPager.ImageCycleViewListener() {
 
             @Override
-            public void onImageClick(ADInfo info, int position, View imageView) {
-                ImageLoader.getInstance().displayImage(info.getUrl(), (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
+            public void onImageClick(String info, int position, View imageView) {
+                ImageLoader.getInstance().displayImage(info, (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
                 Utilities.showToast("您点击了图片" + position, getActivity());
             }
         });
         cycleViewPager.setTime(2000); // 设置轮播时间，默认5000ms
         cycleViewPager.setIndicatorCenter();// 设置圆点指示图标组居中显示，默认靠右
+
+
+        adapter2.setOnItemClickListener(this);
+
     }
 
 
@@ -185,13 +178,19 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     @Override
     public void onButtonItemClick(View view, int position) {
         // TODO Auto-generated method stub
-        Utilities.showToast("您接了条目" + position + "的工单", getActivity());
+        if (view.getTag().equals("待接单")) {
+            Utilities.showToast("您接了条目" + position + "的工单", getActivity());
+        } else if (view.getTag().equals("待预约")) {
+            Utilities.showToast("你确定预约" + position + "的工单", getActivity());
+        } else if (view.getTag().equals("待上门")) {
+            Utilities.showToast("请输入你预约的上门时间" + position + "的工单", getActivity());
+        }
     }
 
     @Override
     public void onLogItemClick(View view, int position) {
         // TODO Auto-generated method stub
-        Utilities.showToast("您点击了条目" + position + "的log", getActivity());
+        Utilities.showToast("您要进入" + position + "的项目", getActivity());
         Intent intent = new Intent(getActivity(), TaskInformationActivity.class);
         Bundle bundle = new Bundle();
         startActivity(intent, bundle);
@@ -312,6 +311,5 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         Logger.e("popupWindow的宽度" + popupWindow.getWidth() + "   contentView的宽度" + contentView.getWidth());
         Utilities.showToast("popupwindow中间的位置" + popupWindow.getWidth(), getActivity());
         popupWindow.showAsDropDown(parent, xPos, 0);
-
     }
 }

@@ -1,30 +1,28 @@
 package com.overtech.lenovo.activity.base;
 
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.fragment.callback.FragmentCallback;
 import com.overtech.lenovo.activity.fragment.callback.FragmentInterface;
 import com.overtech.lenovo.config.Debug;
-import android.view.View.OnTouchListener;
+import com.overtech.lenovo.http.HttpEngine;
 import com.overtech.lenovo.widget.progressdialog.CustomProgressDialog;
 
 
 public abstract class BaseFragment extends Fragment implements
         FragmentInterface, OnTouchListener {
     protected View mRootView;
-    public CustomProgressDialog progressDialog;
-    private ImageView imageView;
-    private AnimationDrawable animationDrawable;
+    public CustomProgressDialog newFragment;
+    public HttpEngine httpEngine;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -32,9 +30,12 @@ public abstract class BaseFragment extends Fragment implements
         // TODO Auto-generated method stub
         super.onCreateView(inflater, container, savedInstanceState);
         Debug.log("BaseFragment==onCreateView", "执行到这了");
+        httpEngine = HttpEngine.getInstance();
+        httpEngine.initContext(getActivity());
         if (mRootView == null) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
+
         return mRootView;
     }
 
@@ -43,10 +44,7 @@ public abstract class BaseFragment extends Fragment implements
         // TODO Auto-generated method stub
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (progressDialog == null) {
-                progressDialog = CustomProgressDialog
-                        .createDialog(getActivity());
-            }
+
         }
     }
 
@@ -54,25 +52,25 @@ public abstract class BaseFragment extends Fragment implements
      * 打开对话框
      */
     public void startProgress(String content) {
-        progressDialog.setMessage(content);
-        progressDialog.show();
-        Debug.log("startProgress====showing", progressDialog.isShowing() + ""
-                + progressDialog);
-
-        imageView = (ImageView) progressDialog
-                .findViewById(R.id.loadingImageView);
-        animationDrawable = (AnimationDrawable) imageView.getBackground();
-        animationDrawable.start();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("custom");
+        if (pre != null) {
+            ft.remove(pre);
+        }
+        ft.addToBackStack(null);
+        newFragment = CustomProgressDialog.newInstance(content);
+        newFragment.setCancelable(false);
+        newFragment.show(ft, "custom");
     }
 
     /**
      * 关闭对话框
      */
     public void stopProgress() {
-        Debug.log("stopProgress====showing", progressDialog.isShowing() + ""
-                + progressDialog);
-        if (progressDialog.isShowing()) {
-            progressDialog.cancel();
+        Debug.log("stopProgress====showing", newFragment.getDialog().isShowing() + ""
+                + newFragment);
+        if (newFragment.getDialog().isShowing()) {
+            newFragment.dismiss();
         }
     }
 
@@ -142,8 +140,8 @@ public abstract class BaseFragment extends Fragment implements
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        if (progressDialog != null) {
-            progressDialog.dismiss();
+        if (newFragment != null) {
+            newFragment.dismiss();
         }
     }
 }

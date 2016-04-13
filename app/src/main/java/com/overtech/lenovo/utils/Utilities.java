@@ -213,4 +213,32 @@ public class Utilities {
 		}
 	}
 
+	/**
+	 * 计算两个时间戳之间的时间差
+	 * @param curTime
+	 * @param desTime
+     * @return
+     */
+	public static String getTimeBetween(long curTime,long desTime){
+		StringBuilder sb=new StringBuilder();
+		long a=desTime-curTime;
+		if(a<0){
+			return "服务中";
+		}
+		int day=(int)a/3600/24;
+		if(day>=1){
+			sb.append(day+"天");
+		}
+		int hour= (int) (a%(3600*24)/3600);
+		if(hour>=1){
+			sb.append(hour+"小时");
+			return sb.append("上门").toString();
+		}else{
+			if(day==0){
+				return sb.append("1小时上门").toString();
+			}else{
+				return sb.append("上门").toString();
+			}
+		}
+	}
 }

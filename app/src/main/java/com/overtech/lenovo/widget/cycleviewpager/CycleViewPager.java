@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.overtech.lenovo.R;
-import com.overtech.lenovo.entity.tasklist.ADInfo;
+import com.overtech.lenovo.config.Debug;
 
 /**
  * 实现可循环，可轮播的viewpager
@@ -45,7 +45,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 	private final int SCROLLING = 0x0001;
 	private int currentPosition = 0;
 	private ImageCycleViewListener mImageCycleViewListener;
-	private List<ADInfo> infos;
+	private List<String> infos;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -68,84 +68,84 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.e("==onActivityCreated====", "onActivityCreated");
+		Debug.log("==onActivityCreated====", "onActivityCreated");
 	};
 
 	@Override
 	public void onAttach(Context context) {
 		// TODO Auto-generated method stub
 		super.onAttach(context);
-		Log.e("==onAttach====", "onAttach");
+		Debug.log("==onAttach====", "onAttach");
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		Log.e("==onCreate====", "onCreate");
+		Debug.log("==onCreate====", "onCreate");
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Log.e("==onDestroy====", "onDestroy");
+		Debug.log("==onDestroy====", "onDestroy");
 	}
 
 	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
-		Log.e("==onDestroyView====", "onDestroyView");
+		Debug.log("==onDestroyView====", "onDestroyView");
 	}
 
 	@Override
 	public void onDetach() {
 		// TODO Auto-generated method stub
 		super.onDetach();
-		Log.e("==onDetach====", "onDetach");
+		Debug.log("==onDetach====", "onDetach");
 	}
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		Log.e("==onHiddenChanged====", "onHiddenChanged");
+		Debug.log("==onHiddenChanged====", "onHiddenChanged");
 	}
 
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		Log.e("==onPause====", "onPause");
+		Debug.log("==onPause====", "onPause");
 	}
 
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Log.e("==onResume====", "onResume");
+		Debug.log("==onResume====", "onResume");
 	}
 
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Log.e("==onStart====", "onStart");
+		Debug.log("==onStart====", "onStart");
 	}
 
 	@Override
 	public void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		Log.e("==onStop====", "onStop");
+		Debug.log("==onStop====", "onStop");
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
-		Log.e("==onViewCreated====", "onViewCreated");
+		Debug.log("==onViewCreated====", "onViewCreated");
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 		return view;
 	}
 
-	public void setData(List<ImageView> views, List<ADInfo> list,
+	public void setData(List<ImageView> views, List<String> list,
 			ImageCycleViewListener listener) {
 		setData(views, list, listener, 0);
 	}
@@ -177,7 +177,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 	 * @param showPosition
 	 *            默认显示位置
 	 */
-	public void setData(List<ImageView> views, List<ADInfo> list,
+	public void setData(List<ImageView> views, List<String> list,
 			ImageCycleViewListener listener, int showPosition) {
 		mImageCycleViewListener = listener;
 		infos = list;
@@ -406,6 +406,6 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 		 * @param position
 		 * @param imageView
 		 */
-		public void onImageClick(ADInfo info, int position, View imageView);
+		public void onImageClick(String info, int position, View imageView);
 	}
 }

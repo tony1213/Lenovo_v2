@@ -2,21 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/progress_bg" >
+    >
 
     <ImageView
-        android:id="@+id/loadingImageView"
+        android:id="@+id/iv_progress_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
-        android:background="@anim/custom_progress_round" />
+        android:src="@drawable/custom_progress_round" />
 
     <TextView
-        android:id="@+id/id_tv_loadingmsg"
+        android:id="@+id/tv_msg_loading"
         style="@style/tv_list_primary_style"
-        android:layout_below="@+id/loadingImageView"
+        android:layout_below="@id/iv_progress_loading"
         android:layout_centerHorizontal="true"
         android:paddingBottom="15dp"
         android:paddingLeft="20dp"

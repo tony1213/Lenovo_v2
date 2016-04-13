@@ -16,6 +16,8 @@ import com.overtech.lenovo.config.Projects;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.common.Employee;
+import com.overtech.lenovo.utils.SharePreferencesUtils;
+import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.EditTextWithDelete;
 import com.squareup.okhttp.Call;
@@ -67,7 +69,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(intent);
                 break;
             case R.id.tv_register_account:
-                intent.setClass(this,RegisterUserAgreementActivity.class);
+                intent.setClass(this, RegisterUserAgreementActivity.class);
                 intent.putExtra("flag", Projects.REGISTER);
                 startActivity(intent);
                 break;
@@ -108,12 +110,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //            @Override
 //            public void onResponse(Response response) throws IOException {
 //                Logger.e("header:" + response.headers().get("Set-Cookie") + ",body:" + response.body().string());
+        SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, "123456");
 //            }
 //        });
     }
-
-
-
 
 
     private void doInvidateLogin() {

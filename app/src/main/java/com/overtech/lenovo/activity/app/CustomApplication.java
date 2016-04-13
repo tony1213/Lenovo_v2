@@ -15,6 +15,8 @@ public class CustomApplication extends Application {
     //    public static Map<String,Long> map;
     public LocationService locationService;
     public MyBDLocaitonListener listener;
+    public double longitude;
+    public double latitude;
     public String city;
 
     @Override
@@ -35,6 +37,8 @@ public class CustomApplication extends Application {
             // TODO Auto-generated method stub
             if (location != null) {
                 city = location.getCity();
+                latitude=location.getLatitude();
+                longitude=location.getLongitude();
                 locationService.stop();
             } else {
                 locationService.start();
