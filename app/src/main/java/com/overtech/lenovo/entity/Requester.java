@@ -14,6 +14,7 @@ public class Requester {
     public String lg = "zh";
     public int cmd;
     public String uid;
+    public String pwd;
     public Map<String, Object> body = new HashMap<String, Object>();
 
 

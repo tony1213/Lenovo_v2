@@ -7,6 +7,7 @@ package com.overtech.lenovo.entity.tasklist.taskbean;
  */
 public class Task {
     public long appointment_home_datetime;//工程师预约上门时间
+    public String repair_person_contact_information;//门店报修人员电话
     public String isUrgent;//是否紧急
     public String issue_resume;//任务单描述
     public String issue_type;//任务单分类

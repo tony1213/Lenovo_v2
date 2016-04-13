@@ -7,25 +7,30 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
-import com.overtech.lenovo.activity.business.common.register.RegisterUserAgreementActivity;
-import com.overtech.lenovo.activity.business.controller.GetSmsCodeAndValicateActivity;
-import com.overtech.lenovo.config.Projects;
+import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.Requester;
-import com.overtech.lenovo.entity.common.Employee;
+import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.EditTextWithDelete;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.Iterator;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -34,6 +39,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private TextView mDoRegister;
     private EditTextWithDelete etLoginName;
     private EditTextWithDelete etLoginPwd;
+    private UIHandler uiHandler;
 
     @Override
     protected int getLayoutIds() {
@@ -42,6 +48,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        uiHandler = new UIHandler(this);
         mDoLogin = (Button) findViewById(R.id.btn_login);
         mDoRegister = (TextView) findViewById(R.id.tv_register_account);
         mDoLostPassword = (TextView) findViewById(R.id.tv_lost_password);
@@ -55,23 +62,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent();
+
         switch (v.getId()) {
             case R.id.btn_login:
-//             doLogin();
-                intent.setClass(this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                doLogin();
                 break;
             case R.id.tv_lost_password:
-                intent.setClass(this, GetSmsCodeAndValicateActivity.class);
-                intent.putExtra("flag", Projects.LOST_PASSWORD);
-                startActivity(intent);
+                doLogout();
+//                intent.setClass(this, GetSmsCodeAndValicateActivity.class);
+//                intent.putExtra("flag", Projects.LOST_PASSWORD);
+//                startActivity(intent);
                 break;
             case R.id.tv_register_account:
-                intent.setClass(this, RegisterUserAgreementActivity.class);
-                intent.putExtra("flag", Projects.REGISTER);
-                startActivity(intent);
+                testNetInterface();
+//                intent.setClass(this, RegisterUserAgreementActivity.class);
+//                intent.putExtra("flag", Projects.REGISTER);
+//                startActivity(intent);
                 break;
             default:
                 break;
@@ -80,7 +86,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void doLogin() {
-        String url = "http://192.168.1.123:8080/test/MobileServlet";
         String name = etLoginName.getText().toString().trim();
         String pwd = etLoginPwd.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
@@ -91,63 +96,125 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             Utilities.showToast("密码不能为空", this);
             return;
         }
-        Employee employee = new Employee();
-        employee.loginName = name;
-        employee.password = pwd;
-
+        startProgress("登录中...");
         Requester requester = new Requester();
-        requester.cmd = 10001;
-        requester.body.put("data", employee);
-        Request request = httpEngine.createRequest(url, requester.toString());
-        Logger.e(requester.toString());
-//        Call call = httpEngine.createRequestCall(request);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Request request, IOException e) {
-//                Logger.e(request.toString());
-//            }
-//
-//            @Override
-//            public void onResponse(Response response) throws IOException {
-//                Logger.e("header:" + response.headers().get("Set-Cookie") + ",body:" + response.body().string());
-        SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, "123456");
-//            }
-//        });
-    }
-
-
-    private void doInvidateLogin() {
-        String url = "http://192.168.1.123:8080/test/MobileServlet";
-
-        Request request = httpEngine.createRequest(url);
+        requester.cmd = 1;
+        requester.uid = name;
+        requester.pwd = pwd;
+        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Logger.e(request.toString());
+                stopProgress();
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                final String json = response.body().string();
+                Logger.e(json);
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            stopProgress();
+                            if (response.isSuccessful()) {
+                                JSONObject jsonObject = new JSONObject(json);
+                                int st = jsonObject.getInt("st");
+                                if (st == 0) {
+                                    JSONObject body = jsonObject.getJSONObject("body");
+                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("userid"));
+                                    Intent intent = new Intent();
+                                    intent.setClass(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else if (st == 1) {
+                                    Utilities.showToast("用户名或者密码错误", LoginActivity.this);
+                                } else {
+                                    Utilities.showToast("illegal request", LoginActivity.this);
+                                }
+                            } else {
+                                Utilities.showToast("服务器异常", LoginActivity.this);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+
+    private void testNetInterface() {//测试获取用户列表接口
+        startProgress("加载中");
+        Requester requester = new Requester();
+        requester.cmd = 10000;
+        requester.uid = SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, -1).toString();
+        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                stopProgress();
+                Logger.e(request.toString());
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                Logger.e("header:" + response.headers().get("Set-Cookie") + ",body:" + response.body().string());
+                String json=response.body().string();
+                Logger.e("10000的接口返回值"+json);
+                stopProgress();
+                if(response.isSuccessful()){
+
+                }
             }
         });
     }
 
     private void doLogout() {
-        String url = "http://192.168.1.123:8080/test/MobileServlet";
+        startProgress("正在退出");
+        Requester requester = new Requester();
+        requester.uid = SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, -1).toString();
+        requester.cmd = 2;
 
-        Request request = httpEngine.createRequest(url);
+        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
+                stopProgress();
                 Logger.e(request.toString());
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
-                Logger.e("header:" + response.headers().get("Set-Cookie") + ",body:" + response.body().string());
+            public void onResponse(final Response response) throws IOException {
+                final String json = response.body().string();
+                Logger.e("登录"+ json);
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopProgress();
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(json);
+                                int st = jsonObject.getInt("st");
+                                if (st == 0) {
+                                    //退出成功
+                                } else if (st == -1) {
+                                    //未登录
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Utilities.showToast("服务器异常", LoginActivity.this);
+                        }
+                    }
+                });
+
             }
         });
     }
