@@ -19,6 +19,7 @@
             android:src="@mipmap/icon_common_back_blue" />
 
         <com.overtech.lenovo.widget.EditTextWithDelete
+            android:id="@+id/et_knowledge_search"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
@@ -53,8 +54,6 @@
         android:horizontalSpacing="10dp"
         android:numColumns="3"
         android:verticalSpacing="10dp">
-
-
     </GridView>
 
     <ListView
