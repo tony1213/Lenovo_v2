@@ -29,13 +29,9 @@ public abstract class BaseFragment extends Fragment implements
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreateView(inflater, container, savedInstanceState);
-        Debug.log("BaseFragment==onCreateView", "执行到这了");
-        httpEngine = HttpEngine.getInstance();
-        httpEngine.initContext(getActivity());
         if (mRootView == null) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
-
         return mRootView;
     }
 
@@ -44,7 +40,10 @@ public abstract class BaseFragment extends Fragment implements
         // TODO Auto-generated method stub
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-
+            if (httpEngine == null) {//开发时发现在onCreateView中初始化可能会造成空指针的情况，所以在fragment可见时对httpengine进行初始化，
+                httpEngine = HttpEngine.getInstance();
+                httpEngine.initContext(getActivity());
+            }
         }
     }
 
@@ -69,9 +68,12 @@ public abstract class BaseFragment extends Fragment implements
     public void stopProgress() {
         Debug.log("stopProgress====showing", newFragment.getDialog().isShowing() + ""
                 + newFragment);
-        if (newFragment.getDialog().isShowing()) {
-            newFragment.dismiss();
+        if (newFragment.getDialog() != null) {
+            if (newFragment.getDialog().isShowing()) {
+                newFragment.dismiss();
+            }
         }
+
     }
 
     @Override

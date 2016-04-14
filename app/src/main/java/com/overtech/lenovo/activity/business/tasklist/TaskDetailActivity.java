@@ -31,6 +31,7 @@ public class TaskDetailActivity extends BaseActivity {
     private DetailInformationFragment detailInfoFrag;// 详细信息
     private StoreInformationFragment storeInfoFrag;// 门店信息
     private PropertyFragment propertyFrag;// 资产
+    private String workorderCode;//工单号
 
     @Override
     protected int getLayoutIds() {
@@ -39,6 +40,9 @@ public class TaskDetailActivity extends BaseActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        Bundle arg = getIntent().getExtras();
+        workorderCode = arg.getString("workorder_code");
+
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (CustomeViewPager) findViewById(R.id.viewPager);
         mTitle = (TextView) findViewById(R.id.tv_task_detail_title);
@@ -80,5 +84,9 @@ public class TaskDetailActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    public String getWorkorderCode() {
+        return workorderCode;
     }
 }

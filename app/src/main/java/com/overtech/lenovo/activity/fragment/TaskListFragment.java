@@ -23,7 +23,6 @@ import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
 import com.overtech.lenovo.debug.Logger;
-import com.overtech.lenovo.entity.RequestBody;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.tasklist.taskbean.AD;
 import com.overtech.lenovo.entity.tasklist.taskbean.Task;
@@ -36,7 +35,6 @@ import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
 import com.overtech.lenovo.widget.cycleviewpager.ViewFactory;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
-import com.overtech.lenovo.widget.progressdialog.CustomProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,9 +99,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         Requester requester = new Requester();
         requester.cmd = 10001;
         requester.uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, null);
-        RequestBody body = new RequestBody();
-        body.taskSchedule = "all";
-        requester.body.put("data", body);
+        requester.body.put("taskSchedule", "all");
 //        Logger.e(new Gson().toJson(requester));
 //        Request request=httpEngine.createRequest("urlurlurl",requester.toString());
 //        Call call=httpEngine.createRequestCall(request);
@@ -122,7 +118,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));// 实现分割线
 
-        String json="{\"body\":{\"ad\":{\"imageUrl1\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\",\"imageUrl2\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\",\"imageUrl3\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\",\"imageUrl4\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"},\"data\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]},\"msg\":\"success\",\"st\":0}";
+        String json = "{\"body\":{\"ad\":{\"imageUrl1\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\",\"imageUrl2\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\",\"imageUrl3\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\",\"imageUrl4\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"},\"data\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]},\"msg\":\"success\",\"st\":0}";
         Logger.e(json);
         Gson gson = new Gson();
         TaskBean bean = gson.fromJson(json, TaskBean.class);
@@ -169,10 +165,10 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     @Override
     public void onItemClick(View view, int position) {
         // TODO Auto-generated method stub
-        Utilities.showToast("您点击了条目" + position, getActivity());
+        Task task = datas.get(position);
         Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
-        Bundle bundle = new Bundle();
-        startActivity(intent, bundle);
+        intent.putExtra("workorder_code", task.workorder_code);
+        startActivity(intent);
     }
 
     @Override

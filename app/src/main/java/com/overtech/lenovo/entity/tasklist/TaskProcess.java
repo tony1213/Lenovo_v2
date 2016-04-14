@@ -8,60 +8,35 @@ package com.overtech.lenovo.entity.tasklist;
  */
 public class TaskProcess {
 	/**
-	 * 工单进度
+	 * 已开单
 	 */
-	private String state;
+	public static final int CREATE=-1;
 	/**
-	 * 工单进度对应的时间
+	 * 未接单
 	 */
-	private String time;
+	public static final int RECEIVE=0;
 	/**
-	 * 工单其他事项
+	 * 未预约
 	 */
-	private String other;
+	public static final int ORDER=1;
 	/**
-	 * 工单动作
+	 * 未上门
 	 */
-	private String action;
-
-	public TaskProcess(String state, String time, String other, String action) {
-		super();
-		this.state = state;
-		this.time = time;
-		this.other = other;
-		this.action = action;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
-	}
-
-	public String getOther() {
-		return other;
-	}
-
-	public void setOther(String other) {
-		this.other = other;
-	}
-
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
-	}
-
+	public static final int VISIT=2;
+	/**
+	 * 未解决
+	 */
+	public static final int RESOLVE=3;
+	/**
+	 * 评价状态
+	 */
+	public static final int EVALUATE=4;
+	public int taskType;//工单类型
+	public String workorder_code;//工单号
+	public String workorder_create_datetime;//工单创建时间
+	public String assigned_datetime;//工单确认时间
+	public String appointment_datetime;//工单预约时间
+	public String appointment_home_datetime;//工单预约上门时间
+	public String evaluate_feedback;//工单评价反馈
+	public String solution;//解决方案
 }

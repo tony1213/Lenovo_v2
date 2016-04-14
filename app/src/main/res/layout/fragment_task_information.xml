@@ -30,6 +30,7 @@
                     android:textSize="@dimen/text_size_hint" />
 
                 <TextView
+                    android:id="@+id/tv_repair_person"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="张小姐"
@@ -50,6 +51,7 @@
                     android:textSize="@dimen/text_size_hint" />
 
                 <TextView
+                    android:id="@+id/tv_repair_person_contact_information"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="021-12345678"
@@ -70,6 +72,7 @@
                     android:textSize="@dimen/text_size_hint" />
 
                 <TextView
+                    android:id="@+id/tv_repair_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="上海市徐家汇广元西路309号"
@@ -79,7 +82,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/iv_dial_phone"
+            android:id="@+id/iv_repair_person_contact_information"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -117,6 +120,7 @@
             android:textSize="@dimen/text_size_list" />
 
         <TextView
+            android:id="@+id/tv_standard_fee_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -167,7 +171,7 @@
             android:text="通知消息" />
 
         <LinearLayout
-            android:id="@+id/ll_notifaction"
+            android:id="@+id/ll_workorder_notification_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_notification"

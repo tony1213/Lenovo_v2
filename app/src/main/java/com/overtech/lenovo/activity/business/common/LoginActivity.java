@@ -124,7 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 int st = jsonObject.getInt("st");
                                 if (st == 0) {
                                     JSONObject body = jsonObject.getJSONObject("body");
-                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("userid"));
+                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("userid")+"");
                                     Intent intent = new Intent();
                                     intent.setClass(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
@@ -152,7 +152,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         startProgress("加载中");
         Requester requester = new Requester();
         requester.cmd = 10000;
-        requester.uid = SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, -1).toString();
+        requester.uid = (String)SharePreferencesUtils.get(this, SharedPreferencesKeys.UID,"-1" );
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -177,7 +177,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void doLogout() {
         startProgress("正在退出");
         Requester requester = new Requester();
-        requester.uid = SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, -1).toString();
+        requester.uid = (String)SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "-1");
         requester.cmd = 2;
 
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
