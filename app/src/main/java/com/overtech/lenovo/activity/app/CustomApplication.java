@@ -1,11 +1,14 @@
 package com.overtech.lenovo.activity.app;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.overtech.lenovo.service.LocationService;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Created by Tony1213 on 16/3/23.
@@ -18,11 +21,19 @@ public class CustomApplication extends Application {
     public double longitude;
     public double latitude;
     public String city;
+    private RefWatcher refWatcher;
+
+    public static RefWatcher getRefWatcher(Context context) {
+        CustomApplication application = (CustomApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         TypefaceProvider.registerDefaultIconSets();
+        refWatcher = LeakCanary.install(this);
 
         locationService = new LocationService(getApplicationContext());
         listener = new MyBDLocaitonListener();

@@ -38,4 +38,5 @@ dependencies {
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.google.code.gson:gson:2.2.2'
     compile files('libs/BaiduLBS_Android.jar')
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
 }
