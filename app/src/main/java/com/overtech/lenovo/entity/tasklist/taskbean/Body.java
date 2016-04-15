@@ -7,5 +7,5 @@ import java.util.List;
  */
 public class Body {
     public List<Task> data;
-    public AD ad;
+    public List<AD> ad;
 }

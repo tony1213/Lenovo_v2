@@ -42,7 +42,7 @@ public class CustomProgressDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Logger.e("onCreateView执行了");
+//        Logger.e("onCreateView执行了");
         View customView = inflater.inflate(R.layout.layout_custom_progress_dialog, container, false);
         if (customView == null) {
             Logger.e("CustomeFragement的对象为空");
@@ -78,50 +78,50 @@ public class CustomProgressDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Logger.e("onCreateDialog执行了");
+//        Logger.e("onCreateDialog执行了");
         return super.onCreateDialog(savedInstanceState);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Logger.e("onCreate执行了");
+//        Logger.e("onCreate执行了");
         setStyle(STYLE_NO_TITLE, R.style.CustomProgressDialog);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Logger.e("onActivityCreated执行了");
+//        Logger.e("onActivityCreated执行了");
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onAttach(Activity activity) {
-        Logger.e("onAttach执行了");
+//        Logger.e("onAttach执行了");
         super.onAttach(activity);
     }
 
     @Override
     public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
-        Logger.e("onInflate执行了");
+//        Logger.e("onInflate执行了");
         super.onInflate(context, attrs, savedInstanceState);
     }
 
     @Override
     public void onResume() {
-        Logger.e("onResume执行了");
+//        Logger.e("onResume执行了");
         super.onResume();
     }
 
     @Override
     public void onStart() {
-        Logger.e("onStart执行了");
+//        Logger.e("onStart执行了");
         super.onStart();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Logger.e("onViewCreated执行了");
+//        Logger.e("onViewCreated执行了");
         if (msg != null) {
             tvMsg.setText(msg);
         } else {

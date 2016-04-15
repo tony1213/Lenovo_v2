@@ -8,8 +8,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,9 +22,11 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseFragment;
+import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
+import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.tasklist.taskbean.AD;
@@ -35,7 +40,15 @@ import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
 import com.overtech.lenovo.widget.cycleviewpager.ViewFactory;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
+import com.overtech.lenovo.widget.progressdialog.WorkorderReceiveDialog;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +74,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     private CycleViewPager cycleViewPager;
     private List<Task> datas;
     private List<ImageView> views = new ArrayList<ImageView>();
-    private List<String> adImgs = new ArrayList<String>();
+    private List<AD> adImgs = new ArrayList<AD>();
     private Handler handler;// cyclerviewpager的handler
     private Runnable runnable;// cyclerviewpager的runnable
     private UIHandler uiHandler;
@@ -94,6 +107,8 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     }
 
     private void initRecyclerView() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));// 实现分割线
         startProgress("加载中");
 
         Requester requester = new Requester();
@@ -101,57 +116,72 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         requester.uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, null);
         requester.body.put("taskSchedule", "all");
 //        Logger.e(new Gson().toJson(requester));
-//        Request request=httpEngine.createRequest("urlurlurl",requester.toString());
-//        Call call=httpEngine.createRequestCall(request);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Request request, IOException e) {
-//
-//            }
-//
-//            @Override
-//            public void onResponse(Response response) throws IOException {
-//
-//            }
-//        });
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));// 实现分割线
-
-        String json = "{\"body\":{\"ad\":{\"imageUrl1\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\",\"imageUrl2\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\",\"imageUrl3\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\",\"imageUrl4\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"},\"data\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]},\"msg\":\"success\",\"st\":0}";
-        Logger.e(json);
-        Gson gson = new Gson();
-        TaskBean bean = gson.fromJson(json, TaskBean.class);
-        datas = bean.body.data;
-        adapter2 = new TaskListAdapter(getActivity());
-        adapter2.setDatas(datas);
-        adapter2.setHeader(LayoutInflater.from(getContext()).inflate(R.layout.item_recyclerview_header, null));
-        mRecyclerView.setAdapter(adapter2);
-
-        AD ad = bean.body.ad;
-        adImgs.add(ad.imageUrl1);
-        adImgs.add(ad.imageUrl2);
-        adImgs.add(ad.imageUrl3);
-        adImgs.add(ad.iamgeUrl4);
-        cycleViewPager = (CycleViewPager) getFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);
-        handler = cycleViewPager.getHandler();
-        runnable = cycleViewPager.getRunnable();
-        for (int i = 0; i < adImgs.size(); i++) {
-            views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i)));
-        }
-        cycleViewPager.setData(views, adImgs, new CycleViewPager.ImageCycleViewListener() {
+        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Logger.e(request.body().toString());
+            }
 
             @Override
-            public void onImageClick(String info, int position, View imageView) {
-                ImageLoader.getInstance().displayImage(info, (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
-                Utilities.showToast("您点击了图片" + position, getActivity());
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    stopProgress();
+                    final String json = response.body().string();
+                    Logger.e("后台返回的数据" + json);
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Gson gson = new Gson();
+                            TaskBean bean = gson.fromJson(json, TaskBean.class);
+                            int st = bean.st;
+                            if (st == -2) {
+                                Utilities.showToast(bean.msg, getActivity());
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            } else if (st == -1) {
+                                Utilities.showToast(bean.msg, getActivity());
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            } else if (st == 0) {
+                                datas = bean.body.data;
+                                adImgs = bean.body.ad;
+                                adapter2 = new TaskListAdapter(getActivity());
+                                adapter2.setDatas(datas);
+                                adapter2.setHeader(LayoutInflater.from(getContext()).inflate(R.layout.item_recyclerview_header, null));
+                                cycleViewPager = (CycleViewPager) getFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);
+                                for (int i = 0; i < adImgs.size(); i++) {
+                                    views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i).imageUrl));
+                                }
+                                cycleViewPager.setData(views, adImgs, new CycleViewPager.ImageCycleViewListener() {
+
+                                    @Override
+                                    public void onImageClick(String info, int position, View imageView) {
+                                        ImageLoader.getInstance().displayImage(info, (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
+                                        Utilities.showToast("您点击了图片" + position, getActivity());
+                                    }
+                                });
+                                cycleViewPager.setTime(2000); // 设置轮播时间，默认5000ms
+                                cycleViewPager.setIndicatorCenter();// 设置圆点指示图标组居中显示，默认靠右
+                                mRecyclerView.setAdapter(adapter2);
+                                adapter2.setOnItemClickListener(TaskListFragment.this);
+                                handler = cycleViewPager.getHandler();
+                                runnable = cycleViewPager.getRunnable();
+                            } else {
+                                //其他异常
+                            }
+                        }
+                    });
+
+
+                }
             }
         });
-        cycleViewPager.setTime(2000); // 设置轮播时间，默认5000ms
-        cycleViewPager.setIndicatorCenter();// 设置圆点指示图标组居中显示，默认靠右
-
-
-        adapter2.setOnItemClickListener(this);
+//        String json = "{\"body\":{\"ad\":{\"imageUrl1\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\",\"imageUrl2\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\",\"imageUrl3\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\",\"imageUrl4\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"},\"data\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]},\"msg\":\"success\",\"st\":0}";
 
     }
 
@@ -176,11 +206,41 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         // TODO Auto-generated method stub
         if (view.getTag().equals("待接单")) {
             Utilities.showToast("您接了条目" + position + "的工单", getActivity());
+
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("workorder");
+            if (pre != null) {
+                ft.remove(pre);
+            }
+            ft.addToBackStack(null);
+            WorkorderReceiveDialog workorderDialog = WorkorderReceiveDialog.newInstance(WorkorderReceiveDialog.MAINACTIVITY);
+            workorderDialog.show(ft, "workorder");
         } else if (view.getTag().equals("待预约")) {
             Utilities.showToast("你确定预约" + position + "的工单", getActivity());
         } else if (view.getTag().equals("待上门")) {
             Utilities.showToast("请输入你预约的上门时间" + position + "的工单", getActivity());
         }
+    }
+
+    /**
+     * 接单对话框确认
+     */
+    public void doNegativeClick() {
+
+    }
+
+    /**
+     * 接单对话框拒绝
+     */
+    public void doPositiveClick() {
+
+    }
+
+    /**
+     * 接单对话框取消
+     */
+    public void doNeutralClick() {
+
     }
 
     @Override

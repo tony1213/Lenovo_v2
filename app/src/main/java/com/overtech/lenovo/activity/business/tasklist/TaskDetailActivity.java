@@ -27,7 +27,7 @@ public class TaskDetailActivity extends BaseActivity {
     private TaskDetailAdapter adapter;
     private List<Fragment> listFragment;
     private List<String> listTitle;
-    private TaskInformationFragment taskInfoFrag;// 本单信息
+    public TaskInformationFragment taskInfoFrag;// 本单信息
     private DetailInformationFragment detailInfoFrag;// 详细信息
     private StoreInformationFragment storeInfoFrag;// 门店信息
     private PropertyFragment propertyFrag;// 资产

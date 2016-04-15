@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
@@ -22,7 +21,6 @@ import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.EditTextWithDelete;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
@@ -31,6 +29,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -102,6 +101,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         requester.uid = name;
         requester.pwd = pwd;
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+
+        Set<String> names=request.headers().names();
+        Iterator<String> it=names.iterator();
+        while (it.hasNext()){
+            String n=it.next();
+            String value=request.headers().get(n);
+            Logger.e("请求体"+n+"==="+value);
+        }
+
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -124,7 +132,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 int st = jsonObject.getInt("st");
                                 if (st == 0) {
                                     JSONObject body = jsonObject.getJSONObject("body");
-                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("userid")+"");
+                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("userid") + "");
                                     Intent intent = new Intent();
                                     intent.setClass(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
@@ -152,7 +160,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         startProgress("加载中");
         Requester requester = new Requester();
         requester.cmd = 10000;
-        requester.uid = (String)SharePreferencesUtils.get(this, SharedPreferencesKeys.UID,"-1" );
+        requester.uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "-1");
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -164,10 +172,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onResponse(Response response) throws IOException {
-                String json=response.body().string();
-                Logger.e("10000的接口返回值"+json);
+                String json = response.body().string();
+                Logger.e("10000的接口返回值" + json);
                 stopProgress();
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                 }
             }
@@ -177,7 +185,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void doLogout() {
         startProgress("正在退出");
         Requester requester = new Requester();
-        requester.uid = (String)SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "-1");
+        requester.uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "-1");
         requester.cmd = 2;
 
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
@@ -192,7 +200,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onResponse(final Response response) throws IOException {
                 final String json = response.body().string();
-                Logger.e("登录"+ json);
+                Logger.e("登录" + json);
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {

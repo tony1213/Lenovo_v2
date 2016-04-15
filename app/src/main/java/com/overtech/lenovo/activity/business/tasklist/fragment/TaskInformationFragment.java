@@ -13,6 +13,7 @@ import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskInfoFragAdapter;
 import com.overtech.lenovo.config.Debug;
 import com.overtech.lenovo.config.SystemConfig;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.tasklist.TaskProcess;
 import com.overtech.lenovo.http.webservice.UIHandler;
@@ -51,7 +52,7 @@ public class TaskInformationFragment extends BaseFragment {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        uiHandler = new UIHandler(getActivity());
+
 
         mTaskProcess = (ListView) mRootView.findViewById(R.id.lv_task_process);
         tvRepairPerson = (TextView) mRootView.findViewById(R.id.tv_repair_person);
@@ -78,12 +79,19 @@ public class TaskInformationFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Logger.e("TaskINfor"+"===="+"onResume");
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         // TODO Auto-generated method stub
         super.setUserVisibleHint(isVisibleToUser);
-        Debug.log("TaskInformationFragment==", isVisibleToUser + "");
+        Debug.log("taskinfofragment==setUserVisibleHint==", isVisibleToUser + "");
         if (isVisibleToUser) {
             if (isFirstLoading) {
+                uiHandler = new UIHandler(getActivity());
                 startProgress("加载中...");
                 Requester requester = new Requester();
                 requester.uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "-1");
@@ -128,6 +136,27 @@ public class TaskInformationFragment extends BaseFragment {
         } else {
             // 取消网络加载
         }
+    }
+
+    /**
+     * 确认接单
+     */
+    public void doNegativeClick(){
+        Utilities.showToast("你接单了",getActivity());
+    }
+
+    /**
+     * 拒绝接单
+     */
+    public void doPositiveClick(){
+        Utilities.showToast("你拒绝了",getActivity());
+    }
+
+    /**
+     * 取消
+     */
+    public void doNeturalClick(){
+        Utilities.showToast("你取消了",getActivity());
     }
 
 }

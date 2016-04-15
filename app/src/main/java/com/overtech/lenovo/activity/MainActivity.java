@@ -22,6 +22,10 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     private FragmentManager mFragmentManager;
     private Fragment mCurrentFragment;
+    public TaskListFragment taskListFragment;
+    public KnowledgeFragment knowledgeFragment;
+    public InformationFragment informationFragment;
+    public PersonalFragment personalFragment;
     private TabView mTabView;
     private int mPreviousTabIndex = 0;//上一次的状态
     private int mCurrentTabIndex = 0;//当前状态
@@ -76,6 +80,15 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     private void replaceFragment(Class<? extends Fragment> newFragment) {
         mCurrentFragment = FragmentUtils.switchFragment(mFragmentManager, R.id.layout_content, mCurrentFragment, newFragment, null, false);
+        if(newFragment.getSimpleName().equals(TaskListFragment.class.getSimpleName())){
+            taskListFragment=(TaskListFragment) mCurrentFragment;
+        }else if(newFragment.getSimpleName().equals(KnowledgeFragment.class.getSimpleName())){
+            knowledgeFragment= (KnowledgeFragment) mCurrentFragment;
+        }else if(newFragment.getSimpleName().equals(InformationFragment.class.getSimpleName())){
+            informationFragment= (InformationFragment) mCurrentFragment;
+        }else{
+            personalFragment= (PersonalFragment) mCurrentFragment;
+        }
     }
 
     @Override

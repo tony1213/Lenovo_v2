@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.config.Debug;
+import com.overtech.lenovo.entity.tasklist.taskbean.AD;
 
 /**
  * 实现可循环，可轮播的viewpager
@@ -45,7 +46,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 	private final int SCROLLING = 0x0001;
 	private int currentPosition = 0;
 	private ImageCycleViewListener mImageCycleViewListener;
-	private List<String> infos;
+	private List<AD> infos;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -68,84 +69,84 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Debug.log("==onActivityCreated====", "onActivityCreated");
+		Debug.log("==CycleViewPager====", "onActivityCreated");
 	};
 
 	@Override
 	public void onAttach(Context context) {
 		// TODO Auto-generated method stub
 		super.onAttach(context);
-		Debug.log("==onAttach====", "onAttach");
+		Debug.log("==CycleViewPager====", "onAttach");
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		Debug.log("==onCreate====", "onCreate");
+		Debug.log("==CycleViewPager====", "onCreate");
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Debug.log("==onDestroy====", "onDestroy");
+		Debug.log("==CycleViewPager====", "onDestroy");
 	}
 
 	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
-		Debug.log("==onDestroyView====", "onDestroyView");
+		Debug.log("==CycleViewPager====", "onDestroyView");
 	}
 
 	@Override
 	public void onDetach() {
 		// TODO Auto-generated method stub
 		super.onDetach();
-		Debug.log("==onDetach====", "onDetach");
+		Debug.log("==CycleViewPager====", "onDetach");
 	}
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		Debug.log("==onHiddenChanged====", "onHiddenChanged");
+		Debug.log("==CycleViewPager====", "onHiddenChanged");
 	}
 
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		Debug.log("==onPause====", "onPause");
+		Debug.log("==CycleViewPager====", "onPause");
 	}
 
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Debug.log("==onResume====", "onResume");
+		Debug.log("==CycleViewPager====", "onResume");
 	}
 
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Debug.log("==onStart====", "onStart");
+		Debug.log("==CycleViewPager====", "onStart");
 	}
 
 	@Override
 	public void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		Debug.log("==onStop====", "onStop");
+		Debug.log("==CycleViewPager====", "onStop");
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
-		Debug.log("==onViewCreated====", "onViewCreated");
+		Debug.log("==CycleViewPager====", "onViewCreated");
 	}
 
 	@Override
@@ -164,7 +165,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 		return view;
 	}
 
-	public void setData(List<ImageView> views, List<String> list,
+	public void setData(List<ImageView> views, List<AD> list,
 			ImageCycleViewListener listener) {
 		setData(views, list, listener, 0);
 	}
@@ -177,7 +178,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 	 * @param showPosition
 	 *            默认显示位置
 	 */
-	public void setData(List<ImageView> views, List<String> list,
+	public void setData(List<ImageView> views, List<AD> list,
 			ImageCycleViewListener listener, int showPosition) {
 		mImageCycleViewListener = listener;
 		infos = list;
@@ -337,7 +338,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 					@Override
 					public void onClick(View v) {
 						mImageCycleViewListener.onImageClick(
-								infos.get(currentPosition), currentPosition, v);
+								infos.get(currentPosition).imageUrl, currentPosition, v);
 					}
 				});
 			}
