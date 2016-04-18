@@ -17,7 +17,6 @@ import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.tasklist.TaskProcess;
 import com.overtech.lenovo.http.webservice.UIHandler;
-import com.overtech.lenovo.picasso.Callback;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.Utilities;
@@ -81,7 +80,7 @@ public class TaskInformationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Logger.e("TaskINfor"+"===="+"onResume");
+        Logger.e("TaskINfor" + "====" + "onResume");
     }
 
     @Override
@@ -141,22 +140,43 @@ public class TaskInformationFragment extends BaseFragment {
     /**
      * 确认接单
      */
-    public void doNegativeClick(){
-        Utilities.showToast("你接单了",getActivity());
+    public void doReceiveNegativeClick() {
+        Utilities.showToast("你接单了", getActivity());
     }
 
     /**
      * 拒绝接单
      */
-    public void doPositiveClick(){
-        Utilities.showToast("你拒绝了",getActivity());
+    public void doReceivePositiveClick() {
+        Utilities.showToast("你取消了", getActivity());
     }
 
     /**
-     * 取消
+     * 预约对话框确认
      */
-    public void doNeturalClick(){
-        Utilities.showToast("你取消了",getActivity());
+    public void doAppointNegativeClick() {
+        Utilities.showToast("你预约了", getActivity());
+    }
+
+    /**
+     * 预约对话框取消
+     */
+    public void doAppointPositiveClick() {
+        Utilities.showToast("预约取消了", getActivity());
+    }
+
+    /**
+     * 到场对话框确认
+     */
+    public void doHomeNegativeClick() {
+        Utilities.showToast("您到场了", getActivity());
+    }
+
+    /**
+     * 到场对话框取消
+     */
+    public void doHomePositiveClick() {
+        Utilities.showToast("您还没有到场", getActivity());
     }
 
 }

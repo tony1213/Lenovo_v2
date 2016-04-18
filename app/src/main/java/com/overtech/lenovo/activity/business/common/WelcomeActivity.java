@@ -3,11 +3,11 @@ package com.overtech.lenovo.activity.business.common;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
+import android.text.TextUtils;
 
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
-import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 
@@ -33,9 +33,16 @@ public class WelcomeActivity extends BaseActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    String uid = (String) SharePreferencesUtils.get(WelcomeActivity.this, SharedPreferencesKeys.UID, null);
+                    if (TextUtils.isEmpty(uid)) {
+                        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
         }, 3000);

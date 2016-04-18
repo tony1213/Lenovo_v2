@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,14 +38,14 @@ import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
 import com.overtech.lenovo.widget.cycleviewpager.ViewFactory;
+import com.overtech.lenovo.widget.dialog.WorkorderAppointDialog;
+import com.overtech.lenovo.widget.dialog.WorkorderHomeDialog;
+import com.overtech.lenovo.widget.dialog.WorkorderReceiveDialog;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
-import com.overtech.lenovo.widget.progressdialog.WorkorderReceiveDialog;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,14 +120,21 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                Logger.e(request.body().toString());
+//                Logger.e(request.body().toString());
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopProgress();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                 if (response.isSuccessful()) {
                     stopProgress();
-                    final String json = response.body().string();
+//                    final String json = response.body().string();
+                    final String json = "{\"body\":{\"ad\":[{\"imageUrl\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\"},{\"imageUrl\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\"},{\"imageUrl\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\"},{\"imageUrl\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"}],\"data\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]},\"msg\":\"success\",\"st\":0}";
                     Logger.e("后台返回的数据" + json);
                     uiHandler.post(new Runnable() {
                         @Override
@@ -181,7 +187,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 }
             }
         });
-//        String json = "{\"body\":{\"ad\":{\"imageUrl1\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\",\"imageUrl2\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\",\"imageUrl3\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\",\"imageUrl4\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"},\"data\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"repair_person_contact_information\":\"18737134310\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]},\"msg\":\"success\",\"st\":0}";
 
     }
 
@@ -205,42 +210,79 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     public void onButtonItemClick(View view, int position) {
         // TODO Auto-generated method stub
         if (view.getTag().equals("待接单")) {
-            Utilities.showToast("您接了条目" + position + "的工单", getActivity());
-
+//            Utilities.showToast("您接了条目" + position + "的工单", getActivity());
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("workorder");
+            Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("workorder_receive");
             if (pre != null) {
                 ft.remove(pre);
             }
             ft.addToBackStack(null);
             WorkorderReceiveDialog workorderDialog = WorkorderReceiveDialog.newInstance(WorkorderReceiveDialog.MAINACTIVITY);
-            workorderDialog.show(ft, "workorder");
+            workorderDialog.show(ft, "workorder_receive");
         } else if (view.getTag().equals("待预约")) {
-            Utilities.showToast("你确定预约" + position + "的工单", getActivity());
+//            Utilities.showToast("你确定预约" + position + "的工单", getActivity());
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("workorder_appoint");
+            if (pre != null) {
+                ft.remove(pre);
+            }
+            ft.addToBackStack(null);
+            WorkorderAppointDialog workorderAppointDialog = WorkorderAppointDialog.newInstance(WorkorderAppointDialog.MAIN_ACTIVITY);
+            workorderAppointDialog.show(ft, "workorder_appoint");
+
         } else if (view.getTag().equals("待上门")) {
-            Utilities.showToast("请输入你预约的上门时间" + position + "的工单", getActivity());
+//            Utilities.showToast("请输入你预约的上门时间" + position + "的工单", getActivity());
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("workorder_home");
+            if (pre != null) {
+                ft.remove(pre);
+            }
+            ft.addToBackStack(null);
+            WorkorderHomeDialog workorderHomeDialog = WorkorderHomeDialog.newInstance(WorkorderHomeDialog.MAIN_ACTIVITY);
+            workorderHomeDialog.show(ft, "workorder_home");
         }
     }
 
     /**
      * 接单对话框确认
      */
-    public void doNegativeClick() {
-
-    }
-
-    /**
-     * 接单对话框拒绝
-     */
-    public void doPositiveClick() {
-
+    public void doReceiveNegativeClick() {
+        Utilities.showToast("您接单了", getActivity());
     }
 
     /**
      * 接单对话框取消
      */
-    public void doNeutralClick() {
+    public void doReceivePositiveClick() {
+        Utilities.showToast("您取消了", getActivity());
+    }
 
+    /**
+     * 预约对话框确认
+     */
+    public void doAppointNegativeClick() {
+        Utilities.showToast("您预约了", getActivity());
+    }
+
+    /**
+     * 预约对话框取消
+     */
+    public void doAppointPositiveClick() {
+        Utilities.showToast("您取消预约", getActivity());
+    }
+
+    /**
+     * 到场对话框确认
+     */
+    public void doHomeNegativeClick() {
+        Utilities.showToast("已上门", getActivity());
+    }
+
+    /**
+     * 到场对话框取消
+     */
+    public void doHomePositiveClick() {
+        Utilities.showToast("没有上门", getActivity());
     }
 
     @Override

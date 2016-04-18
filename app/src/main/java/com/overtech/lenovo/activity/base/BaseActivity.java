@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.overtech.lenovo.http.HttpEngine;
+import com.overtech.lenovo.widget.dialog.CustomProgressDialog;
 import com.overtech.lenovo.widget.dialogeffects.NiftyDialogBuilder;
-import com.overtech.lenovo.widget.progressdialog.CustomProgressDialog;
 
 
 public abstract class BaseActivity extends AppCompatActivity {

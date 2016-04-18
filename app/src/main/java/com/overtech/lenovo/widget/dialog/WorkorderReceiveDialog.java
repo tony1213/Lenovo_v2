@@ -1,4 +1,4 @@
-package com.overtech.lenovo.widget.progressdialog;
+package com.overtech.lenovo.widget.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,7 +10,7 @@ import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 
 /**
- * Created by Overtech on 16/4/15.
+ * Created by Overtech Will on 16/4/15.
  */
 public class WorkorderReceiveDialog extends DialogFragment {
     /**
@@ -40,32 +40,23 @@ public class WorkorderReceiveDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(type==WorkorderReceiveDialog.MAINACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doNegativeClick();
+                            ((MainActivity)getActivity()).taskListFragment.doReceiveNegativeClick();
                         }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doNegativeClick();
+                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceiveNegativeClick();
                         }
                     }
                 })
-                .setPositiveButton("拒绝", new DialogInterface.OnClickListener() {
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(type==WorkorderReceiveDialog.MAINACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doPositiveClick();
+                            ((MainActivity)getActivity()).taskListFragment.doReceivePositiveClick();
                         }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doPositiveClick();
-                        }
-                    }
-                })
-                .setNeutralButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(type==WorkorderReceiveDialog.MAINACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doNeutralClick();
-                        }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doNeturalClick();
+                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceivePositiveClick();
                         }
                     }
                 });
+
         return builder.create();
     }
 }
