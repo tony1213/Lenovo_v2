@@ -131,28 +131,28 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
         } else {
             holder.appointment_home_datetime.setText(Utilities.getTimeBetween(System.currentTimeMillis()/1000, task.appointment_home_datetime));
         }
-        if (task.taskType == 0) {
+        if (task.taskType .equals("0") ) {
             holder.btTaskType.setVisibility(View.VISIBLE);
             holder.btTaskType.setTag("待接单");
             holder.btTaskType.setText("接单");
             holder.taskWaitEvaluate.setVisibility(View.GONE);
-        } else if (task.taskType == 1) {
+        } else if (task.taskType .equals("1")) {
             holder.btTaskType.setVisibility(View.VISIBLE);
             holder.btTaskType.setTag("待预约");
             holder.btTaskType.setText("预约");
             holder.taskWaitEvaluate.setVisibility(View.GONE);
 
-        } else if (task.taskType == 2) {
+        } else if (task.taskType .equals("2")) {
             holder.btTaskType.setVisibility(View.VISIBLE);
             holder.btTaskType.setTag("待上门");
             holder.btTaskType.setText("上门");
             holder.taskWaitEvaluate.setVisibility(View.GONE);
-        } else if (task.taskType == 3) {
+        } else if (task.taskType .equals("3") ) {
             holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
             holder.taskWaitEvaluate.setText("等待结单");
             holder.btTaskType.setVisibility(View.GONE);
             holder.btTaskType.setTag("");
-        } else if (task.taskType == 4) {
+        } else if (task.taskType .equals("4")) {
             holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
             holder.taskWaitEvaluate.setText("等待评价");
             holder.btTaskType.setVisibility(View.GONE);

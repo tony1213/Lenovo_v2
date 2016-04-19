@@ -22,9 +22,10 @@ public class WorkorderReceiveDialog extends DialogFragment {
      */
     public static final int DETAILACTIVITY=1;
     private static int type;
-
-     public static WorkorderReceiveDialog newInstance(int t) {
+    private static int position;
+     public static WorkorderReceiveDialog newInstance(int t,int p) {
         type=t;
+         position=p;
         Bundle args = new Bundle();
 
         WorkorderReceiveDialog fragment = new WorkorderReceiveDialog();
@@ -40,9 +41,9 @@ public class WorkorderReceiveDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(type==WorkorderReceiveDialog.MAINACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doReceiveNegativeClick();
+                            ((MainActivity)getActivity()).taskListFragment.doReceiveNegativeClick(position);
                         }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceiveNegativeClick();
+                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceiveNegativeClick(position);
                         }
                     }
                 })
@@ -50,9 +51,9 @@ public class WorkorderReceiveDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(type==WorkorderReceiveDialog.MAINACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doReceivePositiveClick();
+                            ((MainActivity)getActivity()).taskListFragment.doReceivePositiveClick(position);
                         }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceivePositiveClick();
+                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceivePositiveClick(position);
                         }
                     }
                 });

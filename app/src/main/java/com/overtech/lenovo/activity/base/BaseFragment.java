@@ -73,8 +73,7 @@ public abstract class BaseFragment extends Fragment implements
      * 关闭对话框
      */
     public void stopProgress() {
-        Debug.log("stopProgress====showing", newFragment.getDialog().isShowing() + ""
-                + newFragment);
+
         if (newFragment.getDialog() != null) {
             if (newFragment.getDialog().isShowing()) {
                 newFragment.dismiss();

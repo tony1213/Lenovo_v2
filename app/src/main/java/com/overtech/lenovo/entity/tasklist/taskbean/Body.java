@@ -8,4 +8,5 @@ import java.util.List;
 public class Body {
     public List<Task> data;
     public List<AD> ad;
+    public String taskType;
 }

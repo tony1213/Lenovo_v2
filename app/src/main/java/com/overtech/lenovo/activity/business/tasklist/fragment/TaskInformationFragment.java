@@ -140,42 +140,42 @@ public class TaskInformationFragment extends BaseFragment {
     /**
      * 确认接单
      */
-    public void doReceiveNegativeClick() {
-        Utilities.showToast("你接单了", getActivity());
+    public void doReceiveNegativeClick(int position) {
+        Utilities.showToast("你接单了" + position, getActivity());
     }
 
     /**
      * 拒绝接单
      */
-    public void doReceivePositiveClick() {
+    public void doReceivePositiveClick(int position) {
         Utilities.showToast("你取消了", getActivity());
     }
 
     /**
      * 预约对话框确认
      */
-    public void doAppointNegativeClick() {
-        Utilities.showToast("你预约了", getActivity());
+    public void doAppointNegativeClick(int position,String selectTime) {
+        Utilities.showToast("你预约了" + position, getActivity());
     }
 
     /**
      * 预约对话框取消
      */
-    public void doAppointPositiveClick() {
+    public void doAppointPositiveClick(int position) {
         Utilities.showToast("预约取消了", getActivity());
     }
 
     /**
      * 到场对话框确认
      */
-    public void doHomeNegativeClick() {
-        Utilities.showToast("您到场了", getActivity());
+    public void doHomeNegativeClick(int position) {
+        Utilities.showToast("您到场了" + position, getActivity());
     }
 
     /**
      * 到场对话框取消
      */
-    public void doHomePositiveClick() {
+    public void doHomePositiveClick(int position) {
         Utilities.showToast("您还没有到场", getActivity());
     }
 

@@ -34,3 +34,6 @@ build/
 
 #NDK
 obj/
+.idea/.name
+.idea/.name
+.idea/compiler.xml

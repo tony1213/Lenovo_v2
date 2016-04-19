@@ -21,7 +21,7 @@ public class ViewFactory {
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(params);
-        imageView.setScaleType(ScaleType.CENTER_CROP);
+        imageView.setScaleType(ScaleType.FIT_CENTER);
 //		imageView.setAdjustViewBounds(true);
 //		Log.e("imageView对象地址", imageView.toString());
         ImageLoader.getInstance().displayImage(url, imageView,

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 
@@ -33,7 +34,8 @@ public class WelcomeActivity extends BaseActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    String uid = (String) SharePreferencesUtils.get(WelcomeActivity.this, SharedPreferencesKeys.UID, null);
+                    String uid = (String) SharePreferencesUtils.get(WelcomeActivity.this, SharedPreferencesKeys.UID, "");
+//                    Logger.e(uid);
                     if (TextUtils.isEmpty(uid)) {
                         Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                         startActivity(intent);

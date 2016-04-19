@@ -5,6 +5,7 @@
     android:orientation="horizontal">
 
     <DatePicker
+        android:id="@+id/dialog_appoint_datepicker"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -12,6 +13,7 @@
         android:datePickerMode="spinner" />
 
     <TimePicker
+        android:id="@+id/dialog_appoint_timepicker"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

@@ -15,7 +15,7 @@ public class Task {
     public String longitude;//任务单对应门店纬度
     public String remarks;//任务单备注
     public String taskLogo;//任务单所属项目图标
-    public int taskType;//  工单类型
+    public String taskType;//  工单类型
     public String workorder_code;//工单单号
     public String workorder_create_datetime;//任务单发布时间
 }

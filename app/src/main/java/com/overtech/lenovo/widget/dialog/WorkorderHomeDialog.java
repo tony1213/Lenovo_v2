@@ -15,13 +15,16 @@ import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
  * 用于到场的对话框管理
  */
 public class WorkorderHomeDialog extends DialogFragment {
-    public static final int MAIN_ACTIVITY=0;
-    public static final int DETAIL_ACTIVITY=1;
+    public static final int MAIN_ACTIVITY = 0;
+    public static final int DETAIL_ACTIVITY = 1;
     private static int type;
-    public static WorkorderHomeDialog newInstance(int t){
-        type=t;
-        Bundle args=new Bundle();
-        WorkorderHomeDialog fragment=new WorkorderHomeDialog();
+    private static int position;
+
+    public static WorkorderHomeDialog newInstance(int t, int p) {
+        type = t;
+        position = p;
+        Bundle args = new Bundle();
+        WorkorderHomeDialog fragment = new WorkorderHomeDialog();
         fragment.setArguments(args);
         return fragment;
     }
@@ -29,27 +32,27 @@ public class WorkorderHomeDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
                 .setTitle("提示")
                 .setMessage("你已经到场了吗？")
                 .setNegativeButton("已到场", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(type== WorkorderHomeDialog.MAIN_ACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doHomeNegativeClick();
-                        }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doHomeNegativeClick();
+                        if (type == WorkorderHomeDialog.MAIN_ACTIVITY) {
+                            ((MainActivity) getActivity()).taskListFragment.doHomeNegativeClick(position);
+                        } else {
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doHomeNegativeClick(position);
                         }
                     }
                 })
                 .setPositiveButton("尚未到场", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(type==WorkorderHomeDialog.MAIN_ACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doHomePositiveClick();
-                        }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doHomePositiveClick();;
+                        if (type == WorkorderHomeDialog.MAIN_ACTIVITY) {
+                            ((MainActivity) getActivity()).taskListFragment.doHomePositiveClick(position);
+                        } else {
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doHomePositiveClick(position);
                         }
                     }
                 });

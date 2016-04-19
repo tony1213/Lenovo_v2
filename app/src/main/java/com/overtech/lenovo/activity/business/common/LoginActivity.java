@@ -14,6 +14,7 @@ import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.Requester;
+import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -102,14 +103,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         requester.pwd = pwd;
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
 
-        Set<String> names=request.headers().names();
-        Iterator<String> it=names.iterator();
-        while (it.hasNext()){
-            String n=it.next();
-            String value=request.headers().get(n);
-            Logger.e("请求体"+n+"==="+value);
-        }
-
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -122,6 +115,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onResponse(final Response response) throws IOException {
                 final String json = response.body().string();
                 Logger.e(json);
+
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -132,7 +126,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 int st = jsonObject.getInt("st");
                                 if (st == 0) {
                                     JSONObject body = jsonObject.getJSONObject("body");
-                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("userid") + "");
+                                    Logger.e(body.getInt("uid")+"===是什么值");
+                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("uid") + "");
                                     Intent intent = new Intent();
                                     intent.setClass(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);

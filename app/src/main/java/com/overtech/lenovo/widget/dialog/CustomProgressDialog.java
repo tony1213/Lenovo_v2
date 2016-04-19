@@ -45,22 +45,22 @@ public class CustomProgressDialog extends DialogFragment {
 //        Logger.e("onCreateView执行了");
         View customView = inflater.inflate(R.layout.layout_custom_progress_dialog, container, false);
         if (customView == null) {
-            Logger.e("CustomeFragement的对象为空");
+//            Logger.e("CustomeFragement的对象为空");
         } else {
-            Logger.e("CustomeFragment的对象不为空");
+//            Logger.e("CustomeFragment的对象不为空");
         }
         imageView = (ImageView) customView.findViewById(R.id.iv_progress_loading);
         if (imageView == null) {
             Logger.e("ImageView 对象获取失败");
         } else {
-            Logger.e("ImageView 对象获取成功");
+//            Logger.e("ImageView 对象获取成功");
         }
 
         tvMsg = (TextView) customView.findViewById(R.id.tv_msg_loading);
         if (tvMsg == null) {
-            Logger.e("tvMsg获取对象失败 ");
+//            Logger.e("tvMsg获取对象失败 ");
         } else {
-            Logger.e("tvMsg获取对象成功");
+//            Logger.e("tvMsg获取对象成功");
         }
         this.getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override

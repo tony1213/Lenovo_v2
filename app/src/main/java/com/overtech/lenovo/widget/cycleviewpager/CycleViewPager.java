@@ -69,84 +69,84 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Debug.log("==CycleViewPager====", "onActivityCreated");
+//		Debug.log("==CycleViewPager====", "onActivityCreated");
 	};
 
 	@Override
 	public void onAttach(Context context) {
 		// TODO Auto-generated method stub
 		super.onAttach(context);
-		Debug.log("==CycleViewPager====", "onAttach");
+//		Debug.log("==CycleViewPager====", "onAttach");
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		Debug.log("==CycleViewPager====", "onCreate");
+//		Debug.log("==CycleViewPager====", "onCreate");
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Debug.log("==CycleViewPager====", "onDestroy");
+//		Debug.log("==CycleViewPager====", "onDestroy");
 	}
 
 	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
-		Debug.log("==CycleViewPager====", "onDestroyView");
+//		Debug.log("==CycleViewPager====", "onDestroyView");
 	}
 
 	@Override
 	public void onDetach() {
 		// TODO Auto-generated method stub
 		super.onDetach();
-		Debug.log("==CycleViewPager====", "onDetach");
+//		Debug.log("==CycleViewPager====", "onDetach");
 	}
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		Debug.log("==CycleViewPager====", "onHiddenChanged");
+//		Debug.log("==CycleViewPager====", "onHiddenChanged");
 	}
 
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		Debug.log("==CycleViewPager====", "onPause");
+//		Debug.log("==CycleViewPager====", "onPause");
 	}
 
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Debug.log("==CycleViewPager====", "onResume");
+//		Debug.log("==CycleViewPager====", "onResume");
 	}
 
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Debug.log("==CycleViewPager====", "onStart");
+//		Debug.log("==CycleViewPager====", "onStart");
 	}
 
 	@Override
 	public void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		Debug.log("==CycleViewPager====", "onStop");
+//		Debug.log("==CycleViewPager====", "onStop");
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
-		Debug.log("==CycleViewPager====", "onViewCreated");
+//		Debug.log("==CycleViewPager====", "onViewCreated");
 	}
 
 	@Override
