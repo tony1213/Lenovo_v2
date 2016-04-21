@@ -29,6 +29,14 @@ public class WorkorderHomeDialog extends DialogFragment {
         return fragment;
     }
 
+    public static WorkorderHomeDialog newInstance(int t) {
+        type = t;
+        Bundle args = new Bundle();
+        WorkorderHomeDialog fragment = new WorkorderHomeDialog();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -42,7 +50,7 @@ public class WorkorderHomeDialog extends DialogFragment {
                         if (type == WorkorderHomeDialog.MAIN_ACTIVITY) {
                             ((MainActivity) getActivity()).taskListFragment.doHomeNegativeClick(position);
                         } else {
-                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doHomeNegativeClick(position);
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doHomeNegativeClick();
                         }
                     }
                 })
@@ -52,7 +60,7 @@ public class WorkorderHomeDialog extends DialogFragment {
                         if (type == WorkorderHomeDialog.MAIN_ACTIVITY) {
                             ((MainActivity) getActivity()).taskListFragment.doHomePositiveClick(position);
                         } else {
-                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doHomePositiveClick(position);
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doHomePositiveClick();
                         }
                     }
                 });

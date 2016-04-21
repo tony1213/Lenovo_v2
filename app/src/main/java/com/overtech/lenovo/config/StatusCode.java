@@ -11,10 +11,13 @@ public class StatusCode {
     public static final int WORKORDER_RECEIVE_SUCCESS=0x11;
     public static final int WORKORDER_APPOINT_SUCCESS=0x12;
     public static final int WORKORDER_HOME_SUCCESS=0x13;
-    public static final int WORKORDER_ACCOUNT_SUCCESS=0x14;
-    public static final int WORKORDER_EVALUATE_SUCCSS=0x15;
+    public static final int WORKORDER_SOLVE_SUCCESS=0x14;
+    public static final int WORKORDER_ACCOUNT_SUCCESS=0x15;
+    public static final int WORKORDER_EVALUATE_SUCCSS=0x16;
 
-    public static final int WORKORDER_RECEIVE_ACTION_SUCCESS=0x20;
-    public static final int WORKORDER_APPOINT_ACTION_SUCCESS=0x21;
-    public static final int WORKORDER_HOME_ACTION_SUCCESS=0x22;
+    public static final int WORKORDER_SUCCESS=0x20;
+    public static final int WORKORDER_RECEIVE_ACTION_SUCCESS=0x21;
+    public static final int WORKORDER_APPOINT_ACTION_SUCCESS=0x22;
+    public static final int WORKORDER_HOME_ACTION_SUCCESS=0x23;
+    public static final int WORKORDER_SOLVE_ACTION_SUCCESS=0x24;
 }

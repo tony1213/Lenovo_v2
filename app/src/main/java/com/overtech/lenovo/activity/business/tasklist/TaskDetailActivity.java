@@ -1,8 +1,5 @@
 package com.overtech.lenovo.activity.business.tasklist;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,6 +15,10 @@ import com.overtech.lenovo.activity.business.tasklist.fragment.DetailInformation
 import com.overtech.lenovo.activity.business.tasklist.fragment.PropertyFragment;
 import com.overtech.lenovo.activity.business.tasklist.fragment.StoreInformationFragment;
 import com.overtech.lenovo.activity.business.tasklist.fragment.TaskInformationFragment;
+import com.overtech.lenovo.debug.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskDetailActivity extends BaseActivity {
     private TabLayout mTabLayout;
@@ -40,9 +41,9 @@ public class TaskDetailActivity extends BaseActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        Bundle arg = getIntent().getExtras();
-        workorderCode = arg.getString("workorder_code");
 
+        workorderCode = getIntent().getStringExtra("workorder_code");
+        Logger.e("workorderCode" + workorderCode);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (CustomeViewPager) findViewById(R.id.viewPager);
         mTitle = (TextView) findViewById(R.id.tv_task_detail_title);

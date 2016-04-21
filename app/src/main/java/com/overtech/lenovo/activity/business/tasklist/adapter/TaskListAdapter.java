@@ -1,10 +1,7 @@
 package com.overtech.lenovo.activity.business.tasklist.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
@@ -24,6 +21,8 @@ import com.overtech.lenovo.activity.app.CustomApplication;
 import com.overtech.lenovo.entity.tasklist.taskbean.Task;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
+
+import java.util.List;
 
 public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
     private Context ctx;
@@ -129,32 +128,47 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
         if (task.appointment_home_datetime == 0) {
             holder.appointment_home_datetime.setText("");
         } else {
-            holder.appointment_home_datetime.setText(Utilities.getTimeBetween(System.currentTimeMillis()/1000, task.appointment_home_datetime));
+            holder.appointment_home_datetime.setText(Utilities.getTimeBetween(System.currentTimeMillis() / 1000, task.appointment_home_datetime));
         }
-        if (task.taskType .equals("0") ) {
+        if (task.taskType.equals("0")) {
             holder.btTaskType.setVisibility(View.VISIBLE);
             holder.btTaskType.setTag("待接单");
             holder.btTaskType.setText("接单");
             holder.taskWaitEvaluate.setVisibility(View.GONE);
-        } else if (task.taskType .equals("1")) {
+        } else if (task.taskType.equals("1")) {
             holder.btTaskType.setVisibility(View.VISIBLE);
             holder.btTaskType.setTag("待预约");
             holder.btTaskType.setText("预约");
             holder.taskWaitEvaluate.setVisibility(View.GONE);
 
-        } else if (task.taskType .equals("2")) {
+        } else if (task.taskType.equals("2")) {
             holder.btTaskType.setVisibility(View.VISIBLE);
             holder.btTaskType.setTag("待上门");
             holder.btTaskType.setText("上门");
             holder.taskWaitEvaluate.setVisibility(View.GONE);
-        } else if (task.taskType .equals("3") ) {
+        } else if (task.taskType.equals("3")) {
+            holder.btTaskType.setVisibility(View.VISIBLE);
+            holder.btTaskType.setTag("待解决");
+            holder.btTaskType.setText("解决");
+            holder.taskWaitEvaluate.setVisibility(View.GONE);
+        } else if (task.taskType.equals("4")) {
+            holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
+            holder.taskWaitEvaluate.setText("等待评价");
+            holder.btTaskType.setVisibility(View.GONE);
+            holder.btTaskType.setTag("");
+        } else if (task.taskType.equals("5")) {
             holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
             holder.taskWaitEvaluate.setText("等待结单");
             holder.btTaskType.setVisibility(View.GONE);
             holder.btTaskType.setTag("");
-        } else if (task.taskType .equals("4")) {
+        } else if (task.taskType.equals("6")) {
             holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
-            holder.taskWaitEvaluate.setText("等待评价");
+            holder.taskWaitEvaluate.setText("等待关单");
+            holder.btTaskType.setVisibility(View.GONE);
+            holder.btTaskType.setTag("");
+        } else if (task.taskType.equals("7")) {
+            holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
+            holder.taskWaitEvaluate.setText("已完成");
             holder.btTaskType.setVisibility(View.GONE);
             holder.btTaskType.setTag("");
         }

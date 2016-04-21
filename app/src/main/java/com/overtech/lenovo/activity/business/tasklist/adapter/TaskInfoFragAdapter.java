@@ -1,7 +1,5 @@
 package com.overtech.lenovo.activity.business.tasklist.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
@@ -13,20 +11,26 @@ import android.widget.TextView;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.entity.tasklist.TaskProcess;
 
+import java.util.List;
+
 public class TaskInfoFragAdapter extends BaseAdapter {
     private Context ctx;
     private List<TaskProcess> datas;
     private OnButtonClickListener listener;
+
     public TaskInfoFragAdapter(Context ctx, List<TaskProcess> datas) {
         this.ctx = ctx;
         this.datas = datas;
     }
+
     public interface OnButtonClickListener {
         void onClick(View view);
     }
-    public void setOnButtonClickListener(OnButtonClickListener listener){
-        this.listener=listener;
+
+    public void setOnButtonClickListener(OnButtonClickListener listener) {
+        this.listener = listener;
     }
+
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
@@ -59,14 +63,14 @@ public class TaskInfoFragAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
         TaskProcess task = datas.get(position);
-        if (task.taskType == TaskProcess.CREATE) {
+        if (task.taskType.equals(TaskProcess.CREATE)) {
             vh.mTaskState.setText("开单");
             vh.mTaskTime.setText("开单时间：" + task.workorder_create_datetime);
             vh.mOther.setText("单号：" + task.workorder_code);
             vh.mButton.setVisibility(View.GONE);
-        } else if (task.taskType == TaskProcess.RECEIVE) {//当订单状态到接单状态时
+        } else if (task.taskType.equals(TaskProcess.RECEIVE)) {//当订单状态到接单状态时
             vh.mTaskState.setText("接单");
-            if (TextUtils.isEmpty(task.assigned_datetime)) {
+            if (TextUtils.isEmpty(task.confirm_datetime)) {
                 vh.mTaskTime.setText("");
                 vh.mOther.setText("请接单");
                 vh.mButton.setVisibility(View.VISIBLE);
@@ -74,65 +78,89 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                 vh.mButton.setTag("接单");
             } else {
                 vh.mTaskTime.setVisibility(View.VISIBLE);
-                vh.mTaskTime.setText("接单时间" + task.assigned_datetime);
+                vh.mTaskTime.setText("接单时间：" + task.confirm_datetime);
                 vh.mOther.setText("");
+                vh.mButton.setText("");
+                vh.mButton.setTag("");
                 vh.mButton.setVisibility(View.GONE);
             }
-        } else if (task.taskType == TaskProcess.ORDER) {//订单预约时的业务
+        } else if (task.taskType.equals(TaskProcess.APPOINT)) {//订单预约时的业务
             vh.mTaskState.setText("预约");
-            if(TextUtils.isEmpty(task.appointment_datetime)){
+            if (TextUtils.isEmpty(task.appointment_datetime)) {
                 vh.mOther.setText("请和报修人员预约");
                 vh.mTaskTime.setText("");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("预约");
                 vh.mButton.setTag("预约");
-            }else{
-                vh.mTaskTime.setText("预约时间："+task.appointment_datetime);
-                vh.mOther.setText("");
-                vh.mButton.setVisibility(View.VISIBLE);
-                vh.mButton.setText("改约");
-                vh.mButton.setTag("改约");
+            } else {
+                if (TextUtils.isEmpty(task.home_datetime)) {
+                    vh.mTaskTime.setText("预约时间：" + task.appointment_datetime);
+                    vh.mOther.setText("已预约");
+                    vh.mButton.setVisibility(View.VISIBLE);
+                    vh.mButton.setText("改约");
+                    vh.mButton.setTag("改约");
+                } else {
+                    vh.mTaskTime.setText("预约时间：" + task.appointment_datetime);
+                    vh.mOther.setText("已完成");
+                    vh.mButton.setVisibility(View.GONE);
+                    vh.mButton.setTag("");
+                }
             }
-        }else if(task.taskType==TaskProcess.VISIT){//订单
+        } else if (task.taskType.equals(TaskProcess.HOME)) {//到场
             vh.mTaskState.setText("到场");
-            if(TextUtils.isEmpty(task.appointment_home_datetime)){
-                vh.mOther.setText("请提交你的到场时间");
-                vh.mButton.setVisibility(View.VISIBLE);
-                vh.mButton.setText("到场");
-                vh.mButton.setTag("到场");
-            }else{
-                vh.mTaskTime.setText("到场时间："+task.appointment_home_datetime);
-                vh.mOther.setText("");
-                vh.mButton.setVisibility(View.VISIBLE);
-                vh.mButton.setText("更改");
-                vh.mButton.setTag("更改");
+            if (TextUtils.isEmpty(task.appointment_home_datetime)) {
+                vh.mOther.setText("预约时间提交失败，请重新提交");
+                vh.mButton.setVisibility(View.GONE);
+                vh.mButton.setTag("");
+            } else {
+                if (TextUtils.isEmpty(task.home_datetime)) {
+                    vh.mTaskTime.setText("到场时间：" + task.appointment_home_datetime);
+                    vh.mOther.setText("请按时到场");
+                    vh.mButton.setVisibility(View.VISIBLE);
+                    vh.mButton.setText("到场");
+                    vh.mButton.setTag("到场");
+                } else {
+                    vh.mTaskTime.setText("到场时间：" + task.home_datetime);
+                    vh.mOther.setText("已到场");
+                    vh.mButton.setVisibility(View.GONE);
+                    vh.mButton.setTag("");
+                }
             }
-        }else if(task.taskType==TaskProcess.RESOLVE){
-                vh.mTaskState.setText("完成");
-            if(TextUtils.isEmpty(task.solution)){
+        } else if (task.taskType.equals(TaskProcess.SOLUTION)) {
+            vh.mTaskState.setText("完成");
+            if (TextUtils.isEmpty(task.solution)) {
                 vh.mTaskTime.setText("");
                 vh.mOther.setText("请提交解决方案");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("解决方案");
                 vh.mButton.setTag("解决方案");
-            }else{
-                vh.mTaskTime.setText("");
+            } else {
+                vh.mTaskTime.setText(task.feedback_solved_datetime);
                 vh.mOther.setText(task.solution);
-                vh.mButton.setVisibility(View.VISIBLE);
-                vh.mButton.setText("解决方案");
-                vh.mButton.setTag("解决方案");
+                vh.mButton.setVisibility(View.GONE);
+                vh.mButton.setTag("");
             }
-        }else if(task.taskType==TaskProcess.EVALUATE){
+        } else if (task.taskType.equals(TaskProcess.EVALUATE)) {
             vh.mTaskState.setText("评价");
-            vh.mTaskTime.setText("");
-            vh.mOther.setText(task.solution);
-            vh.mButton.setVisibility(View.GONE);
+            if (TextUtils.isEmpty(task.feedback)) {
+                vh.mTaskTime.setText("");
+                vh.mOther.setText("等待评价");
+                vh.mButton.setVisibility(View.GONE);
+                vh.mButton.setTag("");
+            } else {
+                vh.mTaskTime.setText("");
+                vh.mOther.setText(task.feedback);
+                vh.mButton.setVisibility(View.GONE);
+                vh.mButton.setTag("");
+            }
+        } else if (task.taskType.equals(TaskProcess.ACCOUNT)) {
+
         }
 
         vh.mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener!=null){
+                if (listener != null) {
                     listener.onClick(v);
                 }
             }

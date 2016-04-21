@@ -16,16 +16,26 @@ public class WorkorderReceiveDialog extends DialogFragment {
     /**
      * 从mainactivty的tasklistfragment中接单
      */
-    public static final int MAINACTIVITY=0;
+    public static final int MAINACTIVITY = 0;
     /**
      * 从detailactivity的taskinformation中接单
      */
-    public static final int DETAILACTIVITY=1;
+    public static final int DETAILACTIVITY = 1;
     private static int type;
     private static int position;
-     public static WorkorderReceiveDialog newInstance(int t,int p) {
-        type=t;
-         position=p;
+
+    public static WorkorderReceiveDialog newInstance(int t, int p) {
+        type = t;
+        position = p;
+        Bundle args = new Bundle();
+
+        WorkorderReceiveDialog fragment = new WorkorderReceiveDialog();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static WorkorderReceiveDialog newInstance(int t) {
+        type = t;
         Bundle args = new Bundle();
 
         WorkorderReceiveDialog fragment = new WorkorderReceiveDialog();
@@ -35,25 +45,25 @@ public class WorkorderReceiveDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("你确定要接此单？")
                 .setNegativeButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(type==WorkorderReceiveDialog.MAINACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doReceiveNegativeClick(position);
-                        }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceiveNegativeClick(position);
+                        if (type == WorkorderReceiveDialog.MAINACTIVITY) {
+                            ((MainActivity) getActivity()).taskListFragment.doReceiveNegativeClick(position);
+                        } else {
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doReceiveNegativeClick();
                         }
                     }
                 })
                 .setPositiveButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(type==WorkorderReceiveDialog.MAINACTIVITY){
-                            ((MainActivity)getActivity()).taskListFragment.doReceivePositiveClick(position);
-                        }else{
-                            ((TaskDetailActivity)getActivity()).taskInfoFrag.doReceivePositiveClick(position);
+                        if (type == WorkorderReceiveDialog.MAINACTIVITY) {
+                            ((MainActivity) getActivity()).taskListFragment.doReceivePositiveClick(position);
+                        } else {
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doReceivePositiveClick();
                         }
                     }
                 });

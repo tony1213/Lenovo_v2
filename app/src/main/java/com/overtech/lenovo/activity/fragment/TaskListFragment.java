@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -251,20 +250,21 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
             @Override
             public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
                 if (response.isSuccessful()) {
                     String json = response.body().string();
 //                    Logger.e("后台返回的数据" + json);
 //                    final String json = "{\"body\":{\"ad\":[{\"imageUrl\":\"http://a.hiphotos.baidu.com/zhidao/pic/item/21a4462309f79052f093a19e0ef3d7ca7acbd586.jpg\"},{\"imageUrl\":\"http://img1.3lian.com/img13/c3/10/d/34.jpg\"},{\"imageUrl\":\"http://img15.3lian.com/2015/h1/20/d/137.jpg\"},{\"imageUrl\":\"http://img3.3lian.com/2013/c2/64/d/73.jpg\"}],\"data\":[{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"0\",\"workorder_code\":\"10001001\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"0\",\"issue_resume\":\"打印机无法正常使用\",\"issue_type\":\"未知问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"1\",\"workorder_code\":\"10001002\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":1461233040,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"2\",\"workorder_code\":\"10001003\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"3\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"},{\"appointment_home_datetime\":0,\"isUrgent\":\"1\",\"issue_resume\":\"WIFI无法正常使用\",\"issue_type\":\"网络问题\",\"latitude\":\"\",\"longitude\":\"\",\"remarks\":\"携带检测装备\",\"taskLogo\":\"http://img.sj33.cn/uploads/allimg/201402/7-140206204500561.png\",\"taskType\":\"4\",\"workorder_code\":\"10001004\",\"workorder_create_datetime\":\"2016-04-11\"}]},\"msg\":\"success\",\"st\":0}";
-                    Message msg = uiHandler.obtainMessage();
                     msg.what = StatusCode.WORKORDER_ALL_SUCCESS;
                     msg.obj = json;
-                    uiHandler.sendMessage(msg);
                 } else {
-                    Message msg = uiHandler.obtainMessage();
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
                     msg.what = StatusCode.SERVER_EXCEPTION;
-                    msg.obj = response.body().string();
-                    uiHandler.sendMessage(msg);
+                    msg.obj = gson.toJson(bean);
                 }
+                uiHandler.sendMessage(msg);
             }
         });
 
@@ -320,7 +320,18 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             ft.addToBackStack(null);
             WorkorderHomeDialog workorderHomeDialog = WorkorderHomeDialog.newInstance(WorkorderHomeDialog.MAIN_ACTIVITY, position);
             workorderHomeDialog.show(ft, "workorder_home");
+        } else if (view.getTag().equals("待解决")) {
+            Utilities.showToast("请在工单详情页面进行问题反馈", getActivity());
         }
+    }
+
+    @Override
+    public void onLogItemClick(View view, int position) {
+        // TODO Auto-generated method stub
+        Utilities.showToast("您要进入" + position + "的项目", getActivity());
+        Intent intent = new Intent(getActivity(), TaskInformationActivity.class);
+        Bundle bundle = new Bundle();
+        startActivity(intent, bundle);
     }
 
     /**
@@ -392,6 +403,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         requester.uid = uid;
         requester.body.put("taskType", "1");
         requester.body.put("workorder_code", workorderCode);
+        requester.body.put("appointment_home_datetime", selectTime);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -465,7 +477,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 Message msg = uiHandler.obtainMessage();
                 if (response.isSuccessful()) {
                     String json = response.body().string();
-                    msg.what = StatusCode.WORKORDER_APPOINT_ACTION_SUCCESS;
+                    msg.what = StatusCode.WORKORDER_HOME_ACTION_SUCCESS;
                     msg.obj = json;
                     msg.arg1 = position;
                     msg.arg2 = 2;//记录当前请求工单的状态
@@ -489,20 +501,11 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     }
 
     @Override
-    public void onLogItemClick(View view, int position) {
-        // TODO Auto-generated method stub
-        Utilities.showToast("您要进入" + position + "的项目", getActivity());
-        Intent intent = new Intent(getActivity(), TaskInformationActivity.class);
-        Bundle bundle = new Bundle();
-        startActivity(intent, bundle);
-    }
-
-    @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
         // 在这里加载最新数据
         startProgress("加载中");
         Requester requester = new Requester();
-        requester.cmd = 10002;
+        requester.cmd = 10001;
         requester.uid = uid;
         requester.body.put("taskType", curTaskType);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
@@ -532,8 +535,10 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                         msg.what = StatusCode.WORKORDER_APPOINT_SUCCESS;
                     } else if (curTaskType.equals("2")) {
                         msg.what = StatusCode.WORKORDER_HOME_SUCCESS;
-                    } else {
-
+                    } else if (curTaskType.equals("4")) {
+                        msg.what = StatusCode.WORKORDER_EVALUATE_SUCCSS;
+                    } else if (curTaskType.equals("5")) {
+                        msg.what = StatusCode.WORKORDER_ACCOUNT_SUCCESS;
                     }
                     msg.obj = json;
                 } else {
@@ -575,6 +580,8 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 curTaskType = "-1";
                 popupWindow.dismiss();
                 mTitleFilter.setText(mTaskAll.getText());
+
+                startProgress("加载中");
                 requester.body.put("taskSchedule", "-1");
                 Request requestAll = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callAll = httpEngine.createRequestCall(requestAll);
@@ -606,6 +613,8 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 popupWindow.dismiss();
                 curTaskType = "0";
                 mTitleFilter.setText(mTaskReceive.getText());
+
+                startProgress("加载中");
                 requester.body.put("taskSchedule", "0");
                 Request requestReceive = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callReceive = httpEngine.createRequestCall(requestReceive);
@@ -637,6 +646,8 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 popupWindow.dismiss();
                 curTaskType = "1";
                 mTitleFilter.setText(mTaskOrder.getText());
+
+                startProgress("加载中");
                 requester.body.put("taskSchedule", "1");
                 Request requestAppoint = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callAppoint = httpEngine.createRequestCall(requestAppoint);
@@ -668,6 +679,8 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 popupWindow.dismiss();
                 curTaskType = "2";
                 mTitleFilter.setText(mTaskVisit.getText());
+
+                startProgress("加载中");
                 requester.body.put("taskSchedule", "2");
                 Request requestHome = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callHome = httpEngine.createRequestCall(requestHome);
@@ -697,9 +710,11 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 break;
             case R.id.tv_task_account:
                 popupWindow.dismiss();
-                curTaskType = "";
+                curTaskType = "5";
                 mTitleFilter.setText(mTaskAccount.getText());
-                requester.body.put("taskSchedule", "");//预留一下
+
+                startProgress("加载中");
+                requester.body.put("taskSchedule", "5");//待结单
                 Request requestAccount = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callAccount = httpEngine.createRequestCall(requestAccount);
                 callAccount.enqueue(new Callback() {
@@ -728,8 +743,11 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 break;
             case R.id.tv_task_evaluation:
                 popupWindow.dismiss();
+                curTaskType = "4";
                 mTitleFilter.setText(mTaskAccount.getText());
-                requester.body.put("taskSchedule", "");//预留
+
+                startProgress("加载中");
+                requester.body.put("taskSchedule", "4");//待评价
                 Request requestEvaluate = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callEvaluate = httpEngine.createRequestCall(requestEvaluate);
                 callEvaluate.enqueue(new Callback() {

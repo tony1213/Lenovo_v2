@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 
 import com.overtech.lenovo.activity.fragment.callback.FragmentCallback;
 import com.overtech.lenovo.activity.fragment.callback.FragmentInterface;
-import com.overtech.lenovo.config.Debug;
-import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.http.HttpEngine;
 import com.overtech.lenovo.widget.dialog.CustomProgressDialog;
 
@@ -30,7 +28,7 @@ public abstract class BaseFragment extends Fragment implements
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreateView(inflater, container, savedInstanceState);
-        Logger.e("BaseFragment" + "==" + "onCreateView");
+//        Logger.e("BaseFragment" + "==" + "onCreateView");
         if (mRootView == null) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
         }
@@ -45,7 +43,7 @@ public abstract class BaseFragment extends Fragment implements
     public void setUserVisibleHint(boolean isVisibleToUser) {
         // TODO Auto-generated method stub
         super.setUserVisibleHint(isVisibleToUser);
-        Logger.e("执行到BaseFragment" + "setUserVisibleHint" + "====" + isVisibleToUser);
+//        Logger.e("执行到BaseFragment" + "setUserVisibleHint" + "====" + isVisibleToUser);
         if (isVisibleToUser) {
             if (httpEngine == null) {//在此处初始化的原因这个方法执行很早，两个地方都初始化双重保险
                 httpEngine = HttpEngine.getInstance();
@@ -86,7 +84,7 @@ public abstract class BaseFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-        Logger.e("执行到" + "onActivityCreate");
+//        Logger.e("执行到" + "onActivityCreate");
         setHasOptionsMenu(true);// 如果让fragment使用菜单此处为true
         afterCreate(savedInstanceState);
     }

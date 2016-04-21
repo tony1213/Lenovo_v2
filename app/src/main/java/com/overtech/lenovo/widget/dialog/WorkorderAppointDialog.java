@@ -13,6 +13,11 @@ import android.widget.TimePicker;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
+import com.overtech.lenovo.debug.Logger;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Overtech on 16/4/18.
@@ -26,9 +31,17 @@ public class WorkorderAppointDialog extends DialogFragment {
     private static int type;
     private static int position;
 
-    public static WorkorderAppointDialog newInstance(int t,int p) {
+    public static WorkorderAppointDialog newInstance(int t, int p) {
         type = t;
-        position=p;
+        position = p;
+        Bundle arg = new Bundle();
+        WorkorderAppointDialog fragment = new WorkorderAppointDialog();
+        fragment.setArguments(arg);
+        return fragment;
+    }
+
+    public static WorkorderAppointDialog newInstance(int t) {
+        type = t;
         Bundle arg = new Bundle();
         WorkorderAppointDialog fragment = new WorkorderAppointDialog();
         fragment.setArguments(arg);
@@ -39,8 +52,8 @@ public class WorkorderAppointDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_workorder_appoint, null);
-        mDatePicker= (DatePicker) v.findViewById(R.id.dialog_appoint_datepicker);
-        mTimePicker= (TimePicker) v.findViewById(R.id.dialog_appoint_timepicker);
+        mDatePicker = (DatePicker) v.findViewById(R.id.dialog_appoint_datepicker);
+        mTimePicker = (TimePicker) v.findViewById(R.id.dialog_appoint_timepicker);
         mTimePicker.setIs24HourView(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
@@ -49,16 +62,22 @@ public class WorkorderAppointDialog extends DialogFragment {
                 .setNegativeButton("保存", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int year=mDatePicker.getYear();
-                        int month=mDatePicker.getMonth()+1;//月份是从0月开始
-                        int day=mDatePicker.getDayOfMonth();
-                        int hour=mTimePicker.getCurrentHour();
-                        int minute=mTimePicker.getCurrentMinute();
+                        int year = mDatePicker.getYear();
+                        int month = mDatePicker.getMonth();//月份是从0月开始
+                        int day = mDatePicker.getDayOfMonth();
+                        int hour = mTimePicker.getCurrentHour();
+                        int minute = mTimePicker.getCurrentMinute();
 
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(year, month, day, hour, minute);
+                        String dateStr = sdf.format(calendar.getTime());
+
+                        Logger.e("======选择的时间" + dateStr);
                         if (type == WorkorderAppointDialog.MAIN_ACTIVITY) {
-                            ((MainActivity) getActivity()).taskListFragment.doAppointNegativeClick(position,year+"-"+month+"-"+day+" "+hour+":"+minute+":"+"00");
+                            ((MainActivity) getActivity()).taskListFragment.doAppointNegativeClick(position, dateStr);
                         } else {
-                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointNegativeClick(position,year+"-"+month+"-"+day+" "+hour+":"+minute+":"+"00");
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointNegativeClick(dateStr);
                         }
                     }
                 })
@@ -68,7 +87,7 @@ public class WorkorderAppointDialog extends DialogFragment {
                         if (type == WorkorderAppointDialog.MAIN_ACTIVITY) {
                             ((MainActivity) getActivity()).taskListFragment.doAppointPositiveClick(position);
                         } else {
-                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointPositiveClick(position);
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointPositiveClick();
                         }
                     }
                 });
