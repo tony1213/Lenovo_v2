@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_property_item"
     android:layout_width="match_parent"
-    android:layout_height="27dp"
-    android:orientation="horizontal" >
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <View
         android:layout_width="1dp"
@@ -12,9 +12,7 @@
 
     <TextView
         android:id="@+id/tv_classify"
-        android:layout_width="43dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        style="@style/workorder_property_textview_body_style"
         android:text="PC" />
 
     <View
@@ -24,9 +22,7 @@
 
     <TextView
         android:id="@+id/tv_brand"
-        android:layout_width="43dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        style="@style/workorder_property_textview_body_style"
         android:text="联想" />
 
     <View
@@ -36,9 +32,8 @@
 
     <TextView
         android:id="@+id/tv_model"
-        android:layout_width="52dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        style="@style/workorder_property_textview_body_style"
+        android:layout_width="50dp"
         android:text="173099" />
 
     <View
@@ -48,9 +43,7 @@
 
     <TextView
         android:id="@+id/tv_account"
-        android:layout_width="43dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        style="@style/workorder_property_textview_body_style"
         android:text="3" />
 
     <View
@@ -60,9 +53,7 @@
 
     <TextView
         android:id="@+id/tv_serial"
-        android:layout_width="49dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        style="@style/workorder_property_textview_body_style"
         android:text="123445" />
 
     <View
@@ -72,9 +63,8 @@
 
     <TextView
         android:id="@+id/tv_final_date"
-        android:layout_width="72dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        style="@style/workorder_property_textview_body_style"
+        android:layout_width="90dp"
         android:text="2016-10-10" />
 
     <View
@@ -83,10 +73,19 @@
         android:background="@color/colo_grey" />
 
     <TextView
-        android:id="@+id/tv_remark"
-        android:layout_width="35dp"
+        android:id="@+id/tv_code"
+        style="@style/workorder_property_textview_body_style"
+        android:layout_width="60dp"
+        android:text="ABCII" />
+
+    <View
+        android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:background="@color/colo_grey" />
+
+    <TextView
+        android:id="@+id/tv_remark"
+        style="@style/workorder_property_textview_body_style"
         android:text="断网" />
 
 </LinearLayout>

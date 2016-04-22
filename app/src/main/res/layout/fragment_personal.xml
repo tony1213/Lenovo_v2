@@ -60,6 +60,7 @@
                         android:text="可提金额:" />
 
                     <TextView
+                        android:id="@+id/tv_finance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -113,6 +114,7 @@
                     android:text="本月:" />
 
                 <TextView
+                    android:id="@+id/tv_month_workorder_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -126,6 +128,7 @@
                     android:text="今年：" />
 
                 <TextView
+                    android:id="@+id/tv_year_workorder_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -210,10 +213,12 @@
                     android:text="满意度：" />
 
                 <RatingBar
+                    android:id="@+id/rb_satisfaction"
                     style="@style/CommonRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:isIndicator="true"
                     android:numStars="5" />
             </LinearLayout>
 

@@ -59,7 +59,9 @@ public class DetailInformationFragment extends BaseFragment {
             DetailInfo bean = gson.fromJson(json, DetailInfo.class);
             int st = bean.st;
             if (st == -1 || st == -2) {
+                stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();

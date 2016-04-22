@@ -143,12 +143,4 @@ public abstract class BaseFragment extends Fragment implements
         return false;
     }
 
-    @Override
-    public void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-        if (newFragment != null) {
-            newFragment.dismiss();
-        }
-    }
 }

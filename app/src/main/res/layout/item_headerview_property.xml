@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="16dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@color/bg_qq_blue"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <View
         android:layout_width="1dp"
@@ -11,11 +11,8 @@
         android:background="@color/colo_grey" />
 
     <TextView
-        android:layout_width="43dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="类型"
-        android:textColor="@color/main_white" />
+        style="@style/workorder_property_textview_header_style"
+        android:text="类型" />
 
     <View
         android:layout_width="1dp"
@@ -23,11 +20,8 @@
         android:background="@color/main_white" />
 
     <TextView
-        android:layout_width="43dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="品牌"
-        android:textColor="@color/main_white" />
+        style="@style/workorder_property_textview_header_style"
+        android:text="品牌" />
 
     <View
         android:layout_width="1dp"
@@ -35,11 +29,9 @@
         android:background="@color/main_white" />
 
     <TextView
-        android:layout_width="52dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="型号"
-        android:textColor="@color/main_white" />
+        style="@style/workorder_property_textview_header_style"
+        android:layout_width="50dp"
+        android:text="型号" />
 
     <View
         android:layout_width="1dp"
@@ -47,11 +39,8 @@
         android:background="@color/main_white" />
 
     <TextView
-        android:layout_width="43dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="数量"
-        android:textColor="@color/main_white" />
+        style="@style/workorder_property_textview_header_style"
+        android:text="数量" />
 
     <View
         android:layout_width="1dp"
@@ -59,11 +48,8 @@
         android:background="@color/main_white" />
 
     <TextView
-        android:layout_width="49dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="序列号"
-        android:textColor="@color/main_white" />
+        style="@style/workorder_property_textview_header_style"
+        android:text="序列号" />
 
     <View
         android:layout_width="1dp"
@@ -71,11 +57,9 @@
         android:background="@color/main_white" />
 
     <TextView
-        android:layout_width="72dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="保修截止日期"
-        android:textColor="@color/main_white" />
+        style="@style/workorder_property_textview_header_style"
+        android:layout_width="90dp"
+        android:text="保修截止日期" />
 
     <View
         android:layout_width="1dp"
@@ -83,10 +67,17 @@
         android:background="@color/main_white" />
 
     <TextView
-        android:layout_width="35dp"
+        style="@style/workorder_property_textview_header_style"
+        android:layout_width="60dp"
+        android:text="资产编号" />
+
+    <View
+        android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="备注"
-        android:textColor="@color/main_white" />
+        android:background="@color/main_white" />
+
+    <TextView
+        style="@style/workorder_property_textview_header_style"
+        android:text="备注" />
 
 </LinearLayout>

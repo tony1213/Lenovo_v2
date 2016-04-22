@@ -1,10 +1,10 @@
 package com.overtech.lenovo.activity;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
-import android.view.View;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
@@ -13,8 +13,11 @@ import com.overtech.lenovo.activity.fragment.KnowledgeFragment;
 import com.overtech.lenovo.activity.fragment.PersonalFragment;
 import com.overtech.lenovo.activity.fragment.TaskListFragment;
 import com.overtech.lenovo.activity.fragment.callback.FragmentCallback;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.FragmentUtils;
-import com.overtech.lenovo.widget.dialogeffects.Effectstype;
+import com.overtech.lenovo.utils.SharePreferencesUtils;
+import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.tabview.TabView;
 import com.overtech.lenovo.widget.tabview.TabView.OnTabChangeListener;
 
@@ -29,7 +32,8 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
     private TabView mTabView;
     private int mPreviousTabIndex = 0;//上一次的状态
     private int mCurrentTabIndex = 0;//当前状态
-
+    private String uid;
+    private long exitTime=0;
     @Override
     protected int getLayoutIds() {
         return R.layout.activity_main;
@@ -38,6 +42,7 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         mFragmentManager = getSupportFragmentManager();
+        uid= (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID,"");
         mCurrentTabIndex = 0;
         mPreviousTabIndex = -1;
         setupViews();
@@ -80,44 +85,31 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     private void replaceFragment(Class<? extends Fragment> newFragment) {
         mCurrentFragment = FragmentUtils.switchFragment(mFragmentManager, R.id.layout_content, mCurrentFragment, newFragment, null, false);
-        if(newFragment.getSimpleName().equals(TaskListFragment.class.getSimpleName())){
-            taskListFragment=(TaskListFragment) mCurrentFragment;
-        }else if(newFragment.getSimpleName().equals(KnowledgeFragment.class.getSimpleName())){
-            knowledgeFragment= (KnowledgeFragment) mCurrentFragment;
-        }else if(newFragment.getSimpleName().equals(InformationFragment.class.getSimpleName())){
-            informationFragment= (InformationFragment) mCurrentFragment;
-        }else{
-            personalFragment= (PersonalFragment) mCurrentFragment;
+        if (newFragment.getSimpleName().equals(TaskListFragment.class.getSimpleName())) {
+            taskListFragment = (TaskListFragment) mCurrentFragment;
+        } else if (newFragment.getSimpleName().equals(KnowledgeFragment.class.getSimpleName())) {
+            knowledgeFragment = (KnowledgeFragment) mCurrentFragment;
+        } else if (newFragment.getSimpleName().equals(InformationFragment.class.getSimpleName())) {
+            informationFragment = (InformationFragment) mCurrentFragment;
+        } else {
+            personalFragment = (PersonalFragment) mCurrentFragment;
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_DOWN) {
-            Effectstype effect = Effectstype.Shake;
-            dialogBuilder.withTitle("温馨提示")
-                    .withTitleColor(R.color.main_primary)
-                    .withDividerColor("#11000000").withMessage("您是否要退出？")
-                    .withMessageColor(R.color.main_primary)
-                    .withDialogColor("#FFFFFFFF")
-                    .isCancelableOnTouchOutside(true).withDuration(700)
-                    .withEffect(effect).withButtonDrawable(R.color.main_white)
-                    .withButton1Text("否").withButton1Color("#DD47BEE9")
-                    .withButton2Text("是").withButton2Color("#DD47BEE9")
-                    .setButton1Click(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialogBuilder.dismiss();
-                        }
-                    }).setButton2Click(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            }).show();
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if(System.currentTimeMillis()-exitTime>2000){
+                Utilities.showToast("再按一次退出程序",this);
+                exitTime=System.currentTimeMillis();
+            }else{
+                finish();
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+    public String getUid(){
+        return uid;
     }
 }

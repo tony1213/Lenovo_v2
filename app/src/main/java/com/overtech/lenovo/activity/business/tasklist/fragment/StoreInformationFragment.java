@@ -51,8 +51,10 @@ public class StoreInformationFragment extends BaseFragment {
             StoreInfo bean = gson.fromJson(json, StoreInfo.class);
             int st = bean.st;
             if (st == -1 || st == -2) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
                 return;
@@ -71,6 +73,7 @@ public class StoreInformationFragment extends BaseFragment {
                     adapter = new StoreInfoAdapter(getActivity(), imageList);
                     mRecyclerView.setAdapter(adapter);
                     isInforFirstLoading = false;
+
                     break;
                 case StatusCode.WORKORDER_STORE_REMARK_SUCCESS:
                     List<StoreInfo.Remark> remarks = bean.body.remarks;
@@ -84,6 +87,7 @@ public class StoreInformationFragment extends BaseFragment {
                     isRemarkFirstLoading = false;
                     break;
             }
+            stopProgress();
         }
     };
 
@@ -113,6 +117,7 @@ public class StoreInformationFragment extends BaseFragment {
             if (isInforFirstLoading) {
                 uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
                 workorderCode = ((TaskDetailActivity) getActivity()).getWorkorderCode();
+                startProgress("加载中...");
                 Requester requester = new Requester();
                 requester.uid = uid;
                 requester.cmd = 10005;

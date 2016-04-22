@@ -68,8 +68,10 @@ public class TaskInformationFragment extends BaseFragment {
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             int st = bean.st;
             if (st == -1 || st == -2) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
                 return;

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
@@ -35,8 +36,6 @@ import com.overtech.lenovo.entity.tasklist.taskbean.AD;
 import com.overtech.lenovo.entity.tasklist.taskbean.Task;
 import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
-import com.overtech.lenovo.utils.SharePreferencesUtils;
-import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
@@ -91,6 +90,13 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             int st = bean.st;
+            if (st == -2 || st == -1) {
+                Utilities.showToast(bean.msg, getActivity());
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+                return;
+            }
             switch (msg.what) {
                 case StatusCode.FAILED:
                     Utilities.showToast(bean.msg, getActivity());
@@ -100,36 +106,27 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                     break;
                 case StatusCode.WORKORDER_ALL_SUCCESS:
 
-                    if (st == -2 || st == -1) {
-                        Utilities.showToast(bean.msg, getActivity());
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    } else if (st == 0) {
-                        datas = bean.body.data;
-                        adImgs = bean.body.ad;
-                        workorderAdapter.setDatas(datas);
-                        views.clear();
-                        for (int i = 0; i < adImgs.size(); i++) {
-                            views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i).imageUrl));
-                        }
-                        cycleViewPager.setData(views, adImgs, new CycleViewPager.ImageCycleViewListener() {
-
-                            @Override
-                            public void onImageClick(String info, int position, View imageView) {
-                                ImageLoader.getInstance().displayImage(info, (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
-                                Utilities.showToast("您点击了图片" + position, getActivity());
-                            }
-                        });
-                        if (mRecyclerView.getAdapter() == null) {
-                            mRecyclerView.setAdapter(workorderAdapter);
-                        } else {
-                            workorderAdapter.notifyDataSetChanged();
-                        }
-                        cycleViewPager.refreshData();
-                    } else {
-                        //其他异常
+                    datas = bean.body.data;
+                    adImgs = bean.body.ad;
+                    workorderAdapter.setDatas(datas);
+                    views.clear();
+                    for (int i = 0; i < adImgs.size(); i++) {
+                        views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i).imageUrl));
                     }
+                    cycleViewPager.setData(views, adImgs, new CycleViewPager.ImageCycleViewListener() {
+
+                        @Override
+                        public void onImageClick(String info, int position, View imageView) {
+                            ImageLoader.getInstance().displayImage(info, (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
+                            Utilities.showToast("您点击了图片" + position, getActivity());
+                        }
+                    });
+                    if (mRecyclerView.getAdapter() == null) {
+                        mRecyclerView.setAdapter(workorderAdapter);
+                    } else {
+                        workorderAdapter.notifyDataSetChanged();
+                    }
+                    cycleViewPager.refreshData();
                     break;
                 case StatusCode.WORKORDER_RECEIVE_SUCCESS:
                 case StatusCode.WORKORDER_APPOINT_SUCCESS:
@@ -174,7 +171,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                         int p = msg.arg1;
                         int t = msg.arg2;
                         if (Integer.parseInt(taskType) == t + 1) {//工单状态更新成功
-                            Utilities.showToast("更新成功", getActivity());
                             datas.get(p).taskType = taskType;
                             workorderAdapter.notifyDataSetChanged();
                         } else {
@@ -201,7 +197,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         mTitleFilter = (TextView) mRootView.findViewById(R.id.tv_task_list_filter);
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
         mNotification = (ImageView) mRootView.findViewById(R.id.iv_task_notification);
-        uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
+        uid = ((MainActivity) getActivity()).getUid();
         initRefreshLayout();//下拉刷新
         initRecyclerView();
         initEvent();

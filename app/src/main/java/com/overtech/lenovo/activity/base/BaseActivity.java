@@ -12,7 +12,6 @@ import com.overtech.lenovo.widget.dialogeffects.NiftyDialogBuilder;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
-    public NiftyDialogBuilder dialogBuilder;
     public CustomProgressDialog newFrament;
     public HttpEngine httpEngine;
 
@@ -23,7 +22,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         httpEngine.initContext(getApplicationContext());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(getLayoutIds());
-        dialogBuilder = NiftyDialogBuilder.getInstance(this);
         afterCreate(savedInstanceState);
 
     }
@@ -50,15 +48,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int getLayoutIds();
 
     protected abstract void afterCreate(Bundle savedInstanceState);
-
-    @Override
-    protected void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-        if (dialogBuilder.isShowing()) {
-            dialogBuilder.dismiss();
-        }
-    }
 
     @Override
     public void onBackPressed() {
