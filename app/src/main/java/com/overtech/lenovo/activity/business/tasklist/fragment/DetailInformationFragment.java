@@ -72,7 +72,7 @@ public class DetailInformationFragment extends BaseFragment {
                 case StatusCode.SERVER_EXCEPTION:
                     Utilities.showToast(bean.msg, getActivity());
                     break;
-                case StatusCode.WORKORDER_SUCCESS:
+                case StatusCode.WORKORDER_DETAIL_INFORMATION_SUCCESS:
                     isFirstLoading=false;
                     DetailInfo.Contract contract = bean.body.contract;
                     DetailInfo.WorkorderMessage workorder_message = bean.body.workorder_message;
@@ -169,7 +169,7 @@ public class DetailInformationFragment extends BaseFragment {
                         Message msg = uiHandler.obtainMessage();
                         if (response.isSuccessful()) {
                             String json = response.body().string();
-                            msg.what = StatusCode.WORKORDER_SUCCESS;
+                            msg.what = StatusCode.WORKORDER_DETAIL_INFORMATION_SUCCESS;
                             msg.obj = json;
 
                         } else {

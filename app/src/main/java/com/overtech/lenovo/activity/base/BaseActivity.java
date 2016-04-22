@@ -20,7 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         httpEngine = HttpEngine.getInstance();
-        httpEngine.initContext(this);
+        httpEngine.initContext(getApplicationContext());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(getLayoutIds());
         dialogBuilder = NiftyDialogBuilder.getInstance(this);

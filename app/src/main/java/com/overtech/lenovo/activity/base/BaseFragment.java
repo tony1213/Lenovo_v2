@@ -34,7 +34,7 @@ public abstract class BaseFragment extends Fragment implements
         }
         if (httpEngine == null) {//在这里进行初始化，是因为setUserVisibleHint()竟然会有不执行的情况，原因不知
             httpEngine = HttpEngine.getInstance();
-            httpEngine.initContext(getActivity());
+            httpEngine.initContext(getActivity().getApplicationContext());
         }
         return mRootView;
     }
@@ -47,7 +47,7 @@ public abstract class BaseFragment extends Fragment implements
         if (isVisibleToUser) {
             if (httpEngine == null) {//在此处初始化的原因这个方法执行很早，两个地方都初始化双重保险
                 httpEngine = HttpEngine.getInstance();
-                httpEngine.initContext(getActivity());
+                httpEngine.initContext(getActivity().getApplicationContext());
             }
         }
     }

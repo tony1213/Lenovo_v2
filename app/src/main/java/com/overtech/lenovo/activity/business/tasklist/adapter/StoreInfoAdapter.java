@@ -12,14 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.entity.tasklist.StoreInfo;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 
 public class StoreInfoAdapter extends Adapter<StoreInfoAdapter.MyViewHolder> {
 
 	private Context ctx;
-	private List<String> datas;
+	private List<StoreInfo.ImageUrl> datas;
 
-	public StoreInfoAdapter(Context ctx, List<String> datas) {
+	public StoreInfoAdapter(Context ctx, List<StoreInfo.ImageUrl> datas) {
 		this.ctx = ctx;
 		this.datas = datas;
 	}
@@ -33,7 +34,7 @@ public class StoreInfoAdapter extends Adapter<StoreInfoAdapter.MyViewHolder> {
 	@Override
 	public void onBindViewHolder(MyViewHolder vh, int position) {
 		// TODO Auto-generated method stub
-		ImageLoader.getInstance().displayImage(datas.get(position), vh.imageView,
+		ImageLoader.getInstance().displayImage(datas.get(position).imageUrl, vh.imageView,
 				R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Config.RGB_565);
 	}
 

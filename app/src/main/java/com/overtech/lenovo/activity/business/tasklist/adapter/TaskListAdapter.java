@@ -31,14 +31,11 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_NORMAL = 1;
     private View headerView;
-    private ImageLoader imageLoader;
     private double latitude;
     private double longitude;
 
     public TaskListAdapter(Context ctx) {
         this.ctx = ctx;
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.initContext(ctx);
         longitude = ((CustomApplication) ctx.getApplicationContext()).longitude;
         latitude = ((CustomApplication) ctx.getApplicationContext()).latitude;
     }
@@ -107,7 +104,7 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
             return;
         final int pos = getRealPosition(holder);
         Task task = datas.get(pos);
-        imageLoader.displayImage(task.taskLogo, holder.taskLogo, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
+        ImageLoader.getInstance().displayImage(task.taskLogo, holder.taskLogo, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
         holder.workorder_code.setText(task.workorder_code);
         holder.workorder_create_datetime.setText(task.workorder_create_datetime);
         holder.issue_type.setText(task.issue_type);
