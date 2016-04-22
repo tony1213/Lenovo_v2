@@ -95,8 +95,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                                 }
                             }, Config.RGB_565);
                     tv_finance.setText(bean.body.finance);
-                    tv_month_workorder_amount.setText(bean.body.month_workorder_amount);
-                    tv_year_workorder_amount.setText(bean.body.year_workorder_amount);
+                    tv_month_workorder_amount.setText(bean.body.month_workorder_amount+"单");
+                    tv_year_workorder_amount.setText(bean.body.year_workorder_amount+"单");
                     rb_satisfaction.setRating(Float.parseFloat(bean.body.satisfaction));
                     break;
             }

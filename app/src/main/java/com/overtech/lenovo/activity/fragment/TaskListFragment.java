@@ -36,6 +36,8 @@ import com.overtech.lenovo.entity.tasklist.taskbean.AD;
 import com.overtech.lenovo.entity.tasklist.taskbean.Task;
 import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.SharePreferencesUtils;
+import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
@@ -87,11 +89,12 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             super.handleMessage(msg);
             String json = (String) msg.obj;
             Logger.e("后台返回的数据====" + json);
-
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             int st = bean.st;
             if (st == -2 || st == -1) {
+                stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
@@ -134,6 +137,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 case StatusCode.WORKORDER_ACCOUNT_SUCCESS:
                 case StatusCode.WORKORDER_EVALUATE_SUCCSS:
                     if (st == -2 || st == -1) {
+                        SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
                         Utilities.showToast(bean.msg, getActivity());
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);

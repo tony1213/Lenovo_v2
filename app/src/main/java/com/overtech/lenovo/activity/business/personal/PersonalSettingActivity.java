@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.EditTextWithDelete;
 
@@ -48,9 +49,21 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         mEditCa= (TextView) findViewById(R.id.tv_edit_ca);
         findViewById(R.id.et_personal_phone);
         findViewById(R.id.et_personal_qq);
+        findViewById(R.id.et_personal_wechat);
+        findViewById(R.id.et_personal_email);
+        findViewById(R.id.et_personal_city);
+        findViewById(R.id.et_personal_address);
+
+        findViewById(R.id.et_personal_edu);
+        findViewById(R.id.et_personal_english);
+        findViewById(R.id.et_personal_work_years);
+        findViewById(R.id.et_personal_identity);
+        findViewById(R.id.et_persoanl_id);
+        findViewById(R.id.et_personal_idcard);
+        
         setSupportActionBar(toolBar);//将toolbar设置成actionbar，清单文件中目前使用的是noactionbar 主题，如果改变后，此处必然会崩掉
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_input_delete);//设置返回小图标
+        actionBar.setHomeAsUpIndicator(0);//设置返回小图标
         actionBar.setDisplayHomeAsUpEnabled(true);
         toolBar.setNavigationOnClickListener(this);
         collapsingLayout.setTitle("基本信息");
@@ -59,7 +72,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.tool_bar:
+            case Toolbar.NO_ID:
                 finish();
                 break;
             case R.id.tv_edit_basic:
