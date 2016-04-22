@@ -20,4 +20,6 @@ public class StatusCode {
     public static final int WORKORDER_APPOINT_ACTION_SUCCESS=0x22;
     public static final int WORKORDER_HOME_ACTION_SUCCESS=0x23;
     public static final int WORKORDER_SOLVE_ACTION_SUCCESS=0x24;
+
+    public static final int WORKORDER_DETAIL_INFORMATION_SUCCESS=0x30;
 }
