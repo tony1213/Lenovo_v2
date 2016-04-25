@@ -77,7 +77,8 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
     @Override
     public int getItemCount() {
         // TODO Auto-generated method stub
-        return headerView == null ? datas.size() : datas.size() + 1;
+        return headerView == null ? (datas == null ? 0 : datas.size()) : (datas == null ? 1 : datas.size() + 1);
+
     }
 
     @Override

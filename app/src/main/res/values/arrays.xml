@@ -8,4 +8,7 @@
         <item>河南</item>
     </string-array>
 
+    <string-array name="id_card_type">
+        <item>二代身份证</item>
+    </string-array>
 </resources>

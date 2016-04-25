@@ -147,7 +147,7 @@ public class ImageCacheUtils {
      * @return
      */
     public static Bitmap toRoundBitmap(Bitmap source){
-    	int STROKE_WIDTH = 4;
+    	int STROKE_WIDTH = 2;
 		int width = source.getWidth();
 		int height = source.getHeight();
 		float roundPx;
@@ -206,13 +206,13 @@ public class ImageCacheUtils {
 			source.recycle();//回收被处理的图片，否则会报异常
 		}
 		// 画白色圆圈
-		paint.reset();
-		paint.setColor(Color.WHITE);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(STROKE_WIDTH);
-		paint.setAntiAlias(true);
-		canvas.drawCircle(width / 2, width / 2,
-				width / 2 - STROKE_WIDTH / 2, paint);
+//		paint.reset();
+//		paint.setColor(Color.WHITE);
+//		paint.setStyle(Paint.Style.STROKE);
+//		paint.setStrokeWidth(STROKE_WIDTH);
+//		paint.setAntiAlias(true);
+//		canvas.drawCircle(width / 2, width / 2,
+//				width / 2 - STROKE_WIDTH / 2, paint);
 		return output;
     }
     /** 

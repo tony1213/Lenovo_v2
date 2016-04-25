@@ -28,5 +28,8 @@ public class StatusCode {
 
     public static final int WORKORDER_PROPERTY_SUCCESS=0x50;
 
-    public static final int PERSONL_SUCCESS=0x60;
+    public static final int PERSONAL_SUCCESS=0x60;
+
+    public static final int PERSONAL_SETTING_SUCCESS=0x70;
+    public static final int PERSONAL_SETTING_UPDATE_SUCCESS=0x71;
 }

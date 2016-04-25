@@ -111,10 +111,15 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
                     datas = bean.body.data;
                     adImgs = bean.body.ad;
+
                     workorderAdapter.setDatas(datas);
                     views.clear();
-                    for (int i = 0; i < adImgs.size(); i++) {
-                        views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i).imageUrl));
+                    if(adImgs==null){
+
+                    }else{
+                        for (int i = 0; i < adImgs.size(); i++) {
+                            views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i).imageUrl));
+                        }
                     }
                     cycleViewPager.setData(views, adImgs, new CycleViewPager.ImageCycleViewListener() {
 

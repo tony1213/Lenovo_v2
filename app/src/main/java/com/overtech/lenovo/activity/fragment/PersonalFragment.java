@@ -1,5 +1,6 @@
 package com.overtech.lenovo.activity.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -32,6 +33,7 @@ import com.overtech.lenovo.picasso.Transformation;
 import com.overtech.lenovo.utils.ImageCacheUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.squareup.okhttp.Call;
@@ -56,13 +58,13 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
-            Logger.e("personal===="+json);
+            Logger.e("personal====" + json);
             Person bean = gson.fromJson(json, Person.class);
             int st = bean.st;
             if (st == -1 || st == -2) {
                 if (st == -2 || st == -1) {
                     stopProgress();
-                    SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
+                    SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
                     Utilities.showToast(bean.msg, getActivity());
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
@@ -77,7 +79,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 case StatusCode.SERVER_EXCEPTION:
                     Utilities.showToast(bean.msg, getActivity());
                     break;
-                case StatusCode.PERSONL_SUCCESS:
+                case StatusCode.PERSONAL_SUCCESS:
                     ImageLoader.getInstance().displayImage(bean.body.avator, mAvator,
                             R.mipmap.icon_avator_default, R.mipmap.ic_launcher,
                             new Transformation() {
@@ -95,9 +97,10 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                                 }
                             }, Config.RGB_565);
                     tv_finance.setText(bean.body.finance);
-                    tv_month_workorder_amount.setText(bean.body.month_workorder_amount+"单");
-                    tv_year_workorder_amount.setText(bean.body.year_workorder_amount+"单");
-                    rb_satisfaction.setRating(Float.parseFloat(bean.body.satisfaction));
+                    tv_month_workorder_amount.setText(bean.body.month_workorder_amount + "单");
+                    tv_year_workorder_amount.setText(bean.body.year_workorder_amount + "单");
+                    if (bean.body.satisfaction != null)
+                        rb_satisfaction.setRating(Float.parseFloat(bean.body.satisfaction));
                     break;
             }
             stopProgress();
@@ -144,7 +147,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 Message msg = uiHandler.obtainMessage();
                 if (response.isSuccessful()) {
                     String json = response.body().string();
-                    msg.what = StatusCode.PERSONL_SUCCESS;
+                    msg.what = StatusCode.PERSONAL_SUCCESS;
                     msg.obj = json;
                 } else {
                     ResponseExceptBean bean = new ResponseExceptBean();
@@ -189,13 +192,26 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.ll_personal_setting:
+
                 Intent intent = new Intent(getActivity(),
                         PersonalSettingActivity.class);
-                startActivity(intent);
-
+                startActivityForResult(intent, 0x1);
+                StackManager.getStackManager().pushActivity(getActivity());
                 break;
 
             default:
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0x1://setting
+                if (requestCode == Activity.RESULT_OK) {
+                    StackManager.getStackManager().popActivity(getActivity());
+                }
                 break;
         }
     }

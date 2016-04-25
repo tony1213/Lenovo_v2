@@ -1,21 +1,60 @@
 package com.overtech.lenovo.activity.business.personal;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Message;
+import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.widget.TextViewCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
+import com.overtech.lenovo.activity.business.common.LoginActivity;
+import com.overtech.lenovo.config.StatusCode;
+import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
+import com.overtech.lenovo.entity.RequestExceptBean;
+import com.overtech.lenovo.entity.Requester;
+import com.overtech.lenovo.entity.ResponseExceptBean;
+import com.overtech.lenovo.entity.person.Person;
+import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.picasso.Transformation;
+import com.overtech.lenovo.utils.ImageCacheUtils;
+import com.overtech.lenovo.utils.SharePreferencesUtils;
+import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
-import com.overtech.lenovo.widget.EditTextWithDelete;
+import com.overtech.lenovo.widget.bitmap.ImageLoader;
+import com.overtech.lenovo.widget.dialog.PersonalBirthdayDialog;
+import com.overtech.lenovo.widget.popwindow.DimPopupWindow;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.File;
+import java.io.IOException;
 
 public class PersonalSettingActivity extends BaseActivity implements OnClickListener {
     private Toolbar toolBar;
@@ -23,18 +62,124 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private TextView mEditBasic;
     private TextView mEditTec;
     private TextView mEditCa;
-    private EditTextWithDelete etPhone;
-    private EditTextWithDelete etQQ;
-    private EditTextWithDelete etWeChat;
-    private EditTextWithDelete etEmail;
-    private EditTextWithDelete etCity;
-    private EditTextWithDelete etAddress;
-    private EditTextWithDelete etEdu;
-    private EditTextWithDelete etEnglish;
-    private EditTextWithDelete eWorkYears;
-    private EditTextWithDelete etIdentity;
-    private EditTextWithDelete etIdStyle;
-    private EditTextWithDelete etIdCard;
+    private ImageView ivAvator;
+    private TextView tvName;
+    private TextView tvGender;
+    private TextView tvBirthday;
+    private AppCompatEditText etPhone;
+    private AppCompatEditText etQQ;
+    private AppCompatEditText etWeChat;
+    private AppCompatEditText etEmail;
+    private AppCompatEditText etCity;
+    private AppCompatEditText etAddress;
+    private AppCompatEditText etEdu;
+    private AppCompatEditText etEnglish;
+    private AppCompatEditText etWorkYears;
+    private AppCompatEditText etIdentity;
+    private AppCompatSpinner spIdStyle;
+    private AppCompatEditText etIdCard;
+
+    private AppCompatButton btUploadPositive;
+    private AppCompatButton btUploadOppositive;
+    private AppCompatButton btSaveUpload;
+    private DimPopupWindow dimPopupWindow;
+    private int curState;
+    /**
+     * 打开本地相册的requestcode.
+     */
+    public final int PHOTO =  0x1;
+    /**
+     * 打开照相机的requestcode.
+     */
+    private final int CAMERA = 0x2;
+    private File outFile;
+    private Uri cameraUri;
+    private String idcardPositivePath;
+    private String idcardOppositePath;
+    private Gson gson = new Gson();
+    private String uid;
+    private UIHandler uiHandler = new UIHandler(this) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String json = (String) msg.obj;
+            Logger.e("个人设置：" + json);
+            Person bean = gson.fromJson(json, Person.class);
+            int st = bean.st;
+            if (st == -1 || st == -2) {
+                stopProgress();
+                Utilities.showToast(bean.msg, PersonalSettingActivity.this);
+                SharePreferencesUtils.put(PersonalSettingActivity.this, SharedPreferencesKeys.UID, "");
+                Intent intent = new Intent();
+                intent.setClass(PersonalSettingActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                StackManager.getStackManager().popAllActivitys();
+                return;
+            }
+            switch (msg.what) {
+                case StatusCode.FAILED:
+                    Utilities.showToast(bean.msg, PersonalSettingActivity.this);
+                    break;
+                case StatusCode.SERVER_EXCEPTION:
+                    Utilities.showToast(bean.msg, PersonalSettingActivity.this);
+                    break;
+                case StatusCode.PERSONAL_SETTING_SUCCESS:
+                    tvName.setText(bean.body.name);
+                    tvBirthday.setText(bean.body.birthday);
+                    if (TextUtils.equals(bean.body.sex, "1")) {
+                        tvGender.setText("男");
+                    } else if (TextUtils.equals(bean.body.sex, "0")) {
+                        tvGender.setText("女");
+                    }
+                    etPhone.setText(bean.body.mobile);
+                    etQQ.setText(bean.body.qq);
+                    etWeChat.setText(bean.body.wechat);
+                    etEmail.setText(bean.body.email);
+                    etCity.setText(bean.body.territory_node_path);
+                    etAddress.setText(bean.body.address);
+                    etEdu.setText(bean.body.degree);
+                    etEnglish.setText(bean.body.english_ability);
+                    etWorkYears.setText(bean.body.working_life);
+                    etIdentity.setText(bean.body.self_orientation);
+                    if (bean.body.type_of_id.equals("二代身份证")) {
+                        spIdStyle.setPrompt("二代身份证");
+                    } else {
+                        spIdStyle.setPrompt("其他");
+                    }
+                    etIdCard.setText(bean.body.idcard);
+                    ImageLoader.getInstance().displayImage(bean.body.avator, ivAvator, R.mipmap.icon_avator_default, R.mipmap.icon_common_default_error, new Transformation() {
+                        @Override
+                        public Bitmap transform(Bitmap source) {
+                            return ImageCacheUtils.toRoundBitmap(source);
+                        }
+
+                        @Override
+                        public String key() {
+                            return null;
+                        }
+                    }, Bitmap.Config.RGB_565);
+                    break;
+                case StatusCode.PERSONAL_SETTING_UPDATE_SUCCESS:
+                    Utilities.showToast(bean.msg, PersonalSettingActivity.this);
+                    etPhone.setEnabled(false);
+                    etQQ.setEnabled(false);
+                    etWeChat.setEnabled(false);
+                    etEmail.setEnabled(false);
+                    etCity.setEnabled(false);
+                    etAddress.setEnabled(false);
+                    etEdu.setEnabled(false);
+                    etEnglish.setEnabled(false);
+                    etWorkYears.setEnabled(false);
+                    etIdentity.setEnabled(false);
+                    spIdStyle.setEnabled(false);
+                    etIdCard.setEnabled(false);
+                    break;
+            }
+            stopProgress();
+        }
+    };
+
     @Override
     protected int getLayoutIds() {
         return R.layout.activity_personalsetting;
@@ -44,45 +189,290 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     protected void afterCreate(Bundle savedInstanceState) {
         toolBar = (Toolbar) findViewById(R.id.tool_bar);
         collapsingLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mEditBasic= (TextView) findViewById(R.id.tv_edit_basic);
-        mEditTec= (TextView) findViewById(R.id.tv_edit_tec);
-        mEditCa= (TextView) findViewById(R.id.tv_edit_ca);
-        findViewById(R.id.et_personal_phone);
-        findViewById(R.id.et_personal_qq);
-        findViewById(R.id.et_personal_wechat);
-        findViewById(R.id.et_personal_email);
-        findViewById(R.id.et_personal_city);
-        findViewById(R.id.et_personal_address);
+        mEditBasic = (TextView) findViewById(R.id.tv_edit_basic);
+        mEditTec = (TextView) findViewById(R.id.tv_edit_tec);
+        mEditCa = (TextView) findViewById(R.id.tv_edit_ca);
 
-        findViewById(R.id.et_personal_edu);
-        findViewById(R.id.et_personal_english);
-        findViewById(R.id.et_personal_work_years);
-        findViewById(R.id.et_personal_identity);
-        findViewById(R.id.et_persoanl_id);
-        findViewById(R.id.et_personal_idcard);
-        
+        ivAvator = (ImageView) findViewById(R.id.iv_avator);
+        tvName = (TextView) findViewById(R.id.tv_name);
+        tvGender = (TextView) findViewById(R.id.tv_gender);
+        tvBirthday = (TextView) findViewById(R.id.tv_birthday);
+        etPhone = (AppCompatEditText) findViewById(R.id.et_personal_phone);
+        etQQ = (AppCompatEditText) findViewById(R.id.et_personal_qq);
+        etWeChat = (AppCompatEditText) findViewById(R.id.et_personal_wechat);
+        etEmail = (AppCompatEditText) findViewById(R.id.et_personal_email);
+        etCity = (AppCompatEditText) findViewById(R.id.et_personal_city);
+        etAddress = (AppCompatEditText) findViewById(R.id.et_personal_address);
+
+        etEdu = (AppCompatEditText) findViewById(R.id.et_personal_edu);
+        etEnglish = (AppCompatEditText) findViewById(R.id.et_personal_english);
+        etWorkYears = (AppCompatEditText) findViewById(R.id.et_personal_work_years);
+        etIdentity = (AppCompatEditText) findViewById(R.id.et_personal_identity);
+        spIdStyle = (AppCompatSpinner) findViewById(R.id.sp_persoanl_id);
+        etIdCard = (AppCompatEditText) findViewById(R.id.et_personal_idcard);
+
+        btUploadPositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_positive);
+        btUploadOppositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_opposite);
+        btSaveUpload = (AppCompatButton) findViewById(R.id.bt_save_upload);
+
+        mEditBasic.setOnClickListener(this);
+        mEditTec.setOnClickListener(this);
+        mEditCa.setOnClickListener(this);
+        tvBirthday.setOnClickListener(this);
+        btUploadPositive.setOnClickListener(this);
+        btUploadOppositive.setOnClickListener(this);
+        btSaveUpload.setOnClickListener(this);
+
         setSupportActionBar(toolBar);//将toolbar设置成actionbar，清单文件中目前使用的是noactionbar 主题，如果改变后，此处必然会崩掉
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(0);//设置返回小图标
         actionBar.setDisplayHomeAsUpEnabled(true);
         toolBar.setNavigationOnClickListener(this);
         collapsingLayout.setTitle("基本信息");
+
+        uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
+        startLoading();
+    }
+
+    private void startLoading() {
+        startProgress("加载中");
+        Requester requester = new Requester();
+        requester.cmd = 10011;
+        requester.uid = uid;
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Message msg = uiHandler.obtainMessage();
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    msg.what = StatusCode.PERSONAL_SETTING_SUCCESS;
+                    msg.obj = response.body().string();
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case Toolbar.NO_ID:
                 finish();
                 break;
             case R.id.tv_edit_basic:
-
+                etPhone.setEnabled(true);
+                etQQ.setEnabled(true);
+                etWeChat.setEnabled(true);
+                etEmail.setEnabled(true);
+                etCity.setEnabled(true);
+                etAddress.setEnabled(true);
                 break;
             case R.id.tv_edit_tec:
-
+                etEdu.setEnabled(true);
+                etEnglish.setEnabled(true);
+                etWorkYears.setEnabled(true);
+                etIdentity.setEnabled(true);
                 break;
             case R.id.tv_edit_ca:
+                spIdStyle.setEnabled(true);
+                etIdCard.setEnabled(true);
+                break;
+            case R.id.tv_birthday:
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment pre = getSupportFragmentManager().findFragmentByTag("personal_birthday");
+                if (pre != null) {
+                    ft.remove(pre);
+                }
+                ft.addToBackStack(null);
+                PersonalBirthdayDialog birthdayDialog = PersonalBirthdayDialog.newInstance();
+                birthdayDialog.show(ft, "personal_birthday");
+                break;
+            case R.id.bt_upload_idcard_positive:
+                curState=0;
+                showPopupWindow();
+                break;
+            case R.id.bt_upload_idcard_opposite:
+                curState=1;
+                showPopupWindow();
+                break;
+            case R.id.bt_select_from_camera:
+                openCamera();
+                dimPopupWindow.dismiss();
+                break;
+            case R.id.bt_select_from_photo:
+                openPhoto();
+                dimPopupWindow.dismiss();
+                break;
+            case R.id.bt_select_none:
+                dimPopupWindow.dismiss();
+                break;
+            case R.id.bt_save_upload:
+                startProgress("正在上传");
+                Requester requester = new Requester();
+                requester.uid = uid;
+                requester.cmd = 10012;
+                requester.body.put("name", tvName.getText().toString().trim());
+                if (tvGender.getText().toString().trim().equals("男")) {
+                    requester.body.put("sex", "1");
+                } else {
+                    requester.body.put("sex", "0");
+                }
+                requester.body.put("birthday", tvBirthday.getText().toString().trim());
+                requester.body.put("mobile", etPhone.getText().toString().trim());
+                requester.body.put("qq", etQQ.getText().toString().trim());
+                requester.body.put("wechat", etWeChat.getText().toString().trim());
+                requester.body.put("email", etEmail.getText().toString().trim());
+                requester.body.put("territory_node_path", etCity.getText().toString().trim());
+                requester.body.put("address", etAddress.getText().toString().trim());
+                requester.body.put("degree", etEdu.getText().toString().trim());
+                requester.body.put("english_ability", etEnglish.getText().toString().trim());
+                requester.body.put("working_life", etWorkYears.getText().toString().trim());
+                requester.body.put("self_orientation", etIdentity.getText().toString().trim());
+                requester.body.put("type_of_id", spIdStyle.getSelectedItemPosition() + "");
+                requester.body.put("type_of_id_name", spIdStyle.getSelectedItem().toString());
+                requester.body.put("idcard", etIdCard.getText().toString().trim());
+                Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+                Call call = httpEngine.createRequestCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        Message msg = uiHandler.obtainMessage();
+                        RequestExceptBean bean = new RequestExceptBean();
+                        bean.st = 0;
+                        bean.msg = "网络异常";
+                        msg.what = StatusCode.FAILED;
+                        msg.obj = gson.toJson(bean);
+                        uiHandler.sendMessage(msg);
+                    }
 
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        Message msg = uiHandler.obtainMessage();
+                        if (response.isSuccessful()) {
+                            msg.what = StatusCode.PERSONAL_SETTING_UPDATE_SUCCESS;
+                            msg.obj = response.body().string();
+                        } else {
+                            ResponseExceptBean bean = new ResponseExceptBean();
+                            bean.st = response.code();
+                            bean.msg = response.message();
+                            msg.what = StatusCode.SERVER_EXCEPTION;
+                            msg.obj = gson.toJson(bean);
+                        }
+                        uiHandler.sendMessage(msg);
+                    }
+                });
+
+                break;
+        }
+    }
+    /**
+     * 获取拍照后的图片的路径
+     */
+    private String getPhotoPath(Uri imageUri){
+        ContentResolver resolver=getContentResolver();
+        String[] proj={MediaStore.Images.Media.DATA};
+        Cursor cursor=resolver.query(imageUri, proj, null, null, null);
+        int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if(cursor.moveToNext()){
+            return cursor.getString(columIndex);
+        }
+        return null;
+    }
+    private void openPhoto() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "image/*");
+        startActivityForResult(intent, PHOTO);
+    }
+
+    private void openCamera() {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        File dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        if(curState==0){
+            outFile=new File(dir,"positiveIdcard"+".jpg");
+        }else if(curState==1){
+            outFile=new File(dir,"oppositeIdcard"+".jpg");
+        }
+
+        cameraUri= Uri.fromFile(outFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
+        startActivityForResult(intent, CAMERA);
+    }
+
+    private void showPopupWindow() {
+        dimPopupWindow=new DimPopupWindow(this);
+        View view=getLayoutInflater().inflate(R.layout.layout_dim_pop_add_idcard,null);
+        Button camera= (Button) view.findViewById(R.id.bt_select_from_camera);
+        Button photo= (Button) view.findViewById(R.id.bt_select_from_photo);
+        Button cancle= (Button) view.findViewById(R.id.bt_select_none);
+
+        camera.setOnClickListener(this);
+        photo.setOnClickListener(this);
+        cancle.setOnClickListener(this);
+        dimPopupWindow.setContentView(view);
+        dimPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
+        dimPopupWindow.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+    }
+
+    public void doNegativeClick(String selectTime) {
+        tvBirthday.setText(selectTime);
+    }
+
+    public void doPositiveClick() {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String sdStatus = Environment.getExternalStorageState();
+        if(!sdStatus.equals(Environment.MEDIA_MOUNTED)){
+            Log.i("内存卡错误", "请检查您的内存卡");
+            return ;
+        }
+        switch (requestCode){
+            case CAMERA:
+                if(resultCode==Activity.RESULT_OK){
+                    if(curState==0){
+                        idcardPositivePath=outFile.getAbsolutePath();
+                        Logger.e("正面路径"+idcardPositivePath);
+                    }else if(curState==1){
+                        idcardOppositePath=outFile.getAbsolutePath();
+                        Logger.e("反面路径"+idcardOppositePath);
+                    }
+                }
+                break;
+            case PHOTO:
+                if(requestCode==Activity.RESULT_OK){
+                    if(curState==0){
+                        idcardPositivePath=getPhotoPath(data.getData());
+                        Logger.e("正面路径"+idcardPositivePath);
+                    }else if(curState==1){
+                        idcardOppositePath=getPhotoPath(data.getData());
+                        Logger.e("反面路径"+idcardPositivePath);
+                    }
+                }
                 break;
         }
     }

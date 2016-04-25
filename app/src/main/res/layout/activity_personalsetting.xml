@@ -3,32 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/blue"
             app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp" >
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/back_drop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/title" />
+                android:src="@mipmap/title"
+                app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/tool_bar"
@@ -41,17 +41,17 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp" >
+                android:paddingTop="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -79,12 +79,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="39dp"
-                android:layout_marginTop="15dp" >
+                android:layout_marginTop="15dp">
 
                 <ImageView
                     android:id="@+id/iv_avator"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:scaleType="centerCrop"
                     android:src="@mipmap/icon_avator_default" />
 
                 <View
@@ -124,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="41dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="70dp"
@@ -137,16 +138,16 @@
                     android:id="@+id/et_personal_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="153123123123" />
+                    android:enabled="false"
+                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="41dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="70dp"
@@ -159,16 +160,16 @@
                     android:id="@+id/et_personal_qq"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="350533684" />
+                    android:enabled="false"
+                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="41dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="70dp"
@@ -181,16 +182,16 @@
                     android:id="@+id/et_personal_wechat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="3247298789" />
+                    android:enabled="false"
+                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="41dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="70dp"
@@ -203,16 +204,16 @@
                     android:id="@+id/et_personal_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="57896934@qq.com" />
+                    android:enabled="false"
+                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="41dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="70dp"
@@ -225,9 +226,9 @@
                     android:id="@+id/et_personal_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="上海" />
+                    android:enabled="false"
+                     />
             </LinearLayout>
 
             <LinearLayout
@@ -235,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="41dp"
                 android:orientation="horizontal"
-                android:paddingBottom="20dp" >
+                android:paddingBottom="20dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -248,9 +249,9 @@
                     android:id="@+id/et_personal_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="上海市徐家汇区广元西路309" />
+                    android:enabled="false"
+                     />
             </LinearLayout>
 
             <View
@@ -262,7 +263,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:paddingTop="10dp" >
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -286,7 +287,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="41dp"
-                android:paddingTop="10dp" >
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -301,14 +302,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
                     android:enabled="false"
-                    android:hint="本科" />
+                    />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="41dp" >
+                android:paddingLeft="41dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -323,14 +324,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
                     android:enabled="false"
-                    android:hint="一般" />
+                    />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="41dp" >
+                android:paddingLeft="41dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -343,9 +344,9 @@
                     android:id="@+id/et_personal_work_years"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="2年" />
+                    android:enabled="false"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -353,7 +354,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="15dp"
-                android:paddingLeft="41dp" >
+                android:paddingLeft="41dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -366,9 +367,9 @@
                     android:id="@+id/et_personal_identity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="硬件工程师/数据库工程师" />
+                    android:enabled="false"
+                    android:text="硬件工程师/数据库工程师" />
             </LinearLayout>
 
             <View
@@ -380,7 +381,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
-                android:paddingTop="15dp" >
+                android:paddingTop="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -403,7 +404,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="41dp" >
+                android:paddingLeft="41dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -412,12 +413,13 @@
                     android:text="身份证类型"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_persoanl_id"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/sp_persoanl_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
+                    android:enabled="false"
+                    android:entries="@array/id_card_type"
                     android:text="二代身份证" />
             </LinearLayout>
 
@@ -425,7 +427,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="41dp" >
+                android:paddingLeft="41dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -438,16 +440,16 @@
                     android:id="@+id/et_personal_idcard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:layout_marginLeft="17dp"
-                    android:hint="4115221908008080808" />
+                    android:enabled="false"
+                    android:hint="请输入您的身份证号" />
             </LinearLayout>
 
-            <LinearLayout
+            <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="41dp" >
+                android:paddingLeft="41dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -456,21 +458,33 @@
                     android:text="身份证正面"
                     android:textStyle="bold" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/bt_upload_idcard_positive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
                     android:layout_marginLeft="17dp"
                     android:background="@color/simple_orange"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:text="点击上传"
                     android:textColor="@color/main_white" />
-            </LinearLayout>
 
-            <LinearLayout
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/cb_idcard_positive_upload_success"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="上传成功"
+                    android:visibility="invisible" />
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="25dp"
-                android:paddingLeft="41dp" >
+                android:paddingLeft="41dp">
 
                 <TextView
                     android:layout_width="70dp"
@@ -479,25 +493,38 @@
                     android:text="身份证反面"
                     android:textStyle="bold" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/bt_upload_idcard_opposite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/simple_orange"
                     android:text="点击上传"
                     android:textColor="@color/main_white" />
-            </LinearLayout>
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/cb_idcard_opposite_upload_success"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="上传成功"
+                    android:visibility="invisible" />
+            </android.support.v7.widget.LinearLayoutCompat>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="2dp" >
+                android:layout_marginTop="2dp">
 
                 <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/bt_save_upload"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:background="@color/simple_orange"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:text="确认信息提交"
                     android:textColor="@color/main_white" />
             </RelativeLayout>
