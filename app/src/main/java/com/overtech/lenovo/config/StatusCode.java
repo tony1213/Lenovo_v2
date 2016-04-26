@@ -32,4 +32,6 @@ public class StatusCode {
 
     public static final int PERSONAL_SETTING_SUCCESS=0x70;
     public static final int PERSONAL_SETTING_UPDATE_SUCCESS=0x71;
+    public static final int PERSONAL_SETTING_UPLOAD_ID_POSITIVE=0x72;
+    public static final int PERSONAL_SETTING_UPLOAD_ID_OPPOSITE=0x73;
 }

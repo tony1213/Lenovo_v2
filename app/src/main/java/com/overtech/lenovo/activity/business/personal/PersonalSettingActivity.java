@@ -15,10 +15,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -54,6 +56,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class PersonalSettingActivity extends BaseActivity implements OnClickListener {
@@ -82,12 +85,14 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private AppCompatButton btUploadPositive;
     private AppCompatButton btUploadOppositive;
     private AppCompatButton btSaveUpload;
+    private AppCompatCheckBox cbIdPositive;
+    private AppCompatCheckBox cbIdOpposite;
     private DimPopupWindow dimPopupWindow;
     private int curState;
     /**
      * 打开本地相册的requestcode.
      */
-    public final int PHOTO =  0x1;
+    public final int PHOTO = 0x1;
     /**
      * 打开照相机的requestcode.
      */
@@ -175,6 +180,20 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     spIdStyle.setEnabled(false);
                     etIdCard.setEnabled(false);
                     break;
+                case StatusCode.PERSONAL_SETTING_UPLOAD_ID_POSITIVE:
+                    if (st == 0) {
+                        Logger.e("正面成功");
+                        Utilities.showToast(bean.msg, PersonalSettingActivity.this);
+                        cbIdPositive.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case StatusCode.PERSONAL_SETTING_UPLOAD_ID_OPPOSITE:
+                    if (st == 0) {
+                        Logger.e("反面成功");
+                        Utilities.showToast(bean.msg, PersonalSettingActivity.this);
+                        cbIdOpposite.setVisibility(View.VISIBLE);
+                    }
+                    break;
             }
             stopProgress();
         }
@@ -214,7 +233,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         btUploadPositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_positive);
         btUploadOppositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_opposite);
         btSaveUpload = (AppCompatButton) findViewById(R.id.bt_save_upload);
-
+        cbIdPositive = (AppCompatCheckBox) findViewById(R.id.cb_idcard_positive_upload_success);
+        cbIdOpposite = (AppCompatCheckBox) findViewById(R.id.cb_idcard_opposite_upload_success);
         mEditBasic.setOnClickListener(this);
         mEditTec.setOnClickListener(this);
         mEditCa.setOnClickListener(this);
@@ -306,11 +326,11 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 birthdayDialog.show(ft, "personal_birthday");
                 break;
             case R.id.bt_upload_idcard_positive:
-                curState=0;
+                curState = 0;
                 showPopupWindow();
                 break;
             case R.id.bt_upload_idcard_opposite:
-                curState=1;
+                curState = 1;
                 showPopupWindow();
                 break;
             case R.id.bt_select_from_camera:
@@ -383,19 +403,21 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 break;
         }
     }
+
     /**
      * 获取拍照后的图片的路径
      */
-    private String getPhotoPath(Uri imageUri){
-        ContentResolver resolver=getContentResolver();
-        String[] proj={MediaStore.Images.Media.DATA};
-        Cursor cursor=resolver.query(imageUri, proj, null, null, null);
-        int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if(cursor.moveToNext()){
+    private String getPhotoPath(Uri imageUri) {
+        ContentResolver resolver = getContentResolver();
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = resolver.query(imageUri, proj, null, null, null);
+        int columIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToNext()) {
             return cursor.getString(columIndex);
         }
         return null;
     }
+
     private void openPhoto() {
         Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -405,27 +427,27 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
 
     private void openCamera() {
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        File dir=getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if(!dir.exists()){
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (!dir.exists()) {
             dir.mkdirs();
         }
-        if(curState==0){
-            outFile=new File(dir,"positiveIdcard"+".jpg");
-        }else if(curState==1){
-            outFile=new File(dir,"oppositeIdcard"+".jpg");
+        if (curState == 0) {
+            outFile = new File(dir, "positiveIdcard" + ".jpg");
+        } else if (curState == 1) {
+            outFile = new File(dir, "oppositeIdcard" + ".jpg");
         }
 
-        cameraUri= Uri.fromFile(outFile);
+        cameraUri = Uri.fromFile(outFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
         startActivityForResult(intent, CAMERA);
     }
 
     private void showPopupWindow() {
-        dimPopupWindow=new DimPopupWindow(this);
-        View view=getLayoutInflater().inflate(R.layout.layout_dim_pop_add_idcard,null);
-        Button camera= (Button) view.findViewById(R.id.bt_select_from_camera);
-        Button photo= (Button) view.findViewById(R.id.bt_select_from_photo);
-        Button cancle= (Button) view.findViewById(R.id.bt_select_none);
+        dimPopupWindow = new DimPopupWindow(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_dim_pop_add_idcard, null);
+        Button camera = (Button) view.findViewById(R.id.bt_select_from_camera);
+        Button photo = (Button) view.findViewById(R.id.bt_select_from_photo);
+        Button cancle = (Button) view.findViewById(R.id.bt_select_none);
 
         camera.setOnClickListener(this);
         photo.setOnClickListener(this);
@@ -447,33 +469,157 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String sdStatus = Environment.getExternalStorageState();
-        if(!sdStatus.equals(Environment.MEDIA_MOUNTED)){
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
             Log.i("内存卡错误", "请检查您的内存卡");
-            return ;
+            return;
         }
-        switch (requestCode){
+        switch (requestCode) {
             case CAMERA:
-                if(resultCode==Activity.RESULT_OK){
-                    if(curState==0){
-                        idcardPositivePath=outFile.getAbsolutePath();
-                        Logger.e("正面路径"+idcardPositivePath);
-                    }else if(curState==1){
-                        idcardOppositePath=outFile.getAbsolutePath();
-                        Logger.e("反面路径"+idcardOppositePath);
+                if (resultCode == Activity.RESULT_OK) {
+                    if (curState == 0) {
+                        idcardPositivePath = outFile.getAbsolutePath();
+                        Logger.e("正面路径" + idcardPositivePath);
+                        if (idcardPositivePath != null) {
+                            String[] strings = idcardPositivePath.split("\\.");
+                            startUploadIdPositive(idcardPositivePath, strings[strings.length - 1]);
+                        } else {
+                            Utilities.showToast("获取相机图片失败，请重新尝试或使用相册", this);
+                        }
+                    } else if (curState == 1) {
+                        idcardOppositePath = outFile.getAbsolutePath();
+                        Logger.e("反面路径" + idcardOppositePath);
+                        if (idcardOppositePath != null) {
+                            String[] strings = idcardOppositePath.split("\\.");
+                            startUploadIdOpposite(idcardOppositePath, strings[strings.length - 1]);
+                        } else {
+                            Utilities.showToast("获取相机图片失败，请重新尝试或使用相册", this);
+                        }
                     }
                 }
                 break;
             case PHOTO:
-                if(requestCode==Activity.RESULT_OK){
-                    if(curState==0){
-                        idcardPositivePath=getPhotoPath(data.getData());
-                        Logger.e("正面路径"+idcardPositivePath);
-                    }else if(curState==1){
-                        idcardOppositePath=getPhotoPath(data.getData());
-                        Logger.e("反面路径"+idcardPositivePath);
+                if (resultCode == Activity.RESULT_OK) {
+                    if (curState == 0) {
+                        idcardPositivePath = getPhotoPath(data.getData());
+                        Logger.e("正面路径" + idcardPositivePath);
+                        if (idcardPositivePath != null) {
+                            String[] strings = idcardPositivePath.split("\\.");
+                            startUploadIdPositive(idcardPositivePath, strings[strings.length - 1]);
+                        } else {
+                            Utilities.showToast("获取相册图片失败,请重新尝试或使用相机", this);
+                        }
+                    } else if (curState == 1) {
+                        idcardOppositePath = getPhotoPath(data.getData());
+                        Logger.e("反面路径" + idcardPositivePath);
+                        if (idcardOppositePath != null) {
+                            String[] strings = idcardOppositePath.split("\\.");
+                            startUploadIdPositive(idcardOppositePath, strings[strings.length - 1]);
+                        } else {
+                            Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", this);
+                        }
                     }
                 }
                 break;
         }
+    }
+
+    private void startUploadIdPositive(String path, String name) {
+        startProgress("正在上传");
+        String fileStr = "";
+        try {
+            FileInputStream fis = new FileInputStream(path);
+            byte[] buffer = new byte[fis.available()];
+            while (fis.read(buffer) != -1) {
+                fileStr += Base64.encodeToString(buffer, Base64.DEFAULT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Requester requester = new Requester();
+        requester.cmd = 10013;
+        requester.uid = uid;
+        requester.body.put("type", "1");
+        requester.body.put("content", fileStr);
+        requester.body.put("name", name);
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Message msg = uiHandler.obtainMessage();
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    msg.what = StatusCode.PERSONAL_SETTING_UPLOAD_ID_POSITIVE;
+                    msg.obj = response.body().string();
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    private void startUploadIdOpposite(String path, String name) {
+        startProgress("正在上传");
+        String fileStr = "";
+        try {
+            FileInputStream fis = new FileInputStream(path);
+            byte[] buffer = new byte[fis.available()];
+            while (fis.read(buffer) != -1) {
+                fileStr += Base64.encodeToString(buffer, Base64.DEFAULT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Requester requester = new Requester();
+        requester.cmd = 10013;
+        requester.uid = uid;
+        requester.body.put("type", "2");
+        requester.body.put("content", fileStr);
+        requester.body.put("name", name);
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Message msg = uiHandler.obtainMessage();
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    msg.what = StatusCode.PERSONAL_SETTING_UPLOAD_ID_OPPOSITE;
+                    msg.obj = response.body().string();
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
     }
 }
