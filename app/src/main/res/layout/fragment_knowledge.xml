@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/bg_qq_blue">
@@ -44,7 +44,7 @@
         </RelativeLayout>
 
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             android:id="@+id/classify_mainlist"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.32"
             android:background="#fff"
             android:cacheColorHint="#00000000"
             android:divider="#fff"
@@ -68,7 +68,7 @@
             android:id="@+id/classify_morelist"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.618"
+            android:layout_weight="0.68"
             android:background="#fff"
             android:cacheColorHint="#00000000"
             android:divider="#ffebebeb"

@@ -52,7 +52,6 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private RatingBar rb_satisfaction;
     private LinearLayout setting;
     private String uid;
-    private Gson gson = new Gson();
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {
@@ -167,6 +166,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub
+        ((MainActivity)getActivity()).getSupportActionBar().hide();
 //		ActionBar actionBar = ((MainActivity) getActivity())
 //				.getSupportActionBar();
 //		actionBar.setTitle("我的");

@@ -39,4 +39,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.2'
     compile files('libs/BaiduLBS_Android.jar')
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    compile 'com.android.support:cardview-v7:23.3.0'
 }

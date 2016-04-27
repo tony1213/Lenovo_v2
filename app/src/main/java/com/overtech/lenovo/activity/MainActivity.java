@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 
 import com.overtech.lenovo.R;
@@ -22,7 +24,7 @@ import com.overtech.lenovo.widget.tabview.TabView;
 import com.overtech.lenovo.widget.tabview.TabView.OnTabChangeListener;
 
 public class MainActivity extends BaseActivity implements OnTabChangeListener, FragmentCallback {
-
+    private Toolbar toolbar;
     private FragmentManager mFragmentManager;
     private Fragment mCurrentFragment;
     public TaskListFragment taskListFragment;
@@ -41,6 +43,10 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        toolbar= (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.hide();
         mFragmentManager = getSupportFragmentManager();
         uid= (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID,"");
         mCurrentTabIndex = 0;

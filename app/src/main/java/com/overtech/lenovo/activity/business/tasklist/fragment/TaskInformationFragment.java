@@ -57,7 +57,6 @@ public class TaskInformationFragment extends BaseFragment {
     private String repairPersonContactInformation;
     private String workorderCode;
     private String uid;
-    private Gson gson = new Gson();
     private boolean isFirstLoading = true;//第一次加载
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override

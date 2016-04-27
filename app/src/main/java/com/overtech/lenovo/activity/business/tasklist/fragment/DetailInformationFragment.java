@@ -49,7 +49,6 @@ public class DetailInformationFragment extends BaseFragment {
     private String workorderCode;
     private String uid;
     private boolean isFirstLoading = true;//第一次加载
-    private Gson gson = new Gson();
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {

@@ -4,9 +4,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter;
 import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter.OnItemButtonClickListener;
@@ -73,6 +76,12 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
             }
         });
         mInformation.setAdapter(adapter);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        ((MainActivity)getActivity()).getSupportActionBar().hide();
     }
 
     @Override

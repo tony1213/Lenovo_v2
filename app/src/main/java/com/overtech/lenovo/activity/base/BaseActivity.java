@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.overtech.lenovo.http.HttpEngine;
 import com.overtech.lenovo.widget.dialog.CustomProgressDialog;
 import com.overtech.lenovo.widget.dialogeffects.NiftyDialogBuilder;
@@ -14,7 +15,7 @@ import com.overtech.lenovo.widget.dialogeffects.NiftyDialogBuilder;
 public abstract class BaseActivity extends AppCompatActivity {
     public CustomProgressDialog newFrament;
     public HttpEngine httpEngine;
-
+    public Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

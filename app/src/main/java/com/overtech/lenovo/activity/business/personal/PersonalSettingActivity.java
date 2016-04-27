@@ -101,7 +101,6 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private Uri cameraUri;
     private String idcardPositivePath;
     private String idcardOppositePath;
-    private Gson gson = new Gson();
     private String uid;
     private UIHandler uiHandler = new UIHandler(this) {
         @Override

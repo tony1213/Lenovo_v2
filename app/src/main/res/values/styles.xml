@@ -219,5 +219,16 @@
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginRight">5dp</item>
     </style>
+    <style name="ToolTheme">
+        <item name="android:textColorPrimary">@color/main_white</item>
+        <item name="actionMenuTextColor">@color/main_white</item>
+        <item name="colorControlNormal">@color/main_white</item>
+        <item name="defaultQueryHint">"输入POS机维修"</item>
+    </style>
+
+    <style name="MyPopupTheme" >
+        <!-- For PopupMenu -->
+        <item name="android:textColor">@color/black</item>
+    </style>
 
 </resources>

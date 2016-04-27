@@ -7,57 +7,64 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.entity.knowledge.Knowledges;
+
+import java.util.List;
 
 public class ClassifyMoreAdapter extends BaseAdapter {
 
-	private Context context;
-	private String[] text_list;
-	private int position = 0;
-	Holder hold;
+    private Context context;
+    private List<Knowledges.Knowledge> list;
+    private int position = 0;
+    Holder hold;
 
-	public ClassifyMoreAdapter(Context context, String[] text_list) {
-		this.context = context;
-		this.text_list = text_list;
-	}
+    public ClassifyMoreAdapter(Context context, List<Knowledges.Knowledge> list) {
+        this.context = context;
+        this.list = list;
+    }
 
-	public int getCount() {
-		return text_list.length;
-	}
+    public void setData(List<Knowledges.Knowledge> list) {
+        this.list = list;
+    }
 
-	public Object getItem(int position) {
-		return text_list[position];
-	}
+    public int getCount() {
+        return list == null ? 0 : list.size();
+    }
 
-	public long getItemId(int position) {
-		return position;
-	}
+    public Object getItem(int position) {
+        return list.get(position).knowledge_id;
+    }
 
-	public View getView(int arg0, View view, ViewGroup viewGroup) {
+    public long getItemId(int position) {
+        return position;
+    }
 
-		if (view == null) {
-			view = View.inflate(context, R.layout.item_classify_morelist, null);
-			hold = new Holder(view);
-			view.setTag(hold);
-		} else {
-			hold = (Holder) view.getTag();
-		}
-		hold.txt.setText(text_list[arg0]);
-		hold.txt.setTextColor(0xFF666666);
-		if (arg0 == position) {
-			hold.txt.setTextColor(0xFFFF8C00);
-		}
-		return view;
-	}
+    public View getView(int arg0, View view, ViewGroup viewGroup) {
 
-	public void setSelectItem(int position) {
-		this.position = position;
-	}
+        if (view == null) {
+            view = View.inflate(context, R.layout.item_classify_morelist, null);
+            hold = new Holder(view);
+            view.setTag(hold);
+        } else {
+            hold = (Holder) view.getTag();
+        }
+        hold.txt.setText(list.get(arg0).subject);
+        hold.txt.setTextColor(0xFF666666);
+        if (arg0 == position) {
+            hold.txt.setTextColor(0xFFFF8C00);
+        }
+        return view;
+    }
 
-	private static class Holder {
-		TextView txt;
+    public void setSelectItem(int position) {
+        this.position = position;
+    }
 
-		public Holder(View view) {
-			txt = (TextView) view.findViewById(R.id.moreitem_txt);
-		}
-	}
+    private static class Holder {
+        TextView txt;
+
+        public Holder(View view) {
+            txt = (TextView) view.findViewById(R.id.moreitem_txt);
+        }
+    }
 }

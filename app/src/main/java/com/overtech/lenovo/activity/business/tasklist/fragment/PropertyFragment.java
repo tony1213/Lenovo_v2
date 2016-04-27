@@ -40,7 +40,6 @@ public class PropertyFragment extends BaseFragment {
     private boolean isFirstLoading = true;
     private String uid;
     private String workorderCode;
-    private Gson gson = new Gson();
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {

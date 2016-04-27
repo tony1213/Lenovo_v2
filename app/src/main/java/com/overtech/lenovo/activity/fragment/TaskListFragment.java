@@ -13,6 +13,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -82,7 +84,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     private String curTaskType;//记录当前状态
     private Handler handler;// cyclerviewpager的handler
     private Runnable runnable;// cyclerviewpager的runnable
-    private Gson gson = new Gson();
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {
@@ -811,5 +812,11 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         int xPos = titleView.getWidth() / 2 - popupWindow.getWidth() / 2;
         Logger.e("popupWindow的宽度" + popupWindow.getWidth() + "   contentView的宽度" + contentView.getWidth());
         popupWindow.showAsDropDown(parent, xPos, 0);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        ((MainActivity)getActivity()).getSupportActionBar().hide();
     }
 }

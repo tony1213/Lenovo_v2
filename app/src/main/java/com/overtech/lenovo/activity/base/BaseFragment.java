@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.overtech.lenovo.activity.fragment.callback.FragmentCallback;
 import com.overtech.lenovo.activity.fragment.callback.FragmentInterface;
 import com.overtech.lenovo.http.HttpEngine;
@@ -22,7 +23,7 @@ public abstract class BaseFragment extends Fragment implements
     protected View mRootView;
     public CustomProgressDialog newFragment;
     public HttpEngine httpEngine;
-
+    public Gson gson=new Gson();
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
