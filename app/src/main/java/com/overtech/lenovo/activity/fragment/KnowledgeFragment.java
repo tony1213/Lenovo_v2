@@ -63,6 +63,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
     private ListViewCompat lvContracts;
     private ContractAdapter adapter;
     private List<Knowledges.KnowledgeAndContract> datas;
+    private List<Knowledges.KnowledgeAndContract> contractDatas;
     private SearchView searchView;
     private PopupWindow popupWindow;
     private ListView mainlist;
@@ -111,33 +112,22 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
                         moreAdapter = new ClassifyMoreAdapter(getActivity(), datas.get(0).knowledges);
                         moreAdapter.setSelectItem(0);
                         morelist.setAdapter(moreAdapter);
+                    } else {
+                        moreAdapter.setData(datas.get(0).knowledges);
+                        moreAdapter.notifyDataSetChanged();
                     }
-                    moreAdapter.notifyDataSetChanged();
 
-                    mainlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                            moreAdapter.setData(datas.get(position).knowledges);
-                            moreAdapter.setSelectItem(0);
-                            moreAdapter.notifyDataSetChanged();
-                            mainAdapter.setSelectItem(position);
-                            mainAdapter.notifyDataSetChanged();
-                        }
-                    });
-                    morelist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            moreAdapter.setSelectItem(position);
-                            moreAdapter.notifyDataSetChanged();
-                            Utilities.showToast(parent.getItemAtPosition(position).toString(), getActivity());
-                            Intent intent = new Intent(getActivity(), KnowledgeDetailActivity.class);
-                            startActivity(intent);
-                        }
-                    });
                     break;
                 case StatusCode.KNOWLEDGE_CONTRACT_SUCCESS:
+                    contractDatas = bean.body.data;
+                    if (adapter == null) {
+                        adapter = new ContractAdapter(contractDatas, getActivity());
+                        lvContracts.setAdapter(adapter);
+                    } else {
+                        adapter.setData(contractDatas);
+                        adapter.notifyDataSetChanged();
+                    }
+
                     break;
                 case StatusCode.KNOWLEDGE_CONTENT_SUCCESS:
                     break;
@@ -156,7 +146,8 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
         initView();
         initPopupWindow();
-        initData();
+        initData("0");
+        initContractData();
     }
 
 
@@ -187,12 +178,49 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
-    private void initData() {
+    private void initContractData() {
+        Requester requester = new Requester();
+        requester.cmd = 10020;
+        requester.uid = uid;
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.KNOWLEDGE_CONTRACT_SUCCESS;
+                    msg.obj = json;
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    private void initData(String knowledgeType) {
         startProgress("加载中...");
         Requester requester = new Requester();
         requester.cmd = 10021;
         requester.uid = uid;
-        requester.body.put("contract_code", "0");
+        requester.body.put("contract_code", knowledgeType);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -227,23 +255,17 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void initPopupWindow() {
-        String[] items = new String[]{"haha", "hehe", "heihie"};
-        ArrayList datas = new ArrayList<String>();
-        datas.add("haha");
-        datas.add("hehe");
-        datas.add("heihei");
+
         View contentView = getActivity().getLayoutInflater().inflate(R.layout.layout_popupwindow_contract, null);
         lvContracts = (ListViewCompat) contentView.findViewById(R.id.lv_contracts);
-        adapter = new ContractAdapter(datas, getActivity());
-        lvContracts.setAdapter(adapter);
         lvContracts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Utilities.showToast("您点击了" + position, getActivity());
+//                Utilities.showToast("您点击了" + position, getActivity());
                 popupWindow.dismiss();
+                initData(contractDatas.get(position).contract_code);
             }
         });
-        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setContentView(contentView);
         popupWindow.setFocusable(true);
@@ -255,6 +277,28 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
     private void initView() {
         mainlist = (ListView) mRootView.findViewById(R.id.classify_mainlist);
         morelist = (ListView) mRootView.findViewById(R.id.classify_morelist);
+        mainlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                moreAdapter.setData(datas.get(position).knowledges);
+                moreAdapter.setSelectItem(0);
+                moreAdapter.notifyDataSetChanged();
+                mainAdapter.setSelectItem(position);
+                mainAdapter.notifyDataSetChanged();
+            }
+        });
+        morelist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                moreAdapter.setSelectItem(position);
+                moreAdapter.notifyDataSetChanged();
+                Intent intent = new Intent(getActivity(), KnowledgeDetailActivity.class);
+                intent.putExtra("knowledge_id",(String)moreAdapter.getItem(position));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

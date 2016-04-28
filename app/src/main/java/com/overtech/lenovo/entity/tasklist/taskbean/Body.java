@@ -21,4 +21,6 @@ public class Body {
     public String solution;
     public String feedback_solved_datetime;
     public String feedback;
+
+    public String workorder_notification_datetime;
 }

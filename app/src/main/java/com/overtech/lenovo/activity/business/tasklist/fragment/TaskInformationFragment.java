@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,10 +29,12 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.tasklist.TaskProcess;
 import com.overtech.lenovo.entity.tasklist.taskbean.Body;
+import com.overtech.lenovo.entity.tasklist.taskbean.Task;
 import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.dialog.WorkorderAppointDialog;
 import com.overtech.lenovo.widget.dialog.WorkorderHomeDialog;
@@ -54,6 +58,8 @@ public class TaskInformationFragment extends BaseFragment {
     private TextView tvRepairAddress;
     private ImageView ivRepairContactInfo;
     private TextView tvStandardFeeAmount;
+    private LinearLayout llNotificationContainer;
+    private TextView tvNotificationTime;
     private String repairPersonContactInformation;
     private String workorderCode;
     private String uid;
@@ -64,15 +70,20 @@ public class TaskInformationFragment extends BaseFragment {
             super.handleMessage(msg);
             String json = (String) msg.obj;
             Logger.e("后台拿到的数据==" + json);
+
             TaskBean bean = gson.fromJson(json, TaskBean.class);
+            if(bean==null){
+                return;
+            }
             int st = bean.st;
             if (st == -1 || st == -2) {
                 stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
-                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
+                StackManager.getStackManager().popAllActivitys();
                 return;
             }
             Body body = bean.body;
@@ -185,6 +196,24 @@ public class TaskInformationFragment extends BaseFragment {
                         startLoading();
                     }
                     break;
+                case StatusCode.WORKORDER_NOTIFICATION_SUCCESS:
+                    if(!TextUtils.isEmpty(body.workorder_notification_datetime)) {
+                        tvNotificationTime.setText(body.workorder_notification_datetime);
+                    }
+                    if(body.data!=null) {
+                        for (Task task : body.data) {
+                            TextView tvMsg = new TextView(getActivity());
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            tvMsg.setLayoutParams(params);
+                            if (TextUtils.isEmpty(task.notification_item_time) && TextUtils.isEmpty(task.notification_item_who) && TextUtils.isEmpty(task.notification_item_content)) {
+                                tvMsg.setText("没有最新通知");
+                            } else {
+                                tvMsg.setText(task.notification_item_time + "[" + task.notification_item_who + "]" + task.notification_item_content);
+                            }
+                            llNotificationContainer.addView(tvMsg);
+                        }
+                    }
+                    break;
             }
             stopProgress();
         }
@@ -205,8 +234,8 @@ public class TaskInformationFragment extends BaseFragment {
         tvRepairAddress = (TextView) mRootView.findViewById(R.id.tv_repair_address);
         tvStandardFeeAmount = (TextView) mRootView.findViewById(R.id.tv_standard_fee_amount);
         mTaskProcess = (ListView) mRootView.findViewById(R.id.lv_task_process);
-
-
+        llNotificationContainer = (LinearLayout) mRootView.findViewById(R.id.ll_workorder_notification_container);
+        tvNotificationTime = (TextView) mRootView.findViewById(R.id.tv_workorder_notification_datetime);
         ivRepairContactInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,7 +264,45 @@ public class TaskInformationFragment extends BaseFragment {
                 }
             }
         });
+        loadingNotification();
+    }
 
+    private void loadingNotification() {
+        Requester requester = new Requester();
+        requester.uid = uid;
+        requester.cmd = 10008;
+        requester.body.put("workorder_code", workorderCode);
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.WORKORDER_NOTIFICATION_SUCCESS;
+                    msg.obj = json;
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
     }
 
 

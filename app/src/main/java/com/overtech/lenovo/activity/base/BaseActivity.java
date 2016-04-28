@@ -15,7 +15,7 @@ import com.overtech.lenovo.widget.dialogeffects.NiftyDialogBuilder;
 public abstract class BaseActivity extends AppCompatActivity {
     public CustomProgressDialog newFrament;
     public HttpEngine httpEngine;
-    public Gson gson;
+    public Gson gson=new Gson();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

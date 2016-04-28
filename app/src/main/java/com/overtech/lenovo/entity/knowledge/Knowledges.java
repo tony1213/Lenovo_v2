@@ -10,6 +10,7 @@ public class Knowledges {
     public String msg;
     public Body body;
     public class Body{
+        public String content;
         public List<KnowledgeAndContract> data;
     }
     public class KnowledgeAndContract{

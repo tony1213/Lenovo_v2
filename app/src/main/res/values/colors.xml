@@ -31,8 +31,8 @@
     <color name="frame_gray">#ffcecece</color>
     <color name="main_line">#ffdcdcdc</color>
     <color name="bg_mask">#78000000</color><!-- 蒙层色，50%纯黑 -->
-    <!-- 灰色 -->
-    <color name="bg_qq_blue">#DD47BEE9</color>
+
+    <color name="bg_qq_blue">#5677fc</color>
     <color name="calendar_cell_novalidate">#ffc8d2dc</color>
     <color name="calendar_text_inactive">#40778088</color>
     <color name="contents_text">#ff000000</color>
@@ -78,12 +78,12 @@
     <color name="nifity_dialog_bg">#ffffff</color>
     <color name="btn_press_color">#66000000</color>
     <color name="btn_unpress_color">#22000000</color>
-    <color name="tab_main_color">#42AFF3</color>
+    <color name="tab_main_color">#5677fc</color>
 
     <!-- 工单标题栏核心业务背景色 -->
     <color name="tasklist_title_core_bg">#0079c9</color>
     <!-- mainactivity 导航栏选择后的背景色 -->
-    <color name="main_activity_navigation_selected">#303F9F</color>
+    <color name="main_activity_navigation_selected">#2a36b1</color>
     <!-- 工标题栏TextView选中后的颜色 -->
     <color name="tasklist_title_tv_selected">#006bac</color>
     <!-- 工单信息时间背景 -->

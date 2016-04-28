@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
+import com.overtech.lenovo.activity.app.CustomApplication;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
@@ -64,6 +65,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 public class TaskListFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, View.OnClickListener, TaskListAdapter.OnItemClickListener {
 
     private View titleView, contentView;
+    private TextView mCity;
     private PopupWindow popupWindow;
     private ImageView mNotification;
     private TextView mTitleFilter;
@@ -95,7 +97,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             if (st == -2 || st == -1) {
                 stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
-                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
@@ -115,9 +117,9 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
                     workorderAdapter.setDatas(datas);
                     views.clear();
-                    if(adImgs==null){
+                    if (adImgs == null) {
 
-                    }else{
+                    } else {
                         for (int i = 0; i < adImgs.size(); i++) {
                             views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i).imageUrl));
                         }
@@ -143,7 +145,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 case StatusCode.WORKORDER_ACCOUNT_SUCCESS:
                 case StatusCode.WORKORDER_EVALUATE_SUCCSS:
                     if (st == -2 || st == -1) {
-                        SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
+                        SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
                         Utilities.showToast(bean.msg, getActivity());
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
@@ -204,10 +206,12 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         titleView = mRootView.findViewById(R.id.rl_task_list_title);
+        mCity = (TextView) mRootView.findViewById(R.id.tv_location_city);
         mTitleFilter = (TextView) mRootView.findViewById(R.id.tv_task_list_filter);
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
         mNotification = (ImageView) mRootView.findViewById(R.id.iv_task_notification);
         uid = ((MainActivity) getActivity()).getUid();
+        mCity.setText(((CustomApplication) getActivity().getApplication()).city);
         initRefreshLayout();//下拉刷新
         initRecyclerView();
         initEvent();
@@ -817,6 +821,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        ((MainActivity)getActivity()).getSupportActionBar().hide();
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
     }
 }

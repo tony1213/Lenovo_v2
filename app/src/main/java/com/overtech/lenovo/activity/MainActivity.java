@@ -19,6 +19,7 @@ import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.FragmentUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.tabview.TabView;
 import com.overtech.lenovo.widget.tabview.TabView.OnTabChangeListener;
@@ -43,6 +44,7 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        StackManager.getStackManager().pushActivity(this);
         toolbar= (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar=getSupportActionBar();
@@ -110,6 +112,7 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
                 exitTime=System.currentTimeMillis();
             }else{
                 finish();
+                StackManager.getStackManager().popAllActivitys();
             }
             return true;
         }

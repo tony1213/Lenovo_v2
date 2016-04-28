@@ -1,8 +1,13 @@
 package com.overtech.lenovo.activity.business.tasklist;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -21,10 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDetailActivity extends BaseActivity {
+    private Toolbar toolbar;
     private TabLayout mTabLayout;
     // private ViewPager mViewPager;
     private CustomeViewPager mViewPager;
-    private TextView mTitle;
     private TaskDetailAdapter adapter;
     private List<Fragment> listFragment;
     private List<String> listTitle;
@@ -44,10 +49,21 @@ public class TaskDetailActivity extends BaseActivity {
 
         workorderCode = getIntent().getStringExtra("workorder_code");
         Logger.e("workorderCode" + workorderCode);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (CustomeViewPager) findViewById(R.id.viewPager);
-        mTitle = (TextView) findViewById(R.id.tv_task_detail_title);
 
+        toolbar.setTitle("本单详情");
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         taskInfoFrag = new TaskInformationFragment();
         detailInfoFrag = new DetailInformationFragment();
         storeInfoFrag = new StoreInformationFragment();
@@ -77,14 +93,21 @@ public class TaskDetailActivity extends BaseActivity {
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mViewPager);
+    }
 
-        mTitle.setOnClickListener(new OnClickListener() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     public String getWorkorderCode() {
