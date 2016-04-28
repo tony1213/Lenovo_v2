@@ -26,6 +26,7 @@ public class StatusCode {
 
     public static final int WORKORDER_STORE_INFORMATION_SUCCESS=0x40;
     public static final int WORKORDER_STORE_REMARK_SUCCESS=0x41;
+    public static final int WORKORDER_STORE_REMARK_UPLOAD_SUCCESS=0x42;
 
     public static final int WORKORDER_PROPERTY_SUCCESS=0x50;
 

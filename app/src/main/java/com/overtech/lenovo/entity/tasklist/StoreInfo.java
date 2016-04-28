@@ -11,8 +11,11 @@ public class StoreInfo {
     public Body body;
     public class Body{
         public String name;
+        public String branch_code;
         public List<ImageUrl> imageList;
         public List<Remark> remarks;
+        public String create_datetime;
+        public String create_user_name;
     }
     public class ImageUrl{
         public String imageUrl;

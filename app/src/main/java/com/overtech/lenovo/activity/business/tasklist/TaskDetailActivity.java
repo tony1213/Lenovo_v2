@@ -35,7 +35,7 @@ public class TaskDetailActivity extends BaseActivity {
     private List<String> listTitle;
     public TaskInformationFragment taskInfoFrag;// 本单信息
     private DetailInformationFragment detailInfoFrag;// 详细信息
-    private StoreInformationFragment storeInfoFrag;// 门店信息
+    public StoreInformationFragment storeInfoFrag;// 门店信息
     private PropertyFragment propertyFrag;// 资产
     private String workorderCode;//工单号
 
