@@ -126,7 +126,7 @@ public class StoreInformationFragment extends BaseFragment {
         tvStoreName = (TextView) mRootView.findViewById(R.id.tv_store_name);
         llStoreRemarks = (LinearLayout) mRootView.findViewById(R.id.ll_store_remarks);
         mStoreTalk = (TextView) mRootView.findViewById(R.id.tv_workorder_store_talk);
-        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+//        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getActivity()));
         mStoreTalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

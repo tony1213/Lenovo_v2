@@ -14,6 +14,7 @@ public class StatusCode {
     public static final int WORKORDER_SOLVE_SUCCESS=0x14;
     public static final int WORKORDER_ACCOUNT_SUCCESS=0x15;
     public static final int WORKORDER_EVALUATE_SUCCSS=0x16;
+    public static final int WORKORDER_CONTRACT_SUCCESS=0x17;
 
     public static final int WORKORDER_SUCCESS=0x20;
     public static final int WORKORDER_RECEIVE_ACTION_SUCCESS=0x21;
@@ -27,6 +28,7 @@ public class StatusCode {
     public static final int WORKORDER_STORE_INFORMATION_SUCCESS=0x40;
     public static final int WORKORDER_STORE_REMARK_SUCCESS=0x41;
     public static final int WORKORDER_STORE_REMARK_UPLOAD_SUCCESS=0x42;
+    public static final int WORKORDER_STORE_REPAIR_INFO_SUCCESS=0x43;
 
     public static final int WORKORDER_PROPERTY_SUCCESS=0x50;
 

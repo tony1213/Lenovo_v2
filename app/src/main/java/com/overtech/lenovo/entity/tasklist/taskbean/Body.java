@@ -23,4 +23,12 @@ public class Body {
     public String feedback;
 
     public String workorder_notification_datetime;
+
+    public String contract_code;
+    public String contract_name;
+    public String contract_start_time;
+    public String contract_end_time;
+    public String contract_date;
+    public String contract_party_a;
+    public String contract_party_b;
 }

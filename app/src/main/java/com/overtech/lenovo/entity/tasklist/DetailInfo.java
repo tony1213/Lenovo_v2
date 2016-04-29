@@ -9,6 +9,8 @@ public class DetailInfo {
     public Body body;
 
     public class Body{
+        public String branch_code;
+        public String name;
         public Contract contract;
         public WorkorderMessage workorder_message;
         public SLA sla;

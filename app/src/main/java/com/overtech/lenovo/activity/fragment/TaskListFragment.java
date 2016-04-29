@@ -336,10 +336,9 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     @Override
     public void onLogItemClick(View view, int position) {
         // TODO Auto-generated method stub
-        Utilities.showToast("您要进入" + position + "的项目", getActivity());
         Intent intent = new Intent(getActivity(), TaskInformationActivity.class);
-        Bundle bundle = new Bundle();
-        startActivity(intent, bundle);
+        intent.putExtra("workorder_code",datas.get(position).workorder_code);
+        startActivity(intent);
     }
 
     /**

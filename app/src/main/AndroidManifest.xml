@@ -55,7 +55,8 @@
         <activity android:name=".activity.business.tasklist.TaskInformationActivity" />
         <activity android:name=".activity.business.personal.PersonalSettingActivity" />
         <activity android:name=".activity.business.knowledge.KnowledgeSearchActivity" />
-        <activity android:name=".activity.business.knowledge.KnowledgeFilterActivity"></activity>
+        <activity android:name=".activity.business.knowledge.KnowledgeFilterActivity"/>
+        <activity android:name=".activity.business.tasklist.StoreRepairInformationActivity"/>
     </application>
 
 </manifest>

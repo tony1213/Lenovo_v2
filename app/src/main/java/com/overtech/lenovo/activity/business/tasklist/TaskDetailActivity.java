@@ -21,6 +21,7 @@ import com.overtech.lenovo.activity.business.tasklist.fragment.PropertyFragment;
 import com.overtech.lenovo.activity.business.tasklist.fragment.StoreInformationFragment;
 import com.overtech.lenovo.activity.business.tasklist.fragment.TaskInformationFragment;
 import com.overtech.lenovo.debug.Logger;
+import com.overtech.lenovo.utils.StackManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class TaskDetailActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
+        StackManager.getStackManager().pushActivity(this);
         workorderCode = getIntent().getStringExtra("workorder_code");
         Logger.e("workorderCode" + workorderCode);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -112,5 +114,11 @@ public class TaskDetailActivity extends BaseActivity {
 
     public String getWorkorderCode() {
         return workorderCode;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        StackManager.getStackManager().popActivity(this);
     }
 }

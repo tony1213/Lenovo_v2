@@ -44,18 +44,7 @@
             android:layout_toLeftOf="@id/iv_favorite"
             android:src="@mipmap/icon_common_share" />
     </RelativeLayout>-->
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/tool_bar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/bg_qq_blue" />
-    </android.support.design.widget.AppBarLayout>
-
+    <include layout="@layout/header_view_toolbar" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"

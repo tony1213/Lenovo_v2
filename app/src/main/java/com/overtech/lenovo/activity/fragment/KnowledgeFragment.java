@@ -78,6 +78,10 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
             String json = (String) msg.obj;
             Logger.e("knowledge后台传过来的数据" + json);
             Knowledges bean = gson.fromJson(json, Knowledges.class);
+            if(bean==null){
+                stopProgress();
+                return ;
+            }
             int st = bean.st;
             if (st == -2 || st == -1) {
                 stopProgress();

@@ -3,12 +3,15 @@ package com.overtech.lenovo.activity.business.tasklist.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
+import com.overtech.lenovo.activity.business.tasklist.StoreRepairInformationActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
@@ -20,6 +23,7 @@ import com.overtech.lenovo.entity.tasklist.DetailInfo;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Request;
@@ -46,8 +50,11 @@ public class DetailInformationFragment extends BaseFragment {
     private TextView tvSlaResponseDatetime;
     private TextView tvSlaHomeDatetime;
     private TextView tvSlaSolvedDatetime;
+    private TextView storeRepairInformation;
     private String workorderCode;
     private String uid;
+    private String branchCode;
+    private String branchName;
     private boolean isFirstLoading = true;//第一次加载
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
@@ -56,14 +63,18 @@ public class DetailInformationFragment extends BaseFragment {
             String json = (String) msg.obj;
             Logger.e("detail information " + json);
             DetailInfo bean = gson.fromJson(json, DetailInfo.class);
+            if (bean == null) {
+                return;
+            }
             int st = bean.st;
             if (st == -1 || st == -2) {
                 stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
-                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID,"");
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
+                StackManager.getStackManager().popAllActivitys();
                 return;
             }
             switch (msg.what) {
@@ -74,7 +85,7 @@ public class DetailInformationFragment extends BaseFragment {
                     Utilities.showToast(bean.msg, getActivity());
                     break;
                 case StatusCode.WORKORDER_DETAIL_INFORMATION_SUCCESS:
-                    isFirstLoading=false;
+                    isFirstLoading = false;
                     DetailInfo.Contract contract = bean.body.contract;
                     DetailInfo.WorkorderMessage workorder_message = bean.body.workorder_message;
                     DetailInfo.SLA sla = bean.body.sla;
@@ -98,6 +109,9 @@ public class DetailInformationFragment extends BaseFragment {
                     tvSlaResponseDatetime.setText(sla.sla_response_datetime);
                     tvSlaHomeDatetime.setText(sla.sla_home_datetime);
                     tvSlaSolvedDatetime.setText(sla.sla_solved_datetime);
+
+                    branchCode = bean.body.branch_code;
+                    branchName = bean.body.name;
                     break;
             }
             stopProgress();
@@ -133,6 +147,17 @@ public class DetailInformationFragment extends BaseFragment {
         tvSlaResponseDatetime = (TextView) mRootView.findViewById(R.id.tv_sla_response_datetime);
         tvSlaHomeDatetime = (TextView) mRootView.findViewById(R.id.tv_sla_home_datetime);
         tvSlaSolvedDatetime = (TextView) mRootView.findViewById(R.id.tv_sla_solved_datetime);
+
+        storeRepairInformation = (TextView) mRootView.findViewById(R.id.tv_store_repair_information);
+        storeRepairInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), StoreRepairInformationActivity.class);
+                intent.putExtra("branch_code", branchCode);
+                intent.putExtra("name", branchName);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -151,7 +176,7 @@ public class DetailInformationFragment extends BaseFragment {
                 requester.uid = uid;
                 requester.cmd = 10004;
                 requester.body.put("workorder_code", workorderCode);
-                Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+                Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call call = httpEngine.createRequestCall(request);
                 call.enqueue(new com.squareup.okhttp.Callback() {
                     @Override
