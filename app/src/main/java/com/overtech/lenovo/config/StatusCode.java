@@ -43,4 +43,7 @@ public class StatusCode {
     public static final int KNOWLEDGE_PUBLIC_SUCCESS=0x80;
     public static final int KNOWLEDGE_CONTRACT_SUCCESS=0x81;
     public static final int KNOWLEDGE_CONTENT_SUCCESS=0x82;
+
+    public static final int INFORMATION_SUCCESS=0x90;
+    public static final int INFORMATION_COMMENT_SUCCESS=0x91;
 }

@@ -1,5 +1,7 @@
 package com.overtech.lenovo.entity.information;
 
+import java.util.List;
+
 /**
  * 信息
  * 
@@ -7,60 +9,27 @@ package com.overtech.lenovo.entity.information;
  * 
  */
 public class Information {
-	private String avator;// 头像
-	private String name;// 姓名
-	private String description;// 描述
-	private String[] urls;// 描述图片
-	private long time;//评论发布的时间
-
-	public Information(String avator, String name, String description,
-			String[] urls,long time) {
-		super();
-		this.avator = avator;
-		this.name = name;
-		this.description = description;
-		this.urls = urls;
-		this.time=time;
+	public int st;
+	public String msg;
+	public Body body;
+	public class Body{
+		public List<InforItem> data;
 	}
-
-	public String getAvator() {
-		return avator;
+	public class InforItem{
+		public String post_id;
+		public String create_user_img;
+		public String create_user_name;
+		public String create_user_content;
+		public String create_datetime;
+		public List<UserImg> create_img;
+		public List<Comment> comment;
 	}
-
-	public void setAvator(String avator) {
-		this.avator = avator;
+	public class UserImg{
+		public String img;
 	}
-
-	public String getName() {
-		return name;
+	public class Comment{
+		public String comment_datetime;
+		public String comment_user;
+		public String comment_content;
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String[] getUrls() {
-		return urls;
-	}
-
-	public void setUrls(String[] urls) {
-		this.urls = urls;
-	}
-
-	public long getTime() {
-		return time;
-	}
-
-	public void setTime(long time) {
-		this.time = time;
-	}
-	
 }

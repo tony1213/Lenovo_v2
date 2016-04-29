@@ -1,60 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingRight="35dp" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/iv_information_avator"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="14dp"
-        android:src="@mipmap/ic_launcher" />
-
-    <TextView
-        android:id="@+id/tv_information_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="19dp"
-        android:layout_toRightOf="@id/iv_information_avator"
-        android:text="张先生"
-        android:textColor="@color/main_green"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tv_information_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_information_name"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/iv_information_avator"
-        android:maxLines="4"
-        android:text="@string/information_default1" />
-
-    <GridView
-        android:id="@+id/gv_information_picture"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@id/tv_information_description"
-        android:layout_marginLeft="67dp"
-        android:numColumns="3" >
-    </GridView>
-    <TextView
-        android:id="@+id/tv_information_time"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gv_information_picture"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="15dp" />
-    <ImageView
-        android:id="@+id/iv_information_commend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/gv_information_picture"
-        android:layout_marginTop="15dp"
-        android:src="@mipmap/icon_information_commend" />
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="2dp"
+        app:contentPadding="4dp"
+        >
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_information_avator"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/ic_launcher" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_information_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="19dp"
+                    android:text="张先生"
+                    android:textColor="@color/main_green"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_information_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="4"
+                    android:text="@string/information_default1" />
+
+                <GridView
+                    android:id="@+id/gv_information_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:numColumns="3"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_information_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="sdfsd" />
+
+                    <ImageView
+                        android:id="@+id/iv_information_commend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="15dp"
+                        android:src="@mipmap/icon_information_commend" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_comment_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

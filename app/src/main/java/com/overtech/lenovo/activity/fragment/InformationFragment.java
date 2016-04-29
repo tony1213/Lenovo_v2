@@ -1,23 +1,42 @@
 package com.overtech.lenovo.activity.fragment;
 
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseFragment;
+import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter;
 import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter.OnItemButtonClickListener;
+import com.overtech.lenovo.config.StatusCode;
+import com.overtech.lenovo.config.SystemConfig;
+import com.overtech.lenovo.entity.RequestExceptBean;
+import com.overtech.lenovo.entity.Requester;
+import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.information.Information;
+import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.SharePreferencesUtils;
+import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
@@ -26,12 +45,70 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
 //
 
-public class InformationFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
+public class InformationFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, View.OnClickListener {
 
     private RecyclerView mInformation;
+    private LinearLayout llCommentUpContainer;
+    private AppCompatEditText etComment;
+    private AppCompatButton btComment;
     private BGARefreshLayout mRefreshLayout;
     private InformationAdapter adapter;
     private List<Information> datas;
+    private String uid;
+    private UIHandler uiHandler = new UIHandler(getActivity()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String json = (String) msg.obj;
+            Information bean = gson.fromJson(json, Information.class);
+            if (bean == null) {
+                stopProgress();
+                return;
+            }
+            int st = bean.st;
+            if (st == -1 || st == -2) {
+                stopProgress();
+                Utilities.showToast(bean.msg, getActivity());
+                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+                StackManager.getStackManager().popAllActivitys();
+                return;
+            }
+            switch (msg.what) {
+                case StatusCode.FAILED:
+                    Utilities.showToast(bean.msg, getActivity());
+                    break;
+                case StatusCode.SERVER_EXCEPTION:
+                    Utilities.showToast(bean.msg, getActivity());
+                    break;
+                case StatusCode.INFORMATION_SUCCESS:
+
+                    break;
+                case StatusCode.INFORMATION_COMMENT_SUCCESS:
+                    if (adapter == null) {
+                        adapter = new InformationAdapter(getActivity(), bean.body.data);
+                        adapter.setOnItemButtonClickListener(new OnItemButtonClickListener() {
+
+                            @Override
+                            public void buttonClick(View v, int position) {
+                                // TODO Auto-generated method stub
+                                Utilities.showToast("您评论了第" + position + "条记录", getActivity());
+                                llCommentUpContainer.setVisibility(View.VISIBLE);
+                                etComment.setFocusable(true);
+                            }
+                        });
+                        mInformation.setAdapter(adapter);
+                    } else {
+                        adapter.setData(bean.body.data);
+                        adapter.notifyDataSetChanged();
+                        mRefreshLayout.endRefreshing();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     protected int getLayoutId() {
@@ -41,96 +118,108 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
+        uid = ((MainActivity) getActivity()).getUid();
         mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
+         llCommentUpContainer= (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
+        etComment= (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
+        btComment= (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
         mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
-
+        llCommentUpContainer.setVisibility(View.GONE);
+        etComment.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode==KeyEvent.KEYCODE_BACK){
+                    etComment.setFocusable(false);
+                    llCommentUpContainer.setVisibility(View.GONE);
+                    return true;
+                }
+                return false;
+            }
+        });
+        btComment.setOnClickListener(this);
         mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mInformation.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         mRefreshLayout.setDelegate(this);
         BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
         mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
-        datas = new ArrayList<Information>();
-        datas.add(new Information(
-                "http://avatar.csdn.net/F/C/3/1_heaimnmn.jpg",
-                "李小姐",
-                "星巴克门店运维项目3.1正式上线，第一阶段涉及江苏、浙江、安徽三个省，欢迎大家主动承接。请联系QQ:6657468,6657468@qq.com",
-                new String[]{"http://img3.3lian.com/2014/s4/42/d/44.jpg",
-                        "http://img2.3lian.com/img2007/19/51/025.jpg",
-                        "http://img2.3lian.com/img2007/23/15/005.jpg"},
-                12312414));
-        datas.add(new Information(
-                "http://avatar.csdn.net/6/B/8/1_projectlover.jpg",
-                "罗小姐",
-                "[上海招聘] 招聘T2桌面工程师一名，税前6000，五险一金，2.15到岗。有意愿者请按标准简历模板（见知识库）填写后发至hr@dajutech.com",
-                new String[]{"http://t1.niutuku.com/960/10/10-192927.jpg",
-                        "http://img3.3lian.com/2014/s5/38/d/91.jpg",
-                        "http://www.taopic.com/uploads/allimg/110922/10023-11092211201726.jpg"},
-                213124));
-        adapter = new InformationAdapter(getActivity(), datas);
-        adapter.setOnItemButtonClickListener(new OnItemButtonClickListener() {
+        startProgress("加载中...");
+        initData();
+    }
+
+    private void initData() {
+        Requester requester = new Requester();
+        requester.uid = uid;
+        requester.cmd = 10050;
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new com.squareup.okhttp.Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
 
             @Override
-            public void buttonClick(View v, int position) {
-                // TODO Auto-generated method stub
-                Utilities.showToast("您评论了第" + position + "条记录", getActivity());
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.INFORMATION_SUCCESS;
+                    msg.obj = json;
+
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
             }
         });
-        mInformation.setAdapter(adapter);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        ((MainActivity)getActivity()).getSupportActionBar().hide();
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
     }
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
         // 在这里加载最新数据
-
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                // 加载完毕后在UI线程结束下拉刷新
-                mRefreshLayout.endRefreshing();
-            }
-        }.execute();
+        initData();
     }
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
-
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                // 加载完毕后在UI线程结束加载更多
-                mRefreshLayout.endLoadingMore();
-            }
-        }.execute();
+        mRefreshLayout.endLoadingMore();
 
         return true;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bt_comment:
+                String comment=etComment.getText().toString().trim();
+                if(TextUtils.isEmpty(comment)){
+                    Utilities.showToast("评论内容不能为空",getActivity());
+                    return;
+                }
+                startUploadComment(comment);
+                break;
+        }
+    }
+
+    private void startUploadComment(String content) {
+
     }
 }
