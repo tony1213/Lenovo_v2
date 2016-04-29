@@ -15,6 +15,7 @@ public class StatusCode {
     public static final int WORKORDER_ACCOUNT_SUCCESS=0x15;
     public static final int WORKORDER_EVALUATE_SUCCSS=0x16;
     public static final int WORKORDER_CONTRACT_SUCCESS=0x17;
+    public static final int WORKORDER_MSG_SUCCESS=0x18;
 
     public static final int WORKORDER_SUCCESS=0x20;
     public static final int WORKORDER_RECEIVE_ACTION_SUCCESS=0x21;

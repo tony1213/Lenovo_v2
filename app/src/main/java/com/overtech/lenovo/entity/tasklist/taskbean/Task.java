@@ -19,6 +19,9 @@ public class Task {
     public String workorder_code;//工单单号
     public String workorder_create_datetime;//任务单发布时间
 
+    public String title;//工单通知消息标题
+    public String content;//工单通知消息内容
+
     public String notification_item_time;//消息通知时间
     public String notification_item_who;//消息通知发送者
     public String notification_item_content;//通知内容

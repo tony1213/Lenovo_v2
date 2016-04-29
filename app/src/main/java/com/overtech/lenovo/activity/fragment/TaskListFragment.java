@@ -28,6 +28,7 @@ import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
+import com.overtech.lenovo.activity.business.tasklist.WorkorderMsgActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
@@ -337,7 +338,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     public void onLogItemClick(View view, int position) {
         // TODO Auto-generated method stub
         Intent intent = new Intent(getActivity(), TaskInformationActivity.class);
-        intent.putExtra("workorder_code",datas.get(position).workorder_code);
+        intent.putExtra("workorder_code", datas.get(position).workorder_code);
         startActivity(intent);
     }
 
@@ -582,6 +583,9 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mNotification.setImageResource(R.drawable.anim_task_notification);
                 AnimationDrawable anmation = (AnimationDrawable) mNotification.getDrawable();
                 anmation.start();
+
+                Intent intent = new Intent(getActivity(), WorkorderMsgActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_task_all:
                 curTaskType = "-1";
