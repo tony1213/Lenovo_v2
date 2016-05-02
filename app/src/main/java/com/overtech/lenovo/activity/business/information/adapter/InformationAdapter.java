@@ -123,9 +123,15 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
         }
 
     }
-    public void setData(List<Information.InforItem> datas){
-        this.datas=datas;
+
+    public List<Information.InforItem> getDatas() {
+        return datas;
     }
+
+    public void setData(List<Information.InforItem> datas) {
+        this.datas = datas;
+    }
+
     public void setOnItemButtonClickListener(OnItemButtonClickListener listener) {
         this.listener = listener;
     }

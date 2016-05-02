@@ -37,7 +37,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -54,13 +56,14 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     private BGARefreshLayout mRefreshLayout;
     private InformationAdapter adapter;
     private List<Information> datas;
+    private Map mContentTree=new HashMap();
     private String uid;
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
-            Information bean = gson.fromJson(json, Information.class);
+            final Information bean = gson.fromJson(json, Information.class);
             if (bean == null) {
                 stopProgress();
                 return;
@@ -84,9 +87,6 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     Utilities.showToast(bean.msg, getActivity());
                     break;
                 case StatusCode.INFORMATION_SUCCESS:
-
-                    break;
-                case StatusCode.INFORMATION_COMMENT_SUCCESS:
                     if (adapter == null) {
                         adapter = new InformationAdapter(getActivity(), bean.body.data);
                         adapter.setOnItemButtonClickListener(new OnItemButtonClickListener() {
@@ -97,6 +97,7 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                                 Utilities.showToast("您评论了第" + position + "条记录", getActivity());
                                 llCommentUpContainer.setVisibility(View.VISIBLE);
                                 etComment.setFocusable(true);
+                                etComment.setTag(new Object[]{position,bean.body.data.get(position).post_id});
                             }
                         });
                         mInformation.setAdapter(adapter);
@@ -105,6 +106,11 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                         adapter.notifyDataSetChanged();
                         mRefreshLayout.endRefreshing();
                     }
+                    break;
+                case StatusCode.INFORMATION_COMMENT_SUCCESS:
+                        int p=msg.arg1;
+                        adapter.getDatas().get(p).create_user_content= (String) mContentTree.get(p);
+                        adapter.notifyDataSetChanged();
                     break;
             }
         }
@@ -125,15 +131,13 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
         btComment= (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
         mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
         llCommentUpContainer.setVisibility(View.GONE);
-        etComment.setOnKeyListener(new View.OnKeyListener() {
+        etComment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode==KeyEvent.KEYCODE_BACK){
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
                     etComment.setFocusable(false);
                     llCommentUpContainer.setVisibility(View.GONE);
-                    return true;
                 }
-                return false;
             }
         });
         btComment.setOnClickListener(this);
@@ -210,16 +214,56 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
         switch (v.getId()){
             case R.id.bt_comment:
                 String comment=etComment.getText().toString().trim();
+                Object[] objs= (Object[]) etComment.getTag();
+                String post_id= (String) objs[1];
+                int pos= (int) objs[0];
                 if(TextUtils.isEmpty(comment)){
                     Utilities.showToast("评论内容不能为空",getActivity());
                     return;
                 }
-                startUploadComment(comment);
+                startUploadComment(pos,post_id,comment);
                 break;
         }
     }
 
-    private void startUploadComment(String content) {
+    private void startUploadComment(final int position, String id, final String content) {
+        Requester requester = new Requester();
+        requester.uid = uid;
+        requester.cmd = 10051;
+        requester.body.put("post_id",id);
+        requester.body.put("comment_content",content);
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new com.squareup.okhttp.Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
 
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.INFORMATION_COMMENT_SUCCESS;
+                    msg.obj = json;
+                    msg.arg1=position;
+                    mContentTree.put(position,content);
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
     }
 }
