@@ -30,6 +30,7 @@ public class StatusCode {
     public static final int WORKORDER_STORE_REMARK_SUCCESS=0x41;
     public static final int WORKORDER_STORE_REMARK_UPLOAD_SUCCESS=0x42;
     public static final int WORKORDER_STORE_REPAIR_INFO_SUCCESS=0x43;
+    public static final int WORKORDER_STORE_UPLOAD_LATLNG_SUCCESS=0x44;
 
     public static final int WORKORDER_PROPERTY_SUCCESS=0x50;
 

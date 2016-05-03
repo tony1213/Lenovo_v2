@@ -111,22 +111,22 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
         holder.issue_type.setText(task.issue_type);
         holder.issue_resume.setText(task.issue_resume);
         holder.remarks.setText(task.remarks);
-        if (TextUtils.isEmpty(task.latitude) || TextUtils.isEmpty(task.longitude)) {
+        if (task.latitude == 0.0 || task.longitude == 0.0) {
             holder.taskDistance.setText("未获取位置信息");
         } else {
             if (longitude == 0 || latitude == 0) {
                 holder.taskDistance.setText("获取当前位置信息失败");
             } else {
                 LatLng curLoc = new LatLng(latitude, longitude);
-                LatLng desLoc = new LatLng(Double.parseDouble(task.latitude), Double.parseDouble(task.longitude));
+                LatLng desLoc = new LatLng(task.latitude, task.longitude);
                 double dis = DistanceUtil.getDistance(curLoc, desLoc);
                 holder.taskDistance.setText(dis / 1000 + "km");
             }
         }
-        if (task.appointment_home_datetime == 0) {
+        if (task.appointment_home_mills == 0) {
             holder.appointment_home_datetime.setText("");
         } else {
-            holder.appointment_home_datetime.setText(Utilities.getTimeBetween(System.currentTimeMillis() / 1000, task.appointment_home_datetime));
+            holder.appointment_home_datetime.setText(Utilities.getTimeBetween(System.currentTimeMillis()/1000, task.appointment_home_mills/1000));
         }
         if (task.taskType.equals("0")) {
             holder.btTaskType.setVisibility(View.VISIBLE);
@@ -151,7 +151,7 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
             holder.taskWaitEvaluate.setVisibility(View.GONE);
         } else if (task.taskType.equals("4")) {
             holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
-            holder.taskWaitEvaluate.setText("等待评价");
+            holder.taskWaitEvaluate.setText("等待关单");
             holder.btTaskType.setVisibility(View.GONE);
             holder.btTaskType.setTag("");
         } else if (task.taskType.equals("5")) {
@@ -161,12 +161,7 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
             holder.btTaskType.setTag("");
         } else if (task.taskType.equals("6")) {
             holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
-            holder.taskWaitEvaluate.setText("等待关单");
-            holder.btTaskType.setVisibility(View.GONE);
-            holder.btTaskType.setTag("");
-        } else if (task.taskType.equals("7")) {
-            holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
-            holder.taskWaitEvaluate.setText("已完成");
+            holder.taskWaitEvaluate.setText("完成");
             holder.btTaskType.setVisibility(View.GONE);
             holder.btTaskType.setTag("");
         }

@@ -72,13 +72,13 @@ public abstract class BaseFragment extends Fragment implements
      * 关闭对话框
      */
     public void stopProgress() {
-
-        if (newFragment.getDialog() != null) {
-            if (newFragment.getDialog().isShowing()) {
-                newFragment.dismiss();
+        if(newFragment!=null) {
+            if (newFragment.getDialog() != null) {
+                if (newFragment.getDialog().isShowing()) {
+                    newFragment.dismiss();
+                }
             }
         }
-
     }
 
     @Override

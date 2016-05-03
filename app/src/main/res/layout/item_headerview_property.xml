@@ -30,7 +30,7 @@
 
     <TextView
         style="@style/workorder_property_textview_header_style"
-        android:layout_width="50dp"
+        android:layout_width="52dp"
         android:text="型号" />
 
     <View

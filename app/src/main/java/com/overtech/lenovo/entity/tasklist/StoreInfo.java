@@ -12,6 +12,7 @@ public class StoreInfo {
     public class Body{
         public String name;
         public String branch_code;
+        public String isShow;
         public List<ImageUrl> imageList;
         public List<Remark> remarks;
         public List<RepairInfo> data;

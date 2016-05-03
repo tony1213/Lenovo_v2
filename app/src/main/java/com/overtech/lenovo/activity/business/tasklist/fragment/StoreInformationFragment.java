@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.activity.app.CustomApplication;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
@@ -42,6 +44,7 @@ import java.util.List;
 public class StoreInformationFragment extends BaseFragment {
     private RecyclerView mRecyclerView;
     private TextView tvStoreName;
+    private AppCompatButton btUploadLatlng;
     private LinearLayout llStoreRemarks;
     private TextView mStoreTalk;
     private String branch_code;
@@ -51,6 +54,8 @@ public class StoreInformationFragment extends BaseFragment {
     private boolean isRemarkFirstLoading = true;
     private String uid;
     private String workorderCode;
+    private double latitude;
+    private double longitude;
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {
@@ -81,11 +86,18 @@ public class StoreInformationFragment extends BaseFragment {
                     break;
                 case StatusCode.WORKORDER_STORE_INFORMATION_SUCCESS:
                     String name = bean.body.name;
-                    branch_code=bean.body.branch_code;
+                    branch_code = bean.body.branch_code;
                     List<StoreInfo.ImageUrl> imageList = bean.body.imageList;
                     tvStoreName.setText(name);
                     adapter = new StoreInfoAdapter(getActivity(), imageList);
                     mRecyclerView.setAdapter(adapter);
+                    if(bean.body.isShow!=null) {
+                        if (bean.body.isShow.equals("1")) {
+                            btUploadLatlng.setVisibility(View.VISIBLE);
+                        } else if (bean.body.isShow.equals("0")) {
+                            btUploadLatlng.setVisibility(View.GONE);
+                        }
+                    }
                     isInforFirstLoading = false;
 
                     break;
@@ -107,6 +119,9 @@ public class StoreInformationFragment extends BaseFragment {
                     textView.setText(bean.body.create_datetime + "[" + bean.body.create_user_name + "]" + storeRemarkContent);
                     llStoreRemarks.addView(textView);
                     break;
+                case StatusCode.WORKORDER_STORE_UPLOAD_LATLNG_SUCCESS:
+                    Utilities.showToast("提交成功", getActivity());
+                    break;
             }
             stopProgress();
         }
@@ -121,23 +136,35 @@ public class StoreInformationFragment extends BaseFragment {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-
+        latitude = ((CustomApplication) getActivity().getApplication()).latitude;
+        longitude = ((CustomApplication) getActivity().getApplication()).longitude;
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_store_info);
         tvStoreName = (TextView) mRootView.findViewById(R.id.tv_store_name);
+        btUploadLatlng = (AppCompatButton) mRootView.findViewById(R.id.bt_upload_latlng);
         llStoreRemarks = (LinearLayout) mRootView.findViewById(R.id.ll_store_remarks);
         mStoreTalk = (TextView) mRootView.findViewById(R.id.tv_workorder_store_talk);
 //        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+        btUploadLatlng.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (latitude == 0 || longitude == 0) {
+                    Utilities.showToast("当前经纬度信息错误，请打开GPS并且保持网络畅通，重启app尝试", getActivity());
+                    return;
+                }
+                uploadLatlng();
+            }
+        });
         mStoreTalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction ft=getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment pre=getActivity().getSupportFragmentManager().findFragmentByTag("remark");
-                if(pre!=null){
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("remark");
+                if (pre != null) {
                     ft.remove(pre);
                 }
                 ft.addToBackStack(null);
-                WorkorderStoreRemarkDialog fragment=WorkorderStoreRemarkDialog.newInstance();
-                fragment.show(ft,"remark");
+                WorkorderStoreRemarkDialog fragment = WorkorderStoreRemarkDialog.newInstance();
+                fragment.show(ft, "remark");
             }
         });
     }
@@ -151,7 +178,7 @@ public class StoreInformationFragment extends BaseFragment {
         Requester requester = new Requester();
         requester.cmd = 10030;
         requester.uid = uid;
-        requester.body.put("branch_code",branch_code);
+        requester.body.put("branch_code", branch_code);
         requester.body.put("create_content", content);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
@@ -173,6 +200,48 @@ public class StoreInformationFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     String json = response.body().string();
                     msg.what = StatusCode.WORKORDER_STORE_REMARK_UPLOAD_SUCCESS;
+                    msg.obj = json;
+
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    public void uploadLatlng() {
+        startProgress("更新中");
+        Requester requester = new Requester();
+        requester.uid = uid;
+        requester.cmd = 10031;
+        requester.body.put("branch_id", branch_code);
+        requester.body.put("longitude", longitude);
+        requester.body.put("latitude", latitude);
+        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new com.squareup.okhttp.Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.WORKORDER_STORE_UPLOAD_LATLNG_SUCCESS;
                     msg.obj = json;
 
                 } else {

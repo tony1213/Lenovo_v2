@@ -19,6 +19,8 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.overtech.lenovo.debug.Logger;
+
 /**
  * @author Tony 2015-10-08
  */
@@ -220,10 +222,11 @@ public class Utilities {
      * @return
      */
 	public static String getTimeBetween(long curTime,long desTime){
+		Logger.e("当前时间戳"+curTime+"==="+"预约时间戳"+desTime);
 		StringBuilder sb=new StringBuilder();
 		long a=desTime-curTime;
 		if(a<0){
-			return "服务中";
+			return "已到场";
 		}
 		int day=(int)a/3600/24;
 		if(day>=1){

@@ -72,7 +72,8 @@ public class TaskInformationFragment extends BaseFragment {
             Logger.e("后台拿到的数据==" + json);
 
             TaskBean bean = gson.fromJson(json, TaskBean.class);
-            if(bean==null){
+            if (bean == null) {
+                stopProgress();
                 return;
             }
             int st = bean.st;
@@ -105,79 +106,106 @@ public class TaskInformationFragment extends BaseFragment {
                     //目前时间轴实现思路，根据工单状态自己构造函数，通过listview实现
                     datas.clear();
                     if (taskType.equals("-1")) {//开单
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
                         datas.add(task1);
                     } else if (taskType.equals("0")) {//接单
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", "", "", "", "", "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", "", "", "", "", "", "", "", "");
                         datas.add(task1);
                         datas.add(task2);
                     } else if (taskType.equals("1")) {//预约
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", "", "", body.home_datetime, "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", "", "", body.home_datetime, "", "", "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                     } else if (taskType.equals("2")) {//到场
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                         datas.add(task4);
                     } else if (taskType.equals("3")) {//解决方案
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", "", "", "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                         datas.add(task4);
                         datas.add(task5);
-                    } else if (taskType.equals("4")) {//待评价
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", "");
-                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", "", body.feedback);
-                        datas.add(task1);
-                        datas.add(task2);
-                        datas.add(task3);
-                        datas.add(task4);
-                        datas.add(task5);
-                        datas.add(task6);
-                    } else if (taskType.equals("5")) {//待结单
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.feedback_solved_datetime, "");
-                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", "", body.feedback);
+                    } else if (taskType.equals("4")) {//待关单
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", "", "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                         datas.add(task4);
                         datas.add(task5);
                         datas.add(task6);
-                    } else {//待关单，完成
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.feedback_solved_datetime, "");
-                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", "", body.feedback);
+                    } else if (taskType.equals("5") && TextUtils.isEmpty(body.feedback)) {//待结单，未评价
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", body.feedback_solved_datetime, "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                         datas.add(task4);
                         datas.add(task5);
                         datas.add(task6);
+                        datas.add(task7);
+                    } else if (taskType.equals("5") && !TextUtils.isEmpty(body.feedback)) {//待结单，已评价
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", body.feedback_solved_datetime, "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "", "", "", body.feedback);
+                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        datas.add(task1);
+                        datas.add(task2);
+                        datas.add(task3);
+                        datas.add(task4);
+                        datas.add(task5);
+                        datas.add(task6);
+                        datas.add(task10);
+                        datas.add(task7);
+                    }else if(taskType.equals("6")){
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", body.feedback_solved_datetime, "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        datas.add(task1);
+                        datas.add(task2);
+                        datas.add(task3);
+                        datas.add(task4);
+                        datas.add(task5);
+                        datas.add(task6);
+                        if(!TextUtils.isEmpty(body.feedback)){
+                            TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "", "", "", body.feedback);
+                            datas.add(task10);
+                        }
+                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task8 = new TaskProcess("6", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        datas.add(task7);
+                        datas.add(task8);
                     }
                     if (mTaskProcess.getAdapter() != null) {
                         adapter.notifyDataSetChanged();
@@ -197,10 +225,10 @@ public class TaskInformationFragment extends BaseFragment {
                     }
                     break;
                 case StatusCode.WORKORDER_NOTIFICATION_SUCCESS:
-                    if(!TextUtils.isEmpty(body.workorder_notification_datetime)) {
+                    if (!TextUtils.isEmpty(body.workorder_notification_datetime)) {
                         tvNotificationTime.setText(body.workorder_notification_datetime);
                     }
-                    if(body.data!=null) {
+                    if (body.data != null) {
                         for (Task task : body.data) {
                             TextView tvMsg = new TextView(getActivity());
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -359,6 +387,7 @@ public class TaskInformationFragment extends BaseFragment {
             if (isFirstLoading) {
                 uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
                 workorderCode = ((TaskDetailActivity) getActivity()).getWorkorderCode();
+                startProgress("加载中");
                 startLoading();
                 // 开始网络加载
             } else {
@@ -368,7 +397,6 @@ public class TaskInformationFragment extends BaseFragment {
     }
 
     private void startLoading() {
-        startProgress("加载中...");
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10003;

@@ -7,14 +7,13 @@
         android:id="@+id/iv_process_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="21dp"
         android:src="@mipmap/icon_process_point" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="50dp"
         android:layout_below="@id/iv_process_point"
-        android:layout_marginLeft="28dp"
+        android:layout_marginLeft="7dp"
         android:background="@color/main_orange" />
 
     <LinearLayout
@@ -50,7 +49,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
         android:background="@drawable/shape_task_info_frag_button_bg"
         android:minHeight="30dp"
         android:minWidth="40dp"

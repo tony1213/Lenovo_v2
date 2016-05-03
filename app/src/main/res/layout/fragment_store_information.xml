@@ -5,57 +5,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_store_name"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="8dp"
-        android:text="KFC徐家汇店（K00895）"
-        android:textColor="@color/bg_qq_blue"
-        android:textSize="@dimen/text_size_title" />
+        >
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_store_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            android:text="KFC徐家汇店（K00895）"
+            android:textColor="@color/bg_qq_blue"
+            android:textSize="@dimen/text_size_title" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/bt_upload_latlng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_alignBaseline="@id/tv_store_name"
+            android:layout_alignParentRight="true"
+            android:minHeight="20dp"
+            android:layout_marginRight="12dp"
+            android:text="上传门店经纬度"
+            android:background="@color/main_orange"
+            android:textColor="@color/main_white" />
+    </RelativeLayout>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_weight="1">
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        app:contentPadding="16dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_store_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layoutManager="GridLayoutManager"
             android:layout_gravity="center"
+            app:layoutManager="GridLayoutManager"
             app:spanCount="2" />
     </android.support.v7.widget.CardView>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:background="@color/colo_grey" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="4dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        app:cardBackgroundColor="@color/store_remark_bg">
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/store_remark_bg"
+        app:contentPadding="16dp">
 
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:layout_width="match_parent"

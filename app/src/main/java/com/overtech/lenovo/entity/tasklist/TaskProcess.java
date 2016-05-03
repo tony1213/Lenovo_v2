@@ -27,13 +27,16 @@ public class TaskProcess {
      */
     public static final String SOLUTION = "3";
     /**
-     * 待评价
+     * 待关单
      */
-    public static final String EVALUATE = "4";
+    public static final String SHUTDOWN = "4";
     /**
      * 待结单
      */
     public static final String ACCOUNT = "5";
+
+    public static final String COMPLITE="6";
+    public static final String EVALUATE="10";//如果有内容，则显示该节点
 
     public String taskType;//工单类型
     public String workorder_code;//工单号
@@ -43,10 +46,11 @@ public class TaskProcess {
     public String appointment_home_datetime;//工单预约上门时间
     public String home_datetime;//工程师上门时间
     public String solution;//解决方案
+    public String shutdown_datetime;//工单关单时间
     public String feedback_solved_datetime;//工程师反馈的解决时间
     public String feedback;//工单评价反馈
 
-    public TaskProcess(String taskType, String workorder_code, String workorder_create_datetime, String confirm_datetime, String appointment_datetime, String appointment_home_datetime, String home_datetime, String solution, String feedback_solved_datetime, String feedback) {
+    public TaskProcess(String taskType, String workorder_code, String workorder_create_datetime, String confirm_datetime, String appointment_datetime, String appointment_home_datetime, String home_datetime, String solution, String shutdown_datetime,String feedback_solved_datetime, String feedback) {
         this.taskType = taskType;
         this.workorder_code = workorder_code;
         this.workorder_create_datetime = workorder_create_datetime;
@@ -55,6 +59,7 @@ public class TaskProcess {
         this.appointment_home_datetime = appointment_home_datetime;
         this.home_datetime = home_datetime;
         this.solution = solution;
+        this.shutdown_datetime=shutdown_datetime;
         this.feedback_solved_datetime = feedback_solved_datetime;
         this.feedback = feedback;
     }

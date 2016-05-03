@@ -543,7 +543,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                         msg.what = StatusCode.WORKORDER_APPOINT_SUCCESS;
                     } else if (curTaskType.equals("2")) {
                         msg.what = StatusCode.WORKORDER_HOME_SUCCESS;
-                    } else if (curTaskType.equals("4")) {
+                    } else if (curTaskType.equals("10")) {
                         msg.what = StatusCode.WORKORDER_EVALUATE_SUCCSS;
                     } else if (curTaskType.equals("5")) {
                         msg.what = StatusCode.WORKORDER_ACCOUNT_SUCCESS;
@@ -754,7 +754,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 break;
             case R.id.tv_task_evaluation:
                 popupWindow.dismiss();
-                curTaskType = "4";
+                curTaskType = "10";
                 mTitleFilter.setText(mTaskAccount.getText());
 
                 startProgress("加载中");

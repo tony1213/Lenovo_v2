@@ -33,7 +33,7 @@
     <TextView
         android:id="@+id/tv_model"
         style="@style/workorder_property_textview_body_style"
-        android:layout_width="50dp"
+        android:layout_width="52dp"
         android:text="173099" />
 
     <View
