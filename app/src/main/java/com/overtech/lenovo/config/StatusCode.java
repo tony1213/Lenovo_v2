@@ -39,6 +39,8 @@ public class StatusCode {
     public static final int PERSONAL_SETTING_UPDATE_SUCCESS=0x71;
     public static final int PERSONAL_SETTING_UPLOAD_ID_POSITIVE=0x72;
     public static final int PERSONAL_SETTING_UPLOAD_ID_OPPOSITE=0x73;
+    public static final int PERSONAL_ACCOUNT_DETAIL_SUCCESS=0x74;
+    public static final int PERSONAL_ACCOUNT_SERVER_SUCCESS=0x75;
 
     public static final int KNOWLEDGE_PUBLIC_SUCCESS=0x80;
     public static final int KNOWLEDGE_CONTRACT_SUCCESS=0x81;

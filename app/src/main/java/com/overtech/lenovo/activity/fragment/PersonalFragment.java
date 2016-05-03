@@ -20,6 +20,7 @@ import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
+import com.overtech.lenovo.activity.business.personal.PersonalAccountDetailActivity;
 import com.overtech.lenovo.activity.business.personal.PersonalSettingActivity;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
@@ -49,6 +50,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private TextView tv_finance;
     private TextView tv_month_workorder_amount;
     private TextView tv_year_workorder_amount;
+    private LinearLayout mAccountDetail;
+    private LinearLayout mAccountServerDetail;
     private RatingBar rb_satisfaction;
     private LinearLayout setting;
     private String uid;
@@ -119,6 +122,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         tv_finance = (TextView) mRootView.findViewById(R.id.tv_finance);
         tv_month_workorder_amount = (TextView) mRootView.findViewById(R.id.tv_month_workorder_amount);
         tv_year_workorder_amount = (TextView) mRootView.findViewById(R.id.tv_year_workorder_amount);
+        mAccountDetail = (LinearLayout) mRootView.findViewById(R.id.ll_account_detail);
+        mAccountServerDetail = (LinearLayout) mRootView.findViewById(R.id.ll_account_server_detail);
         rb_satisfaction = (RatingBar) mRootView.findViewById(R.id.rb_satisfaction);
         setting = (LinearLayout) mRootView.findViewById(R.id.ll_personal_setting);
         uid = ((MainActivity) getActivity()).getUid();
@@ -159,14 +164,15 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
-
+        mAccountDetail.setOnClickListener(this);
+        mAccountServerDetail.setOnClickListener(this);
         setting.setOnClickListener(this);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub
-        ((MainActivity)getActivity()).getSupportActionBar().hide();
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
 //		ActionBar actionBar = ((MainActivity) getActivity())
 //				.getSupportActionBar();
 //		actionBar.setTitle("我的");
@@ -195,24 +201,19 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
                 Intent intent = new Intent(getActivity(),
                         PersonalSettingActivity.class);
-                startActivityForResult(intent, 0x1);
-                StackManager.getStackManager().pushActivity(getActivity());
+                startActivity(intent);
                 break;
+            case R.id.ll_account_detail:
+                Intent intent2 = new Intent(getActivity(), PersonalAccountDetailActivity.class);
+                startActivity(intent2);
+                break;
+            case R.id.ll_account_server_detail:
 
+                break;
             default:
                 break;
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 0x1://setting
-                if (requestCode == Activity.RESULT_OK) {
-                    StackManager.getStackManager().popActivity(getActivity());
-                }
-                break;
-        }
-    }
+
 }
