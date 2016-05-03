@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
-import com.overtech.lenovo.activity.business.personal.adapter.PersonalAccountDetailAdapter;
+import com.overtech.lenovo.activity.business.personal.adapter.PersonalAccountServerDetailAdapter;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.entity.RequestExceptBean;
@@ -34,12 +34,12 @@ import java.io.IOException;
 /**
  * Created by Overtech on 16/5/3.
  */
-public class PersonalAccountDetailActivity extends BaseActivity {
-    private Toolbar toolBar;
+public class PersonalAccountServerDetailActivity extends BaseActivity {
+    private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private PersonalAccountDetailAdapter adapter;
+    private PersonalAccountServerDetailAdapter adapter;
     private String uid;
-    private UIHandler uiHandler = new UIHandler(this) {
+    private UIHandler uiHandler=new UIHandler(this){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -52,45 +52,44 @@ public class PersonalAccountDetailActivity extends BaseActivity {
             int st = bean.st;
             if (st == -1 || st == -2) {
                 stopProgress();
-                SharePreferencesUtils.put(PersonalAccountDetailActivity.this, SharedPreferencesKeys.UID, "");
-                Utilities.showToast(bean.msg, PersonalAccountDetailActivity.this);
-                Intent intent = new Intent(PersonalAccountDetailActivity.this, LoginActivity.class);
+                SharePreferencesUtils.put(PersonalAccountServerDetailActivity.this, SharedPreferencesKeys.UID, "");
+                Utilities.showToast(bean.msg, PersonalAccountServerDetailActivity.this);
+                Intent intent = new Intent(PersonalAccountServerDetailActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
-            switch (msg.what) {
+            switch (msg.what){
                 case StatusCode.FAILED:
-                    Utilities.showToast(bean.msg, PersonalAccountDetailActivity.this);
+                    Utilities.showToast(bean.msg,PersonalAccountServerDetailActivity.this);
                     break;
                 case StatusCode.SERVER_EXCEPTION:
-                    Utilities.showToast(bean.msg, PersonalAccountDetailActivity.this);
+                    Utilities.showToast(bean.msg,PersonalAccountServerDetailActivity.this);
                     break;
-                case StatusCode.PERSONAL_ACCOUNT_DETAIL_SUCCESS:
-                    adapter = new PersonalAccountDetailAdapter(PersonalAccountDetailActivity.this, bean.body.data);
+                case StatusCode.PERSONAL_ACCOUNT_SERVER_SUCCESS:
+                    adapter=new PersonalAccountServerDetailAdapter(PersonalAccountServerDetailActivity.this,bean.body.data);
                     recyclerView.setAdapter(adapter);
                     break;
             }
             stopProgress();
         }
     };
-
     @Override
     protected int getLayoutIds() {
-        return R.layout.activity_personal_account_detail;
+        return R.layout.activity_personal_account_server_detail;
     }
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        toolBar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(toolBar);
-        ActionBar actionBar = getSupportActionBar();
+        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
+        toolbar= (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar=getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("变化明细");
-        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+        actionBar.setTitle("服务明细");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -102,7 +101,7 @@ public class PersonalAccountDetailActivity extends BaseActivity {
     private void initData() {
         startProgress("加载中");
         Requester requester = new Requester();
-        requester.cmd = 10014;
+        requester.cmd = 10015;
         requester.uid = uid;
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
         Call call = httpEngine.createRequestCall(request);
@@ -123,7 +122,7 @@ public class PersonalAccountDetailActivity extends BaseActivity {
                 Message msg = uiHandler.obtainMessage();
                 if (response.isSuccessful()) {
                     String json = response.body().string();
-                    msg.what = StatusCode.PERSONAL_ACCOUNT_DETAIL_SUCCESS;
+                    msg.what = StatusCode.PERSONAL_ACCOUNT_SERVER_SUCCESS;
                     msg.obj = json;
                 } else {
                     ResponseExceptBean bean = new ResponseExceptBean();

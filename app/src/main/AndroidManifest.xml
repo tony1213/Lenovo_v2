@@ -59,6 +59,7 @@
         <activity android:name=".activity.business.tasklist.StoreRepairInformationActivity"/>
         <activity android:name=".activity.business.tasklist.WorkorderMsgActivity"/>
         <activity android:name=".activity.business.personal.PersonalAccountDetailActivity"/>
+        <activity android:name=".activity.business.personal.PersonalAccountServerDetailActivity"/>
     </application>
 
 </manifest>

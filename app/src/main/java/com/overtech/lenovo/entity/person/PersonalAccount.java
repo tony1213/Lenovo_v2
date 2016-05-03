@@ -19,5 +19,6 @@ public class PersonalAccount {
         public String issue_type;
         public String issue_description;
         public String solution;
+        public String task_type;
     }
 }

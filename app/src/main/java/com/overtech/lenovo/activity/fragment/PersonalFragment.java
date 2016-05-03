@@ -21,6 +21,7 @@ import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.personal.PersonalAccountDetailActivity;
+import com.overtech.lenovo.activity.business.personal.PersonalAccountServerDetailActivity;
 import com.overtech.lenovo.activity.business.personal.PersonalSettingActivity;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
@@ -208,7 +209,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 startActivity(intent2);
                 break;
             case R.id.ll_account_server_detail:
-
+                Intent intent3=new Intent(getActivity(),PersonalAccountServerDetailActivity.class);
+                startActivity(intent3);
                 break;
             default:
                 break;
