@@ -90,6 +90,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
+                android:checked="false"
                 android:background="@drawable/selector_toggle_button"
                 android:text=""
                 android:textOff=""

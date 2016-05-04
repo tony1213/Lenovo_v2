@@ -171,7 +171,6 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_contract:
-                Utilities.showToast("您点击了菜单" + item.getItemId(), getActivity());
                 popupWindow.showAtLocation(toolbar, Gravity.NO_GRAVITY, toolbar.getWidth() / 5 * 4, toolbar.getHeight() + getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android")));
 
                 return true;

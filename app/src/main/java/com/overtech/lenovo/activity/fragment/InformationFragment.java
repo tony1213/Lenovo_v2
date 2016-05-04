@@ -22,6 +22,7 @@ import com.overtech.lenovo.activity.business.information.adapter.InformationAdap
 import com.overtech.lenovo.activity.business.information.adapter.InformationAdapter.OnItemButtonClickListener;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.RequestExceptBean;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
@@ -56,13 +57,14 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     private BGARefreshLayout mRefreshLayout;
     private InformationAdapter adapter;
     private List<Information> datas;
-    private Map mContentTree=new HashMap();
+    private Map mContentTree = new HashMap();
     private String uid;
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
+            Logger.e("informationfragment  后台" + json);
             final Information bean = gson.fromJson(json, Information.class);
             if (bean == null) {
                 stopProgress();
@@ -97,7 +99,7 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                                 Utilities.showToast("您评论了第" + position + "条记录", getActivity());
                                 llCommentUpContainer.setVisibility(View.VISIBLE);
                                 etComment.setFocusable(true);
-                                etComment.setTag(new Object[]{position,bean.body.data.get(position).post_id});
+                                etComment.setTag(new Object[]{position, bean.body.data.get(position).post_id});
                             }
                         });
                         mInformation.setAdapter(adapter);
@@ -108,11 +110,18 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     }
                     break;
                 case StatusCode.INFORMATION_COMMENT_SUCCESS:
-                        int p=msg.arg1;
-                        adapter.getDatas().get(p).create_user_content= (String) mContentTree.get(p);
-                        adapter.notifyDataSetChanged();
+                    int p = msg.arg1;
+                    Information information = new Information();
+                    Information.Comment comment = information.new Comment();
+                    comment.comment_content = bean.body.comment_content;
+                    comment.comment_user = bean.body.comment_user;
+                    adapter.getDatas().get(p).comment.add(comment);
+                    adapter.notifyDataSetChanged();
+                    etComment.setText("");
+                    llCommentUpContainer.setVisibility(View.GONE);
                     break;
             }
+            stopProgress();
         }
     };
 
@@ -126,15 +135,15 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
         // TODO Auto-generated method stub
         uid = ((MainActivity) getActivity()).getUid();
         mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
-         llCommentUpContainer= (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
-        etComment= (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
-        btComment= (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
+        llCommentUpContainer = (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
+        etComment = (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
+        btComment = (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
         mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
         llCommentUpContainer.setVisibility(View.GONE);
         etComment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
+                if (!hasFocus) {
                     etComment.setFocusable(false);
                     llCommentUpContainer.setVisibility(View.GONE);
                 }
@@ -211,17 +220,17 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bt_comment:
-                String comment=etComment.getText().toString().trim();
-                Object[] objs= (Object[]) etComment.getTag();
-                String post_id= (String) objs[1];
-                int pos= (int) objs[0];
-                if(TextUtils.isEmpty(comment)){
-                    Utilities.showToast("评论内容不能为空",getActivity());
+                String comment = etComment.getText().toString().trim();
+                Object[] objs = (Object[]) etComment.getTag();
+                String post_id = (String) objs[1];
+                int pos = (int) objs[0];
+                if (TextUtils.isEmpty(comment)) {
+                    Utilities.showToast("评论内容不能为空", getActivity());
                     return;
                 }
-                startUploadComment(pos,post_id,comment);
+                startUploadComment(pos, post_id, comment);
                 break;
         }
     }
@@ -230,8 +239,8 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10051;
-        requester.body.put("post_id",id);
-        requester.body.put("comment_content",content);
+        requester.body.put("post_id", id);
+        requester.body.put("comment_content", content);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new com.squareup.okhttp.Callback() {
@@ -253,8 +262,8 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     String json = response.body().string();
                     msg.what = StatusCode.INFORMATION_COMMENT_SUCCESS;
                     msg.obj = json;
-                    msg.arg1=position;
-                    mContentTree.put(position,content);
+                    msg.arg1 = position;
+                    mContentTree.put(position, content);
                 } else {
                     ResponseExceptBean bean = new ResponseExceptBean();
                     bean.st = response.code();

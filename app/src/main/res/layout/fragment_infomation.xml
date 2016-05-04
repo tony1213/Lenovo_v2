@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/rl_infomation_title"
@@ -18,40 +17,40 @@
             android:text="信息" />
 
     </RelativeLayout>
+
     <cn.bingoogolapple.refreshlayout.BGARefreshLayout
         android:id="@+id/rl_modulename_refresh_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_infomation_title">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_information"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
+
     <LinearLayout
         android:id="@+id/ll_comment_upload_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
         android:padding="2dp"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="jahja"
-            />
+            android:layout_weight="1" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/bt_comment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/shape_task_info_frag_button_bg"
-            android:text="发送"
-            />
+            android:text="发送" />
     </LinearLayout>
 </RelativeLayout>

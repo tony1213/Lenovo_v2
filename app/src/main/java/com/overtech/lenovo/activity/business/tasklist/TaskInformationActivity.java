@@ -14,6 +14,7 @@ import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.RequestExceptBean;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
@@ -45,6 +46,7 @@ public class TaskInformationActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
+            Logger.e("项目说明："+json);
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             if (bean == null) {
                 stopProgress();

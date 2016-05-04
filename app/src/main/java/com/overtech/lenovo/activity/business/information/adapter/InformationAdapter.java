@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,11 +60,11 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
 
         if (vh.itemAdapter == null) {
             vh.itemAdapter = new InformationItemAdapter(ctx, info.create_img);// 初始化item的adapter
+            vh.picture.setAdapter(vh.itemAdapter);// 每个item内的图片描述
         } else {
             vh.itemAdapter.setUrls(info.create_img);
             vh.itemAdapter.notifyDataSetChanged();// 当出现convertView重用的时候，就将adapter重新刷新
         }
-        vh.picture.setAdapter(vh.itemAdapter);// 每个item内的图片描述
         vh.time.setText(info.create_datetime);
 
         vh.commend.setOnClickListener(new OnClickListener() {

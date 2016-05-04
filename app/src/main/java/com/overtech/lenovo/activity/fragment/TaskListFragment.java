@@ -42,6 +42,7 @@ import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.cycleviewpager.CycleViewPager;
@@ -102,6 +103,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
+                StackManager.getStackManager().popAllActivitys();
                 return;
             }
             switch (msg.what) {
@@ -403,7 +405,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
      */
     public void doAppointNegativeClick(final int position, String selectTime) {
         startProgress("预约中");
-        Utilities.showToast("您预约了" + position + "当前时间：" + selectTime, getActivity());
         Task task = datas.get(position);
         String workorderCode = task.workorder_code;
         Requester requester = new Requester();
@@ -451,7 +452,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
      * 预约对话框取消
      */
     public void doAppointPositiveClick(int position) {
-        Utilities.showToast("您取消预约", getActivity());
     }
 
     /**
@@ -755,10 +755,10 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             case R.id.tv_task_evaluation:
                 popupWindow.dismiss();
                 curTaskType = "10";
-                mTitleFilter.setText(mTaskAccount.getText());
+                mTitleFilter.setText(mTaskEvaluation.getText());
 
                 startProgress("加载中");
-                requester.body.put("taskSchedule", "4");//待评价
+                requester.body.put("taskSchedule", "10");//待评价
                 Request requestEvaluate = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callEvaluate = httpEngine.createRequestCall(requestEvaluate);
                 callEvaluate.enqueue(new Callback() {

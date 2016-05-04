@@ -13,6 +13,8 @@ public class Information {
 	public String msg;
 	public Body body;
 	public class Body{
+		public String comment_user;
+		public String comment_content;
 		public List<InforItem> data;
 	}
 	public class InforItem{
@@ -28,6 +30,8 @@ public class Information {
 		public String img;
 	}
 	public class Comment{
+		public Comment(){
+		}
 		public String comment_datetime;
 		public String comment_user;
 		public String comment_content;

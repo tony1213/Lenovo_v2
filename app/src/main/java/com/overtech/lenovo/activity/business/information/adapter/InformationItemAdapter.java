@@ -24,7 +24,16 @@ public class InformationItemAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return data==null?0 :(data.size()>9?9:data.size());// 限制每个item的最大加载图片数量为9，暂定
+//		return data==null?0 :(data.size()>9?9:data.size());// 限制每个item的最大加载图片数量为9，暂定
+		if(data==null){
+			return 0;
+		}else{
+			if(data.size()>9){
+				return 9;
+			}else{
+				return data.size();
+			}
+		}
 	}
 
 	@Override
