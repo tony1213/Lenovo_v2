@@ -18,9 +18,9 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.common.Common;
 import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.SMSCodeCountDownTimer;
 import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
-import com.overtech.lenovo.widget.TimeButton;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -34,9 +34,11 @@ import java.io.IOException;
 public class FindbackPasswordActivity extends BaseActivity implements View.OnClickListener {
     private AppCompatEditText etFindbackPhone;
     private AppCompatEditText etSmsCode;
-    private TimeButton btGetSmsCode;
+    private AppCompatButton btGetSmsCode;
     private AppCompatButton btFindbackUpload;
+    private SMSCodeCountDownTimer timer;
     private String sessionId;
+    private String ph;
     private UIHandler uiHandler = new UIHandler(this) {
         @Override
         public void handleMessage(Message msg) {
@@ -66,8 +68,8 @@ public class FindbackPasswordActivity extends BaseActivity implements View.OnCli
                     Utilities.showToast(bean.msg, FindbackPasswordActivity.this);
                     if (st == 0) {
                         Intent intent = new Intent(FindbackPasswordActivity.this, ResetPasswordActivity.class);
+                        intent.putExtra("phone",ph);
                         startActivity(intent);
-                        finish();
                     }
                     break;
             }
@@ -90,12 +92,13 @@ public class FindbackPasswordActivity extends BaseActivity implements View.OnCli
         StackManager.getStackManager().pushActivity(this);
         etFindbackPhone = (AppCompatEditText) findViewById(R.id.et_findback_phone);
         etSmsCode = (AppCompatEditText) findViewById(R.id.et_findback_sms_code);
-        btGetSmsCode = (TimeButton) findViewById(R.id.bt_get_sms_code);
+        btGetSmsCode = (AppCompatButton) findViewById(R.id.bt_get_sms_code);
         btFindbackUpload = (AppCompatButton) findViewById(R.id.bt_findback_upload);
 
         btGetSmsCode.setOnClickListener(this);
         btFindbackUpload.setOnClickListener(this);
 
+        timer = new SMSCodeCountDownTimer(60 * 1000, 1000, btGetSmsCode);
     }
 
     @Override
@@ -111,10 +114,11 @@ public class FindbackPasswordActivity extends BaseActivity implements View.OnCli
                     Utilities.showToast("手机号格式不对", this);
                     return;
                 }
+                timer.start();
                 getSmsCode(phone);
                 break;
             case R.id.bt_findback_upload:
-                String ph = etFindbackPhone.getText().toString().trim();
+                ph = etFindbackPhone.getText().toString().trim();
                 if (TextUtils.isEmpty(ph)) {
                     Utilities.showToast("手机号不能为空", this);
                     return;
@@ -215,5 +219,6 @@ public class FindbackPasswordActivity extends BaseActivity implements View.OnCli
     public void onBackPressed() {
         super.onBackPressed();
         StackManager.getStackManager().popActivity(this);
+        timer.cancel();
     }
 }

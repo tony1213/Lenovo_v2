@@ -1,18 +1,14 @@
 package com.overtech.lenovo.activity.business.common.password;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
-import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
@@ -22,7 +18,6 @@ import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.common.Common;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.Utilities;
-import com.overtech.lenovo.widget.EditTextWithDelete;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -38,16 +33,17 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
     private AppCompatEditText etNewPassword;
     private AppCompatEditText etNewPasswordConfirm;
     private AppCompatButton btSubmitPwd;
+    private String phone;
     private UIHandler uiHandler = new UIHandler(this) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
-            Logger.e("resetpasswordactivity" + json);
-            if (json == null) {
+            Logger.e("resetpasswordactivity===" + json);
+            Common bean = gson.fromJson(json, Common.class);
+            if (bean == null) {
                 return;
             }
-            Common bean = gson.fromJson(json, Common.class);
             int st = bean.st;
             switch (msg.what) {
                 case StatusCode.FAILED:
@@ -59,8 +55,8 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                 case StatusCode.FINDBACK_RESET_PASSWORD_SUCCESS:
                     Utilities.showToast(bean.msg, ResetPasswordActivity.this);
                     if (st == 0) {
-                        Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+//                        startActivity(intent);
                     }
                     break;
             }
@@ -81,6 +77,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        phone = getIntent().getStringExtra("phone");
         etNewPassword = (AppCompatEditText) findViewById(R.id.et_newpassword);
         etNewPasswordConfirm = (AppCompatEditText) findViewById(R.id.et_password_confirm);
         btSubmitPwd = (AppCompatButton) findViewById(R.id.bt_reset_pwd_confirm);
@@ -116,6 +113,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
         Requester requester = new Requester();
         requester.cmd = 6;
         requester.body.put("pwd", pwd);
+        requester.body.put("phone", phone);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {

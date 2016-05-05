@@ -1,8 +1,8 @@
 package com.overtech.lenovo.activity.business.common.register;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Message;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.widget.AppCompatButton;
@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -27,8 +28,8 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.common.Common;
 import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.SMSCodeCountDownTimer;
 import com.overtech.lenovo.utils.Utilities;
-import com.overtech.lenovo.widget.TimeButton;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -40,11 +41,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private AppCompatEditText etPhone;
     private AppCompatEditText etPwd;
     private AppCompatEditText etSmsCode;
-    private TimeButton btGetSmsCode;
+    private AppCompatButton btGetSmsCode;
     private AppCompatCheckBox cbPrivacy;
     private AppCompatTextView tvPrivacyContetent;
     private AppCompatButton btRegisterUpload;
     private PopupWindow privacyPopup;
+    private SMSCodeCountDownTimer timer;
     private String sessionId;
     private UIHandler uiHandler = new UIHandler(this) {
         @Override
@@ -92,7 +94,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         etPhone = (AppCompatEditText) findViewById(R.id.et_register_phone);
         etPwd = (AppCompatEditText) findViewById(R.id.et_register_pwd);
         etSmsCode = (AppCompatEditText) findViewById(R.id.et_register_sms_code);
-        btGetSmsCode = (TimeButton) findViewById(R.id.bt_get_sms_code);
+        btGetSmsCode = (AppCompatButton) findViewById(R.id.bt_get_sms_code);
         cbPrivacy = (AppCompatCheckBox) findViewById(R.id.cb_privacy);
         tvPrivacyContetent = (AppCompatTextView) findViewById(R.id.tv_privacy_content);
         btRegisterUpload = (AppCompatButton) findViewById(R.id.bt_register_upload);
@@ -110,6 +112,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 }
             }
         });
+        timer=new SMSCodeCountDownTimer(60*1000,1000,btGetSmsCode);//为获取验证码注册计时器
     }
 
     @Override
@@ -125,6 +128,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     Utilities.showToast("手机号格式不对", this);
                     return;
                 }
+                timer.start();
                 getSmsCode(phone);
                 break;
             case R.id.tv_privacy_content:
@@ -255,5 +259,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+    }
 }
