@@ -7,6 +7,11 @@ package com.overtech.lenovo.config;
 public class StatusCode {
     public static final int FAILED=0x1;
     public static final int SERVER_EXCEPTION=0x2;
+    public static final int SMS_CODE_RESPONSE_SUCCESS=0x3;
+    public static final int REGISTER_RESPONSE_SUCCESS=0x4;
+    public static final int FINDBACK_PASSWORD_SUBMIT_SMSCODE_SUCCESS=0x5;
+    public static final int FINDBACK_RESET_PASSWORD_SUCCESS=0x6;
+
     public static final int WORKORDER_ALL_SUCCESS=0x10;
     public static final int WORKORDER_RECEIVE_SUCCESS=0x11;
     public static final int WORKORDER_APPOINT_SUCCESS=0x12;

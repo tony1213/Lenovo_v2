@@ -94,6 +94,10 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             super.handleMessage(msg);
             String json = (String) msg.obj;
             Logger.e("后台返回的数据====" + json);
+            if(json==null){
+                stopProgress();
+                return;
+            }
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             int st = bean.st;
             if (st == -2 || st == -1) {

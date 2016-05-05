@@ -78,9 +78,9 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
             String json = (String) msg.obj;
             Logger.e("knowledge后台传过来的数据" + json);
             Knowledges bean = gson.fromJson(json, Knowledges.class);
-            if(bean==null){
+            if (bean == null) {
                 stopProgress();
-                return ;
+                return;
             }
             int st = bean.st;
             if (st == -2 || st == -1) {
@@ -102,6 +102,10 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
                     break;
                 case StatusCode.KNOWLEDGE_PUBLIC_SUCCESS:
                     datas = bean.body.data;
+                    if (datas == null || datas.size() == 0) {
+                        Utilities.showToast("无数据", getActivity());
+                        return;
+                    }
                     if (mainAdapter == null) {
                         mainAdapter = new ClassifyMainAdapter(getActivity(), datas);
                         mainAdapter.setSelectItem(0);
@@ -298,7 +302,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
                 moreAdapter.setSelectItem(position);
                 moreAdapter.notifyDataSetChanged();
                 Intent intent = new Intent(getActivity(), KnowledgeDetailActivity.class);
-                intent.putExtra("knowledge_id",(String)moreAdapter.getItem(position));
+                intent.putExtra("knowledge_id", (String) moreAdapter.getItem(position));
                 startActivity(intent);
             }
         });

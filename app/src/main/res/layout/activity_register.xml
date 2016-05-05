@@ -13,10 +13,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="125dp"
+            android:layout_marginTop="100dp"
             android:text="注册"
             android:textColor="@color/main_white"
-            android:textSize="45sp" />
+            android:textSize="36sp" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/et_register_phone"
@@ -26,9 +26,9 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="180dp"
-        
             android:drawableLeft="@mipmap/common_regiter_phone"
             android:hint="  请输入手机号码"
+            android:inputType="number"
             android:textColorHint="@color/main_white" />
 
         <LinearLayout
@@ -69,8 +69,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="36dp"
-            android:drawablePadding="8dp"
             android:drawableLeft="@mipmap/common_regsiter_pwd"
+            android:drawablePadding="8dp"
             android:hint="请输入密码"
             android:textColorHint="@color/main_white" />
 
@@ -104,7 +104,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="18dp"
-            android:background="@color/main_white"
+            android:background="@drawable/selector_button_enable"
+            android:enabled="false"
             android:minHeight="36dp"
             android:text="提交"
             android:textColor="@color/bg_qq_blue"

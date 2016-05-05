@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
@@ -50,4 +51,11 @@ public class WelcomeActivity extends BaseActivity {
         }, 3000);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

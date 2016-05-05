@@ -2,17 +2,20 @@ package com.overtech.lenovo.activity.business.tasklist.adapter;
 
 
 import java.util.ArrayList;
+
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
+
 /**
- * Created by Tony1213 on 16/3/22.
+ * Created by Will on 16/5/04.
  */
-public class ViewPagerAdapter extends PagerAdapter{
+public class ViewPagerAdapter extends PagerAdapter {
     //界面列表
     private ArrayList<View> views;
-    public ViewPagerAdapter(ArrayList<View> views)
-    {
+
+    public ViewPagerAdapter(ArrayList<View> views) {
         this.views = views;
     }
 
@@ -23,8 +26,7 @@ public class ViewPagerAdapter extends PagerAdapter{
     public int getCount() {
         if (views != null) {
             return views.size();
-        }
-        else return 0;
+        } else return 0;
     }
 
     /**
@@ -35,21 +37,15 @@ public class ViewPagerAdapter extends PagerAdapter{
         return (arg0 == arg1);
     }
 
-    /**
-     * 销毁position位置的界面
-     */
+
     @Override
-    public void destroyItem(View container, int position, Object object) {
-        ((ViewPager) container).removeView(views.get(position));
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView(views.get(position));
     }
 
-    /**
-     * 初始化position位置的界面
-     */
     @Override
-    public Object instantiateItem(View container, int position) {
-        ((ViewPager) container).addView(views.get(position), 0);
+    public Object instantiateItem(ViewGroup container, int position) {
+        container.addView(views.get(position));
         return views.get(position);
     }
-
 }

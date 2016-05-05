@@ -2,14 +2,12 @@ package com.overtech.lenovo.activity.business.common;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -17,13 +15,14 @@ import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
-import com.overtech.lenovo.activity.business.common.register.RegisterUserAgreementActivity;
+import com.overtech.lenovo.activity.business.common.password.FindbackPasswordActivity;
+import com.overtech.lenovo.activity.business.common.password.ResetPasswordActivity;
+import com.overtech.lenovo.activity.business.common.register.RegisterActivity;
 import com.overtech.lenovo.activity.business.controller.GetSmsCodeAndValicateActivity;
 import com.overtech.lenovo.config.Projects;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.Requester;
-import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -34,12 +33,9 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -83,19 +79,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.btn_login:
                 doLogin();
                 break;
             case R.id.tv_lost_password:
-                intent.setClass(this, GetSmsCodeAndValicateActivity.class);
-                intent.putExtra("flag", Projects.LOST_PASSWORD);
+                intent.setClass(this, FindbackPasswordActivity.class);
+//                intent.putExtra("flag", Projects.LOST_PASSWORD);
                 startActivity(intent);
                 break;
             case R.id.tv_register_account:
-                intent.setClass(this, RegisterUserAgreementActivity.class);
-                intent.putExtra("flag", Projects.REGISTER);
+                intent.setClass(this, RegisterActivity.class);
+//                intent.putExtra("flag", Projects.REGISTER);
                 startActivity(intent);
                 break;
             default:
@@ -134,8 +130,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onResponse(final Response response) throws IOException {
                 final String json = response.body().string();
                 Logger.e(json);
-                if(json==null){
-                    return ;
+                if (json == null) {
+                    return;
                 }
                 uiHandler.post(new Runnable() {
                     @Override

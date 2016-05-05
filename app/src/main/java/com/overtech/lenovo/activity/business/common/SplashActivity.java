@@ -51,7 +51,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         for (int i = 0; i < pics.length; i++) {
             ImageView iv = new ImageView(this);
             iv.setLayoutParams(mParams);
-            iv.setScaleType(ScaleType.FIT_XY);
+            iv.setScaleType(ScaleType.CENTER_CROP);
             iv.setImageResource(pics[i]);
             views.add(iv);
         }
