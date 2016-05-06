@@ -32,7 +32,7 @@
     <color name="main_line">#ffdcdcdc</color>
     <color name="bg_mask">#78000000</color><!-- 蒙层色，50%纯黑 -->
 
-    <color name="bg_qq_blue">#5677fc</color>
+    <color name="bg_qq_blue">#19A4D7</color>
     <color name="calendar_cell_novalidate">#ffc8d2dc</color>
     <color name="calendar_text_inactive">#40778088</color>
     <color name="contents_text">#ff000000</color>

@@ -27,7 +27,7 @@ public class WorkorderMsgAdapter extends RecyclerView.Adapter<WorkorderMsgAdapte
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder viewHolder = new MyViewHolder(((WorkorderMsgActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_workorder_msg, null));
+        MyViewHolder viewHolder = new MyViewHolder(((WorkorderMsgActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_workorder_msg, parent,false));
         return viewHolder;
     }
 

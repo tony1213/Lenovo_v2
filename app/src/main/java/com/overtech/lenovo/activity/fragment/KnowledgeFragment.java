@@ -103,6 +103,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
                 case StatusCode.KNOWLEDGE_PUBLIC_SUCCESS:
                     datas = bean.body.data;
                     if (datas == null || datas.size() == 0) {
+                        stopProgress();
                         Utilities.showToast("无数据", getActivity());
                         return;
                     }

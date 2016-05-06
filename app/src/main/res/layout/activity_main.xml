@@ -13,7 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/bg_qq_blue"
         app:popupTheme="@style/MyPopupTheme"
-        app:theme="@style/ToolTheme"></android.support.v7.widget.Toolbar>
+        app:theme="@style/ToolTheme"/>
 
     <FrameLayout
         android:id="@+id/layout_content"
@@ -25,7 +25,7 @@
         android:id="@+id/view_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tab_main_color"
+        android:background="@color/bg_qq_blue"
         android:orientation="horizontal" />
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
@@ -106,6 +107,12 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(mCurrentFragment instanceof InformationFragment){
+            if(informationFragment.llCommentUpContainer.getVisibility()== View.VISIBLE){
+                informationFragment.llCommentUpContainer.setVisibility(View.GONE);
+                return true;
+            }
+        }
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if(System.currentTimeMillis()-exitTime>2000){
                 Utilities.showToast("再按一次退出程序",this);

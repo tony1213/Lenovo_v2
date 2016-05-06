@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.overtech.lenovo.http.HttpEngine;
 import com.overtech.lenovo.widget.dialog.CustomProgressDialog;
-import com.overtech.lenovo.widget.dialogeffects.NiftyDialogBuilder;
 
 
 public abstract class BaseActivity extends AppCompatActivity {

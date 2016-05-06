@@ -63,6 +63,11 @@ public class TaskInformationActivity extends BaseActivity {
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
+            if(st==1){
+                stopProgress();
+                Utilities.showToast(bean.msg,TaskInformationActivity.this);
+                return;
+            }
             switch (msg.what) {
                 case StatusCode.FAILED:
                     Utilities.showToast(bean.msg, TaskInformationActivity.this);
@@ -73,8 +78,8 @@ public class TaskInformationActivity extends BaseActivity {
                 case StatusCode.WORKORDER_CONTRACT_SUCCESS:
                     tvContractCode.setText(bean.body.contract_code);
                     tvContractName.setText(bean.body.contract_name);
-                    tvContractStartTime.setText(bean.body.contract_start_time);
-                    tvContractEndTime.setText(bean.body.contract_end_time);
+                    tvContractStartTime.setText(bean.body.contract_start_date);
+                    tvContractEndTime.setText(bean.body.contract_end_date);
                     tvContractDate.setText(bean.body.contract_date);
                     tvContractPartyA.setText(bean.body.contract_party_a);
                     tvContractPartyB.setText(bean.body.contract_party_b);

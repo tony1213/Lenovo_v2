@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
@@ -41,7 +40,6 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.person.Person;
 import com.overtech.lenovo.http.webservice.UIHandler;
-import com.overtech.lenovo.picasso.Transformation;
 import com.overtech.lenovo.utils.ImageCacheUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -54,6 +52,7 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -109,6 +108,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
             String json = (String) msg.obj;
             Logger.e("个人设置：" + json);
             Person bean = gson.fromJson(json, Person.class);
+            if (bean == null) {
+                stopProgress();
+                return;
+            }
             int st = bean.st;
             if (st == -1 || st == -2) {
                 stopProgress();
@@ -119,6 +122,11 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 startActivity(intent);
                 finish();
                 StackManager.getStackManager().popAllActivitys();
+                return;
+            }
+            if (st == 1) {
+                stopProgress();
+                Utilities.showToast(bean.msg, PersonalSettingActivity.this);
                 return;
             }
             switch (msg.what) {
@@ -160,7 +168,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
 
                         @Override
                         public String key() {
-                            return null;
+                            return "personalsetting";
                         }
                     }, Bitmap.Config.RGB_565);
                     break;

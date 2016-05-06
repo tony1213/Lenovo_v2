@@ -15,6 +15,7 @@ import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.personal.adapter.PersonalAccountServerDetailAdapter;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.RequestExceptBean;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
@@ -44,6 +45,7 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
+            Logger.e("服务明细===="+json);
             PersonalAccount bean = gson.fromJson(json, PersonalAccount.class);
             if (bean == null) {
                 stopProgress();

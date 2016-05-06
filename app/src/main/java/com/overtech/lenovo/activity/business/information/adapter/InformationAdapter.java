@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,9 +16,9 @@ import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.entity.information.Information;
-import com.overtech.lenovo.picasso.Transformation;
 import com.overtech.lenovo.utils.ImageCacheUtils;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
+import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
@@ -41,10 +40,8 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
     @Override
     public void onBindViewHolder(MyViewHolder vh, final int position) {
         Information.InforItem info = datas.get(position);
-        ImageLoader.getInstance().displayImage(info.create_user_img, vh.avator,
-                R.mipmap.ic_launcher, R.mipmap.ic_launcher,
+        ImageLoader.getInstance().displayImage(info.create_user_img, vh.avator, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
                 new Transformation() {
-
                     @Override
                     public Bitmap transform(Bitmap source) {
                         return ImageCacheUtils.toRoundBitmap(source);
@@ -52,9 +49,10 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
 
                     @Override
                     public String key() {
-                        return null;
+                        return position+"";
                     }
-                }, Config.RGB_565);// 处理头像
+                },
+                Config.RGB_565);// 处理头像
         vh.name.setText(info.create_user_name);
         vh.description.setText(info.create_user_content);
 

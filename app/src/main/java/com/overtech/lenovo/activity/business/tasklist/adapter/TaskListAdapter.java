@@ -119,8 +119,8 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
             } else {
                 LatLng curLoc = new LatLng(latitude, longitude);
                 LatLng desLoc = new LatLng(task.latitude, task.longitude);
-                double dis = DistanceUtil.getDistance(curLoc, desLoc);
-                holder.taskDistance.setText(dis / 1000 + "km");
+                double dis = DistanceUtil.getDistance(curLoc,desLoc);
+                holder.taskDistance.setText((int)dis / 1000 + "km");
             }
         }
         if (task.appointment_home_mills == 0) {

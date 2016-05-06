@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <RelativeLayout
-        android:id="@+id/rl_infomation_title"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/bg_qq_blue">
-
-        <TextView
-            android:id="@+id/textView3"
-            style="@style/tv_title_white_style"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="信息" />
-
-    </RelativeLayout>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <cn.bingoogolapple.refreshlayout.BGARefreshLayout
         android:id="@+id/rl_modulename_refresh_info"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_infomation_title">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_infomation_title"
+        android:layout_weight="1">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_information"
@@ -35,9 +22,11 @@
         android:id="@+id/ll_comment_upload_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/bg_bg"
         android:orientation="horizontal"
-        android:padding="2dp"
+        android:paddingRight="16dp"
         android:visibility="gone">
 
         <android.support.v7.widget.AppCompatEditText
@@ -50,7 +39,9 @@
             android:id="@+id/bt_comment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
             android:background="@drawable/shape_task_info_frag_button_bg"
             android:text="发送" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

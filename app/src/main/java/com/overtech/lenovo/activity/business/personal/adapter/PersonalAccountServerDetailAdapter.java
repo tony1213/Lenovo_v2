@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
-import com.overtech.lenovo.activity.business.personal.PersonalAccountDetailActivity;
+import com.overtech.lenovo.activity.business.personal.PersonalAccountServerDetailActivity;
 import com.overtech.lenovo.entity.person.PersonalAccount;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class PersonalAccountServerDetailAdapter extends RecyclerView.Adapter<Per
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = ((PersonalAccountDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_server_detail, null);
+        View view = ((PersonalAccountServerDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_server_detail, parent,false);//如果此处只用inflate（R.layout，null）；则只会生成view,不会设置layoutparams
         return new MyViewHolder(view);
     }
 

@@ -1,5 +1,6 @@
 package com.overtech.lenovo.activity.business.common.password;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.AppCompatButton;
@@ -9,6 +10,7 @@ import android.view.View;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
+import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
@@ -17,6 +19,7 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.common.Common;
 import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -55,8 +58,10 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                 case StatusCode.FINDBACK_RESET_PASSWORD_SUCCESS:
                     Utilities.showToast(bean.msg, ResetPasswordActivity.this);
                     if (st == 0) {
-//                        Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-//                        startActivity(intent);
+                        Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        StackManager.getStackManager().popAllActivitys();
                     }
                     break;
             }
@@ -78,6 +83,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         phone = getIntent().getStringExtra("phone");
+        Logger.e("发送过来的手机号  "+phone);
         etNewPassword = (AppCompatEditText) findViewById(R.id.et_newpassword);
         etNewPasswordConfirm = (AppCompatEditText) findViewById(R.id.et_password_confirm);
         btSubmitPwd = (AppCompatButton) findViewById(R.id.bt_reset_pwd_confirm);

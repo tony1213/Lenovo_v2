@@ -2,6 +2,7 @@ package com.overtech.lenovo.activity.business.personal.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,7 +28,8 @@ public class PersonalAccountDetailAdapter extends RecyclerView.Adapter<PersonalA
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = ((PersonalAccountDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_detail, null);
+        View view = ((PersonalAccountDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_detail,parent,false);
+//        View view=LayoutInflater.from(ctx).inflate(R.layout.item_recyclerview_personal_account_detail,parent);
         return new MyViewHolder(view);
     }
 
@@ -64,5 +66,6 @@ public class PersonalAccountDetailAdapter extends RecyclerView.Adapter<PersonalA
             issue_description = (TextView) itemView.findViewById(R.id.tv_workorder_issue_description);
             solution = (TextView) itemView.findViewById(R.id.tv_workorder_solution);
         }
+
     }
 }

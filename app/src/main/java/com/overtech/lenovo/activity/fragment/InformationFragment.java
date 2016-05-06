@@ -3,14 +3,17 @@ package com.overtech.lenovo.activity.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -50,8 +53,9 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 
 public class InformationFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, View.OnClickListener {
 
+    private ActionBar actionBar;
     private RecyclerView mInformation;
-    private LinearLayout llCommentUpContainer;
+    public LinearLayout llCommentUpContainer;
     private AppCompatEditText etComment;
     private AppCompatButton btComment;
     private BGARefreshLayout mRefreshLayout;
@@ -96,7 +100,6 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                             @Override
                             public void buttonClick(View v, int position) {
                                 // TODO Auto-generated method stub
-                                Utilities.showToast("您评论了第" + position + "条记录", getActivity());
                                 llCommentUpContainer.setVisibility(View.VISIBLE);
                                 etComment.setFocusable(true);
                                 etComment.setTag(new Object[]{position, bean.body.data.get(position).post_id});
@@ -134,24 +137,18 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         uid = ((MainActivity) getActivity()).getUid();
+        actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        actionBar.show();
+        actionBar.setTitle("信息");
         mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
         llCommentUpContainer = (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
         etComment = (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
         btComment = (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
         mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
         llCommentUpContainer.setVisibility(View.GONE);
-        etComment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    etComment.setFocusable(false);
-                    llCommentUpContainer.setVisibility(View.GONE);
-                }
-            }
-        });
+
         btComment.setOnClickListener(this);
         mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mInformation.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         mRefreshLayout.setDelegate(this);
         BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
         mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
@@ -200,7 +197,7 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        ((MainActivity) getActivity()).getSupportActionBar().hide();
+        actionBar.show();;
     }
 
     @Override
@@ -275,4 +272,5 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
             }
         });
     }
+
 }

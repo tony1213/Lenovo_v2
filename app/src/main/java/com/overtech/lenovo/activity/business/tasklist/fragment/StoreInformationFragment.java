@@ -219,7 +219,7 @@ public class StoreInformationFragment extends BaseFragment {
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10031;
-        requester.body.put("branch_id", branch_code);
+        requester.body.put("branch_code", branch_code);
         requester.body.put("longitude", longitude);
         requester.body.put("latitude", latitude);
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));

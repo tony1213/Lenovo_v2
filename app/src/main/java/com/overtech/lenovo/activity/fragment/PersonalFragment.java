@@ -31,7 +31,6 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.person.Person;
 import com.overtech.lenovo.http.webservice.UIHandler;
-import com.overtech.lenovo.picasso.Transformation;
 import com.overtech.lenovo.utils.ImageCacheUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -42,6 +41,7 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.picasso.Transformation;
 
 import java.io.IOException;
 
@@ -96,7 +96,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                                 @Override
                                 public String key() {
                                     // TODO Auto-generated method stub
-                                    return null;
+                                    return "personal fragment";
                                 }
                             }, Config.RGB_565);
                     tv_finance.setText(bean.body.finance);

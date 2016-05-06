@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.baidu.mapapi.SDKInitializer;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.overtech.lenovo.service.LocationService;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
@@ -35,6 +36,7 @@ public class CustomApplication extends Application {
         super.onCreate();
         TypefaceProvider.registerDefaultIconSets();
         refWatcher = LeakCanary.install(this);
+        SDKInitializer.initialize(this);
         ImageLoader.getInstance().initContext(getApplicationContext());
         locationService = new LocationService(getApplicationContext());
         listener = new MyBDLocaitonListener();
