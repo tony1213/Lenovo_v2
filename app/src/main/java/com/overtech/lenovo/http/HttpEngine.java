@@ -16,18 +16,13 @@ import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.internal.http.OkHeaders;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.FileNameMap;
-import java.net.URI;
 import java.net.URLConnection;
-import java.util.List;
-import java.util.Map;
 
 public class HttpEngine {
 
@@ -80,7 +75,7 @@ public class HttpEngine {
      * @param jsonData 请求数据类型，json格式
      * @return
      */
-    public Request createRequest(String url, String jsonData){
+    public Request createRequest(String url, String jsonData) {
         if (TextUtils.isEmpty(jsonData)) {
             return null;
         }
