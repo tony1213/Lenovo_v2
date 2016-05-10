@@ -98,7 +98,7 @@ public class StoreRepairInformationActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(0);
 
-        toolbar.setTitle(branchName);
+        actionBar.setTitle(branchName);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

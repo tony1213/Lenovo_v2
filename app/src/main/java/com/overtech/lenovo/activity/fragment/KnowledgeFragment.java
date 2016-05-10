@@ -13,6 +13,7 @@ import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -155,7 +156,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
         initView();
         initPopupWindow();
-        initData("0");
+        initData(10021,"0",null);
         initContractData();
     }
 
@@ -170,6 +171,17 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
         toolbar.setTitle("知识");
         actionBar.show();
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String query=searchView.getQuery().toString().trim();
+                if(!TextUtils.isEmpty(query)){
+                    searchView.onActionViewCollapsed();
+                    initData(10023,null,query);
+                }
+            }
+        });
     }
 
     @Override
@@ -223,12 +235,13 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         });
     }
 
-    private void initData(String knowledgeType) {
+    private void initData(int cmd,String knowledgeType,String keyword) {
         startProgress("加载中...");
         Requester requester = new Requester();
-        requester.cmd = 10021;
+        requester.cmd = cmd;
         requester.uid = uid;
         requester.body.put("contract_code", knowledgeType);
+        requester.body.put("keyword",keyword);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -271,7 +284,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Utilities.showToast("您点击了" + position, getActivity());
                 popupWindow.dismiss();
-                initData(contractDatas.get(position).contract_code);
+                initData(10021,contractDatas.get(position).contract_code,null);
             }
         });
         popupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

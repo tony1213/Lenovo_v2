@@ -26,7 +26,7 @@ public class StoreRepairInforAdapter extends RecyclerView.Adapter<StoreRepairInf
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_recyclerview_store_repair_infor, null));
+        MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_recyclerview_store_repair_infor, parent,false));
         return viewHolder;
     }
 
