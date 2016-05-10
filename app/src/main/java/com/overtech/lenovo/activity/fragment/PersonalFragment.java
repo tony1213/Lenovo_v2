@@ -1,15 +1,24 @@
 package com.overtech.lenovo.activity.fragment;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -37,12 +46,15 @@ import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
+import com.overtech.lenovo.widget.popwindow.DimPopupWindow;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.picasso.Transformation;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 
@@ -53,9 +65,15 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private TextView tv_year_workorder_amount;
     private LinearLayout mAccountDetail;
     private LinearLayout mAccountServerDetail;
+    private DimPopupWindow dimPopupWindow;
     private RatingBar rb_satisfaction;
     private LinearLayout setting;
     private String uid;
+    public final int CAMERA = 0x1;
+    public final int PHOTO = 0x2;
+    private File camera;
+    private Uri cameraUri;
+    private String avatorPath;
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {
@@ -105,10 +123,14 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                     if (bean.body.satisfaction != null)
                         rb_satisfaction.setRating(Float.parseFloat(bean.body.satisfaction));
                     break;
+                case StatusCode.PERSONAL_UPLOAD_AVATOR_SUCCESS:
+                    Utilities.showToast(bean.msg, getActivity());
+                    break;
             }
             stopProgress();
         }
     };
+
 
     @Override
     protected int getLayoutId() {
@@ -165,6 +187,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
+        mAvator.setOnClickListener(this);
         mAccountDetail.setOnClickListener(this);
         mAccountServerDetail.setOnClickListener(this);
         setting.setOnClickListener(this);
@@ -209,13 +232,157 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 startActivity(intent2);
                 break;
             case R.id.ll_account_server_detail:
-                Intent intent3=new Intent(getActivity(),PersonalAccountServerDetailActivity.class);
+                Intent intent3 = new Intent(getActivity(), PersonalAccountServerDetailActivity.class);
                 startActivity(intent3);
+                break;
+            case R.id.iv_avator:
+                showPopupWindow();
+                break;
+            case R.id.bt_select_from_camera:
+                openCamera();
+                dimPopupWindow.dismiss();
+                break;
+            case R.id.bt_select_from_photo:
+                openPhoto();
+                dimPopupWindow.dismiss();
+                break;
+            case R.id.bt_select_none:
+                dimPopupWindow.dismiss();
                 break;
             default:
                 break;
         }
     }
 
+    private void openPhoto() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "image/*");
+        startActivityForResult(intent, PHOTO);
+    }
+
+    private void openCamera() {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        File dir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        camera = new File(dir, "avator" + ".jpg");
+
+        cameraUri = Uri.fromFile(camera);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
+        startActivityForResult(intent, CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
+            Utilities.showToast("请检查内存卡", getActivity());
+            return;
+        }
+        switch (requestCode) {
+            case CAMERA:
+                if (resultCode == Activity.RESULT_OK) {
+                    avatorPath = camera.getAbsolutePath();
+                    String[] strings = avatorPath.split("\\.");
+                    startUploadAvator(avatorPath, strings[strings.length - 1]);
+                    Bitmap bitmap = BitmapFactory.decodeFile(avatorPath);
+                    mAvator.setImageBitmap(ImageCacheUtils.toRoundBitmap(bitmap));
+                }
+                break;
+            case PHOTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    avatorPath = getPhoto(data.getData());
+                    if (avatorPath != null) {
+                        String[] strings = avatorPath.split("\\.");
+                        startUploadAvator(avatorPath, strings[strings.length - 1]);
+                        Bitmap bitmap = BitmapFactory.decodeFile(avatorPath);
+                        mAvator.setImageBitmap(ImageCacheUtils.toRoundBitmap(bitmap));
+                    } else {
+                        Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", getActivity());
+                    }
+                }
+                break;
+        }
+    }
+
+    private void startUploadAvator(String avatorPath, String name) {
+        startProgress("正在上传");
+        String fileStr = "";
+        try {
+            FileInputStream fis = new FileInputStream(avatorPath);
+            byte[] buffer = new byte[fis.available()];
+            while (fis.read(buffer) != -1) {
+                fileStr += Base64.encodeToString(buffer, Base64.DEFAULT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Requester requester = new Requester();
+        requester.cmd = 10013;
+        requester.uid = uid;
+        requester.body.put("type", "3");
+        requester.body.put("content", fileStr);
+        requester.body.put("name", name);
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Message msg = uiHandler.obtainMessage();
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    msg.what = StatusCode.PERSONAL_UPLOAD_AVATOR_SUCCESS;
+                    msg.obj = response.body().string();
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    private String getPhoto(Uri data) {
+        ContentResolver resolver = getActivity().getContentResolver();
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = resolver.query(data, proj, null, null, null);
+        int columIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToNext()) {
+            return cursor.getString(columIndex);
+        }
+        return null;
+    }
+
+    private void showPopupWindow() {
+        if (dimPopupWindow == null) {
+            dimPopupWindow = new DimPopupWindow(getActivity());
+            View view = getActivity().getLayoutInflater().inflate(R.layout.layout_dim_pop_add_idcard, null);
+            Button camera = (Button) view.findViewById(R.id.bt_select_from_camera);
+            Button photo = (Button) view.findViewById(R.id.bt_select_from_photo);
+            Button cancle = (Button) view.findViewById(R.id.bt_select_none);
+            camera.setOnClickListener(this);
+            photo.setOnClickListener(this);
+            cancle.setOnClickListener(this);
+            dimPopupWindow.setContentView(view);
+            dimPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
+        }
+        dimPopupWindow.showAtLocation(getActivity().getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, getResources().getDimensionPixelOffset(getResources().getIdentifier("navigation_bar_height", "dimen", "android")));
+    }
 
 }

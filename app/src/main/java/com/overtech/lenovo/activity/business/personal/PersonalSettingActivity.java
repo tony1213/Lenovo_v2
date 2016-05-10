@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -40,6 +42,7 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.person.Person;
 import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.AppUtils;
 import com.overtech.lenovo.utils.ImageCacheUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -74,10 +77,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private AppCompatEditText etEmail;
     private AppCompatEditText etCity;
     private AppCompatEditText etAddress;
-    private AppCompatEditText etEdu;
-    private AppCompatEditText etEnglish;
+    private AppCompatSpinner spEdu;
+    private AppCompatSpinner spEnglish;
     private AppCompatEditText etWorkYears;
-    private AppCompatEditText etIdentity;
+    private AppCompatSpinner spIdentity;
     private AppCompatSpinner spIdStyle;
     private AppCompatEditText etIdCard;
 
@@ -86,6 +89,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private AppCompatButton btSaveUpload;
     private AppCompatCheckBox cbIdPositive;
     private AppCompatCheckBox cbIdOpposite;
+    private AppCompatImageView ivPositiveIdcard;
+    private AppCompatImageView ivOppositiveIdcard;
     private DimPopupWindow dimPopupWindow;
     private int curState;
     /**
@@ -150,10 +155,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     etEmail.setText(bean.body.email);
                     etCity.setText(bean.body.territory_node_path);
                     etAddress.setText(bean.body.address);
-                    etEdu.setText(bean.body.degree);
-                    etEnglish.setText(bean.body.english_ability);
+                    spEdu.setPrompt(bean.body.degree);
+                    spEnglish.setSelection(1);
                     etWorkYears.setText(bean.body.working_life);
-                    etIdentity.setText(bean.body.self_orientation);
+                    spIdentity.setSelection(1);
                     if (bean.body.type_of_id.equals("二代身份证")) {
                         spIdStyle.setPrompt("二代身份证");
                     } else {
@@ -171,6 +176,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                             return "personalsetting";
                         }
                     }, Bitmap.Config.RGB_565);
+                    ImageLoader.getInstance().displayImage(bean.body.positive_identity_card, ivPositiveIdcard);
+                    ImageLoader.getInstance().displayImage(bean.body.opposite_identity_card, ivOppositiveIdcard);
                     break;
                 case StatusCode.PERSONAL_SETTING_UPDATE_SUCCESS:
                     Utilities.showToast(bean.msg, PersonalSettingActivity.this);
@@ -180,10 +187,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     etEmail.setEnabled(false);
                     etCity.setEnabled(false);
                     etAddress.setEnabled(false);
-                    etEdu.setEnabled(false);
-                    etEnglish.setEnabled(false);
+                    spEdu.setEnabled(false);
+                    spEnglish.setEnabled(false);
                     etWorkYears.setEnabled(false);
-                    etIdentity.setEnabled(false);
+                    spIdentity.setEnabled(false);
                     spIdStyle.setEnabled(false);
                     etIdCard.setEnabled(false);
                     break;
@@ -230,16 +237,18 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         etCity = (AppCompatEditText) findViewById(R.id.et_personal_city);
         etAddress = (AppCompatEditText) findViewById(R.id.et_personal_address);
 
-        etEdu = (AppCompatEditText) findViewById(R.id.et_personal_edu);
-        etEnglish = (AppCompatEditText) findViewById(R.id.et_personal_english);
+        spEdu = (AppCompatSpinner) findViewById(R.id.sp_personal_edu);
+        spEnglish = (AppCompatSpinner) findViewById(R.id.sp_personal_english);
         etWorkYears = (AppCompatEditText) findViewById(R.id.et_personal_work_years);
-        etIdentity = (AppCompatEditText) findViewById(R.id.et_personal_identity);
+        spIdentity = (AppCompatSpinner) findViewById(R.id.sp_personal_identity);
         spIdStyle = (AppCompatSpinner) findViewById(R.id.sp_persoanl_id);
         etIdCard = (AppCompatEditText) findViewById(R.id.et_personal_idcard);
 
         btUploadPositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_positive);
         btUploadOppositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_opposite);
         btSaveUpload = (AppCompatButton) findViewById(R.id.bt_save_upload);
+        ivPositiveIdcard = (AppCompatImageView) findViewById(R.id.iv_positive_idcard);
+        ivOppositiveIdcard = (AppCompatImageView) findViewById(R.id.iv_oppositive_idcard);
         cbIdPositive = (AppCompatCheckBox) findViewById(R.id.cb_idcard_positive_upload_success);
         cbIdOpposite = (AppCompatCheckBox) findViewById(R.id.cb_idcard_opposite_upload_success);
         mEditBasic.setOnClickListener(this);
@@ -313,10 +322,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 etAddress.setEnabled(true);
                 break;
             case R.id.tv_edit_tec:
-                etEdu.setEnabled(true);
-                etEnglish.setEnabled(true);
+                spEdu.setEnabled(true);
+                spEnglish.setEnabled(true);
                 etWorkYears.setEnabled(true);
-                etIdentity.setEnabled(true);
+                spIdentity.setEnabled(true);
                 break;
             case R.id.tv_edit_ca:
                 spIdStyle.setEnabled(true);
@@ -352,6 +361,11 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 dimPopupWindow.dismiss();
                 break;
             case R.id.bt_save_upload:
+                String id = etIdCard.getText().toString().trim();
+                if (!AppUtils.IDCardValidate(id)) {
+                    Utilities.showToast("身份证号码不合法", this);
+                    return;
+                }
                 startProgress("正在上传");
                 Requester requester = new Requester();
                 requester.uid = uid;
@@ -369,10 +383,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 requester.body.put("email", etEmail.getText().toString().trim());
                 requester.body.put("territory_node_path", etCity.getText().toString().trim());
                 requester.body.put("address", etAddress.getText().toString().trim());
-                requester.body.put("degree", etEdu.getText().toString().trim());
-                requester.body.put("english_ability", etEnglish.getText().toString().trim());
+                requester.body.put("degree", spEdu.getSelectedItem().toString().trim());
+                requester.body.put("english_ability", spEnglish.getSelectedItem().toString().trim());
                 requester.body.put("working_life", etWorkYears.getText().toString().trim());
-                requester.body.put("self_orientation", etIdentity.getText().toString().trim());
+                requester.body.put("self_orientation", spIdentity.getSelectedItem().toString().trim());
                 requester.body.put("type_of_id", spIdStyle.getSelectedItemPosition() + "");
                 requester.body.put("type_of_id_name", spIdStyle.getSelectedItem().toString());
                 requester.body.put("idcard", etIdCard.getText().toString().trim());
@@ -450,18 +464,19 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     }
 
     private void showPopupWindow() {
-        dimPopupWindow = new DimPopupWindow(this);
-        View view = getLayoutInflater().inflate(R.layout.layout_dim_pop_add_idcard, null);
-        Button camera = (Button) view.findViewById(R.id.bt_select_from_camera);
-        Button photo = (Button) view.findViewById(R.id.bt_select_from_photo);
-        Button cancle = (Button) view.findViewById(R.id.bt_select_none);
-
-        camera.setOnClickListener(this);
-        photo.setOnClickListener(this);
-        cancle.setOnClickListener(this);
-        dimPopupWindow.setContentView(view);
-        dimPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
-        dimPopupWindow.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+        if (dimPopupWindow == null) {
+            dimPopupWindow = new DimPopupWindow(this);
+            View view = getLayoutInflater().inflate(R.layout.layout_dim_pop_add_idcard, null);
+            Button camera = (Button) view.findViewById(R.id.bt_select_from_camera);
+            Button photo = (Button) view.findViewById(R.id.bt_select_from_photo);
+            Button cancle = (Button) view.findViewById(R.id.bt_select_none);
+            camera.setOnClickListener(this);
+            photo.setOnClickListener(this);
+            cancle.setOnClickListener(this);
+            dimPopupWindow.setContentView(view);
+            dimPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
+        }
+        dimPopupWindow.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, getResources().getDimensionPixelOffset(getResources().getIdentifier("navigation_bar_height", "dimen", "android")));
     }
 
     public void doNegativeClick(String selectTime) {
@@ -489,6 +504,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                         if (idcardPositivePath != null) {
                             String[] strings = idcardPositivePath.split("\\.");
                             startUploadIdPositive(idcardPositivePath, strings[strings.length - 1]);
+                            ivPositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardPositivePath));
                         } else {
                             Utilities.showToast("获取相机图片失败，请重新尝试或使用相册", this);
                         }
@@ -498,6 +514,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                         if (idcardOppositePath != null) {
                             String[] strings = idcardOppositePath.split("\\.");
                             startUploadIdOpposite(idcardOppositePath, strings[strings.length - 1]);
+                            ivOppositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardOppositePath));
                         } else {
                             Utilities.showToast("获取相机图片失败，请重新尝试或使用相册", this);
                         }
@@ -512,6 +529,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                         if (idcardPositivePath != null) {
                             String[] strings = idcardPositivePath.split("\\.");
                             startUploadIdPositive(idcardPositivePath, strings[strings.length - 1]);
+                            ivPositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardPositivePath));
                         } else {
                             Utilities.showToast("获取相册图片失败,请重新尝试或使用相机", this);
                         }
@@ -520,7 +538,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                         Logger.e("反面路径" + idcardPositivePath);
                         if (idcardOppositePath != null) {
                             String[] strings = idcardOppositePath.split("\\.");
-                            startUploadIdPositive(idcardOppositePath, strings[strings.length - 1]);
+                            startUploadIdOpposite(idcardOppositePath, strings[strings.length - 1]);
+                            ivOppositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardOppositePath));
                         } else {
                             Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", this);
                         }

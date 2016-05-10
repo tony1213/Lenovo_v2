@@ -94,20 +94,27 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             super.handleMessage(msg);
             String json = (String) msg.obj;
             Logger.e("后台返回的数据====" + json);
-            if(json==null){
+            if (json == null) {
                 stopProgress();
                 return;
             }
             TaskBean bean = gson.fromJson(json, TaskBean.class);
+            if (bean == null) {
+                stopProgress();
+                Utilities.showToast("无数据", getActivity());
+                return;//加上无数据页面
+            }
             int st = bean.st;
             if (st == -2 || st == -1) {
                 stopProgress();
-                Utilities.showToast(bean.msg, getActivity());
-                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                getActivity().finish();
-                StackManager.getStackManager().popAllActivitys();
+                if (getActivity() != null) {
+                    Utilities.showToast(bean.msg, getActivity());
+                    SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                    StackManager.getStackManager().popAllActivitys();
+                }
                 return;
             }
             switch (msg.what) {
@@ -117,12 +124,8 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 case StatusCode.SERVER_EXCEPTION:
                     Utilities.showToast(bean.msg, getActivity());
                     break;
-                case StatusCode.WORKORDER_ALL_SUCCESS:
-
-                    datas = bean.body.data;
+                case StatusCode.WORKORDER_AD_SUCCESS:
                     adImgs = bean.body.ad;
-
-                    workorderAdapter.setDatas(datas);
                     views.clear();
                     if (adImgs == null) {
 
@@ -139,12 +142,16 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                             Utilities.showToast("您点击了图片" + position, getActivity());
                         }
                     });
+                    break;
+                case StatusCode.WORKORDER_ALL_SUCCESS:
+                    datas = bean.body.data;
+                    workorderAdapter.setDatas(datas);
                     if (mRecyclerView.getAdapter() == null) {
                         mRecyclerView.setAdapter(workorderAdapter);
                     } else {
                         workorderAdapter.notifyDataSetChanged();
+                        handler.post(runnable);
                     }
-                    cycleViewPager.refreshData();
                     break;
                 case StatusCode.WORKORDER_RECEIVE_SUCCESS:
                 case StatusCode.WORKORDER_APPOINT_SUCCESS:
@@ -159,22 +166,9 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                         getActivity().finish();
                     } else if (st == 0) {
                         datas = bean.body.data;
-                        adImgs = bean.body.ad;
                         workorderAdapter.setDatas(datas);
                         workorderAdapter.notifyDataSetChanged();
-                        views.clear();
-                        for (int i = 0; i < adImgs.size(); i++) {
-                            views.add(ViewFactory.getImageView(getActivity(), adImgs.get(i).imageUrl));
-                        }
-                        cycleViewPager.setData(views, adImgs, new CycleViewPager.ImageCycleViewListener() {
-
-                            @Override
-                            public void onImageClick(String info, int position, View imageView) {
-                                ImageLoader.getInstance().displayImage(info, (ImageView) imageView, R.mipmap.icon_common_default_stub, R.mipmap.icon_common_default_error, Bitmap.Config.RGB_565);
-                                Utilities.showToast("您点击了图片" + position, getActivity());
-                            }
-                        });
-                        cycleViewPager.refreshData();
+                        handler.post(runnable);//刷新之后发现轮播图不会再自动刷新了
                     }
                     break;
                 case StatusCode.WORKORDER_RECEIVE_ACTION_SUCCESS:
@@ -220,6 +214,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         uid = ((MainActivity) getActivity()).getUid();
         mCity.setText(((CustomApplication) getActivity().getApplication()).city);
         initRefreshLayout();//下拉刷新
+        initAD();
         initRecyclerView();
         initEvent();
     }
@@ -232,9 +227,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
     }
 
-    private void initRecyclerView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));// 实现分割线
+    private void initAD() {
         workorderAdapter = new TaskListAdapter(getActivity());
         workorderAdapter.setHeader(LayoutInflater.from(getContext()).inflate(R.layout.item_recyclerview_header, null));
         workorderAdapter.setOnItemClickListener(TaskListFragment.this);
@@ -244,13 +237,51 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         handler = cycleViewPager.getHandler();
         runnable = cycleViewPager.getRunnable();
 
+        Requester requester = new Requester();
+        requester.cmd = 10000;
+        requester.uid = uid;
+        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.WORKORDER_AD_SUCCESS;
+                    msg.obj = json;
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    private void initRecyclerView() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));// 实现分割线
         startProgress("加载中");
         curTaskType = "-1";//请求所有
         Requester requester = new Requester();
         requester.cmd = 10001;
         requester.uid = uid;
         requester.body.put("taskSchedule", "-1");
-//        Logger.e(gson.toJson(requester));
         Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -516,6 +547,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
         // 在这里加载最新数据
         startProgress("加载中");
+        Logger.e("tasklistfragment 下拉刷新 currentTask" + curTaskType);
         Requester requester = new Requester();
         requester.cmd = 10001;
         requester.uid = uid;
@@ -597,7 +629,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mTitleFilter.setText(mTaskAll.getText());
 
                 startProgress("加载中");
-                requester.body.put("taskSchedule", "-1");
+                requester.body.put("taskType", "-1");
                 Request requestAll = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callAll = httpEngine.createRequestCall(requestAll);
                 callAll.enqueue(new Callback() {
@@ -630,7 +662,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mTitleFilter.setText(mTaskReceive.getText());
 
                 startProgress("加载中");
-                requester.body.put("taskSchedule", "0");
+                requester.body.put("taskType", "0");
                 Request requestReceive = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callReceive = httpEngine.createRequestCall(requestReceive);
                 callReceive.enqueue(new Callback() {
@@ -663,7 +695,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mTitleFilter.setText(mTaskOrder.getText());
 
                 startProgress("加载中");
-                requester.body.put("taskSchedule", "1");
+                requester.body.put("taskType", "1");
                 Request requestAppoint = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callAppoint = httpEngine.createRequestCall(requestAppoint);
                 callAppoint.enqueue(new Callback() {
@@ -696,7 +728,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mTitleFilter.setText(mTaskVisit.getText());
 
                 startProgress("加载中");
-                requester.body.put("taskSchedule", "2");
+                requester.body.put("taskType", "2");
                 Request requestHome = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callHome = httpEngine.createRequestCall(requestHome);
                 callHome.enqueue(new Callback() {
@@ -729,7 +761,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mTitleFilter.setText(mTaskAccount.getText());
 
                 startProgress("加载中");
-                requester.body.put("taskSchedule", "5");//待结单
+                requester.body.put("taskType", "5");//待结单
                 Request requestAccount = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callAccount = httpEngine.createRequestCall(requestAccount);
                 callAccount.enqueue(new Callback() {
@@ -762,7 +794,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 mTitleFilter.setText(mTaskEvaluation.getText());
 
                 startProgress("加载中");
-                requester.body.put("taskSchedule", "10");//待评价
+                requester.body.put("taskType", "10");//待评价
                 Request requestEvaluate = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call callEvaluate = httpEngine.createRequestCall(requestEvaluate);
                 callEvaluate.enqueue(new Callback() {

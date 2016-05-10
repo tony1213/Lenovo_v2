@@ -38,7 +38,7 @@ public class HttpEngine {
 
     public static final MediaType JSON = MediaType.parse("application/json;charset=utf-8");
 
-    private static int timeOut = 40000;
+    private static int timeOut = 20000;
 
     private HttpEngine() {
         mOkHttpClient = new OkHttpClient();

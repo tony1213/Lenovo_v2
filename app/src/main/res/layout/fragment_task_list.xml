@@ -11,13 +11,13 @@
     <cn.bingoogolapple.refreshlayout.BGARefreshLayout
         android:id="@+id/rl_modulename_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_task_list_title">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
 
     </cn.bingoogolapple.refreshlayout.BGARefreshLayout>

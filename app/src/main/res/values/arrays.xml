@@ -11,4 +11,21 @@
     <string-array name="id_card_type">
         <item>二代身份证</item>
     </string-array>
+    <string-array name="edu_type">
+        <item>硕士及以上</item>
+        <item>本科</item>
+        <item>专科</item>
+        <item>高中及以下</item>
+    </string-array>
+    <string-array name="english_level">
+        <item>大学英语四级以下</item>
+        <item>大学英语四级</item>
+        <item>大学英语六级</item>
+        <item>大学英语六级以上</item>
+    </string-array>
+    <string-array name="self_orientation">
+        <item>硬件工程师</item>
+        <item>软件工程师</item>
+        <item>数据库工程师</item>
+    </string-array>
 </resources>

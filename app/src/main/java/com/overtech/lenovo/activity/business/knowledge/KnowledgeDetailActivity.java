@@ -68,7 +68,7 @@ public class KnowledgeDetailActivity extends BaseActivity implements View.OnClic
                     Utilities.showToast(bean.msg, KnowledgeDetailActivity.this);
                     break;
                 case StatusCode.KNOWLEDGE_CONTENT_SUCCESS:
-                    webView.loadDataWithBaseURL("about:blank", bean.body.content, "text/html", "utf-8", null);
+                    webView.loadDataWithBaseURL(null, "<html><body>"+bean.body.content+"<body><html>", "text/html", "utf-8", null);
                     break;
             }
         }
@@ -92,10 +92,14 @@ public class KnowledgeDetailActivity extends BaseActivity implements View.OnClic
         mDoBack.setOnClickListener(this);
         mDoShare.setOnClickListener(this);
         webView.requestFocus();
+        webView.setInitialScale(25);
         WebSettings settings = webView.getSettings();
+        settings.setUseWideViewPort(true);
         settings.setJavaScriptEnabled(true);//启用支持javascript
+        settings.setSupportZoom(true);
         settings.setDefaultTextEncodingName("utf-8");
         settings.setBuiltInZoomControls(true);
+        settings.setBlockNetworkImage(false);
         initData();
     }
 

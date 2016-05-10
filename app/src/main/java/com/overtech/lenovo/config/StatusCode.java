@@ -21,6 +21,7 @@ public class StatusCode {
     public static final int WORKORDER_EVALUATE_SUCCSS=0x16;
     public static final int WORKORDER_CONTRACT_SUCCESS=0x17;
     public static final int WORKORDER_MSG_SUCCESS=0x18;
+    public static final int WORKORDER_AD_SUCCESS=0x19;
 
     public static final int WORKORDER_SUCCESS=0x20;
     public static final int WORKORDER_RECEIVE_ACTION_SUCCESS=0x21;
@@ -47,6 +48,7 @@ public class StatusCode {
     public static final int PERSONAL_SETTING_UPLOAD_ID_OPPOSITE=0x73;
     public static final int PERSONAL_ACCOUNT_DETAIL_SUCCESS=0x74;
     public static final int PERSONAL_ACCOUNT_SERVER_SUCCESS=0x75;
+    public static final int PERSONAL_UPLOAD_AVATOR_SUCCESS=0x76;
 
     public static final int KNOWLEDGE_PUBLIC_SUCCESS=0x80;
     public static final int KNOWLEDGE_CONTRACT_SUCCESS=0x81;

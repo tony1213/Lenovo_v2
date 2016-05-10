@@ -290,12 +290,13 @@
                     android:text="学历"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_edu"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/sp_personal_edu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    android:entries="@array/edu_type" />
             </LinearLayout>
 
             <LinearLayout
@@ -311,12 +312,13 @@
                     android:text="英语能力"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_english"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/sp_personal_english"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    android:entries="@array/english_level" />
             </LinearLayout>
 
             <LinearLayout
@@ -354,13 +356,13 @@
                     android:text="自我定位"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_identity"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/sp_personal_identity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
                     android:enabled="false"
-                    android:text="硬件工程师/数据库工程师" />
+                    android:entries="@array/self_orientation" />
             </LinearLayout>
 
             <View
@@ -453,6 +455,7 @@
                     android:id="@+id/bt_upload_idcard_positive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minHeight="24dp"
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="17dp"
                     android:background="@color/simple_orange"
@@ -471,11 +474,17 @@
                     android:visibility="invisible" />
             </android.support.v7.widget.LinearLayoutCompat>
 
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/iv_positive_idcard"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginLeft="128dp"
+                android:scaleType="centerInside" />
+
             <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="25dp"
                 android:paddingLeft="41dp">
 
                 <TextView
@@ -489,6 +498,7 @@
                     android:id="@+id/bt_upload_idcard_opposite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minHeight="24dp"
                     android:layout_marginLeft="17dp"
                     android:layout_marginTop="2dp"
                     android:background="@color/simple_orange"
@@ -504,6 +514,13 @@
                     android:text="上传成功"
                     android:visibility="invisible" />
             </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/iv_oppositive_idcard"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginLeft="128dp"
+                android:scaleType="centerInside" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

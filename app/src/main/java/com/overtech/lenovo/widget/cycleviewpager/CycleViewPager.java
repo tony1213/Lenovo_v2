@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.tasklist.taskbean.AD;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
                 case SCROLLING:
                     currentPosition++;
                     // Log.e("currentPosition", currentPosition + "");
+                    Logger.e("cycylerViewPager=="+currentPosition);
                     if (currentPosition >= imageViews.size()) {
                         viewPager.setCurrentItem(0, true);// 此处如果改为false，下面的onPageScrollStateChanged
                         // 将不会执行，handle将不会重新执行任务，
@@ -288,7 +290,7 @@ public class CycleViewPager extends Fragment implements OnPageChangeListener {
     @Override
     public void onPageSelected(int position) {
         // Log.e("==onPageSelected==", "==onPageSelected==");
-        currentPosition = position % 4;
+        currentPosition = position;
         setIndicator(currentPosition);
     }
 
