@@ -6,7 +6,8 @@
         android:id="@+id/menu_search"
         android:title="搜索"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/menu_contract"
         android:icon="@mipmap/arrow_down_white"

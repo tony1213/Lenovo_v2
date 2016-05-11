@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
@@ -37,7 +38,8 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
     private int mPreviousTabIndex = 0;//上一次的状态
     private int mCurrentTabIndex = 0;//当前状态
     private String uid;
-    private long exitTime=0;
+    private long exitTime = 0;
+
     @Override
     protected int getLayoutIds() {
         return R.layout.activity_main;
@@ -46,12 +48,14 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         StackManager.getStackManager().pushActivity(this);
-        toolbar= (Toolbar) findViewById(R.id.tool_bar);
+        TextView title = (TextView) findViewById(R.id.tv_toolbar_title);
+        title.setVisibility(View.GONE);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar=getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         mFragmentManager = getSupportFragmentManager();
-        uid= (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID,"");
+        uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
         mCurrentTabIndex = 0;
         mPreviousTabIndex = -1;
         setupViews();
@@ -107,17 +111,17 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(mCurrentFragment instanceof InformationFragment){
-            if(informationFragment.llCommentUpContainer.getVisibility()== View.VISIBLE){
+        if (mCurrentFragment instanceof InformationFragment) {
+            if (informationFragment.llCommentUpContainer.getVisibility() == View.VISIBLE) {
                 informationFragment.llCommentUpContainer.setVisibility(View.GONE);
                 return true;
             }
         }
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if(System.currentTimeMillis()-exitTime>2000){
-                Utilities.showToast("再按一次退出程序",this);
-                exitTime=System.currentTimeMillis();
-            }else{
+            if (System.currentTimeMillis() - exitTime > 2000) {
+                Utilities.showToast("再按一次退出程序", this);
+                exitTime = System.currentTimeMillis();
+            } else {
                 finish();
                 StackManager.getStackManager().popAllActivitys();
             }
@@ -125,7 +129,8 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
         }
         return super.onKeyDown(keyCode, event);
     }
-    public String getUid(){
+
+    public String getUid() {
         return uid;
     }
 }

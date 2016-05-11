@@ -17,6 +17,8 @@ public class Person {
         public String name;
         public String sex;
         public String birthday;
+        public String isCertificated;
+        public String certificate_datetime;
         public String mobile;
         public String qq;
         public String wechat;

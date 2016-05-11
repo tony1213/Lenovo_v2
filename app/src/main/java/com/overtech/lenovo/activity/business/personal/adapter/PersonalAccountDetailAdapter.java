@@ -28,8 +28,7 @@ public class PersonalAccountDetailAdapter extends RecyclerView.Adapter<PersonalA
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = ((PersonalAccountDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_detail,parent,false);
-//        View view=LayoutInflater.from(ctx).inflate(R.layout.item_recyclerview_personal_account_detail,parent);
+        View view = ((PersonalAccountDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_detail, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -38,10 +37,13 @@ public class PersonalAccountDetailAdapter extends RecyclerView.Adapter<PersonalA
         PersonalAccount.Workorder data = datas.get(position);
         holder.workorder_code.setText(data.workorder_code);
         holder.datetime.setText(data.datetime);
-        holder.issue_description.setText(data.issue_description);
-        holder.issue_type.setText(data.issue_type);
         holder.standard_fee_amount.setText(data.standard_fee_amount);
-        holder.solution.setText(data.solution);
+        holder.workorder_contract.setText(data.contract);
+        if (data.isPay.equals("0")) {
+            holder.workorder_pay_status.setText("未支付");
+        } else if (data.isPay.equals("1")) {
+            holder.workorder_pay_status.setText("已支付");
+        }
     }
 
     @Override
@@ -53,18 +55,16 @@ public class PersonalAccountDetailAdapter extends RecyclerView.Adapter<PersonalA
         TextView workorder_code;
         TextView datetime;
         TextView standard_fee_amount;
-        TextView issue_type;
-        TextView issue_description;
-        TextView solution;
+        TextView workorder_contract;
+        TextView workorder_pay_status;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             workorder_code = (TextView) itemView.findViewById(R.id.tv_workorder_code);
             datetime = (TextView) itemView.findViewById(R.id.tv_workorder_datetime);
             standard_fee_amount = (TextView) itemView.findViewById(R.id.tv_workorder_standard_fee_amount);
-            issue_type = (TextView) itemView.findViewById(R.id.tv_workorder_issue_type);
-            issue_description = (TextView) itemView.findViewById(R.id.tv_workorder_issue_description);
-            solution = (TextView) itemView.findViewById(R.id.tv_workorder_solution);
+            workorder_contract = (TextView) itemView.findViewById(R.id.tv_workorder_contract);
+            workorder_pay_status = (TextView) itemView.findViewById(R.id.tv_workorder_pay_status);
         }
 
     }

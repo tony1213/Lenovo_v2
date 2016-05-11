@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
@@ -59,8 +60,11 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     private AppCompatEditText etComment;
     private AppCompatButton btComment;
     private BGARefreshLayout mRefreshLayout;
+    private TextView title;
     private InformationAdapter adapter;
-    private List<Information> datas;
+    private List<Information.InforItem> datas;
+    private boolean isRefreshing;//用于标记当前是上拉刷新还是下拉加载更多
+    private int curPage = 0;//记录当前的页码
     private Map mContentTree = new HashMap();
     private String uid;
     private UIHandler uiHandler = new UIHandler(getActivity()) {
@@ -85,6 +89,13 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
+            if (bean.body == null || bean.body.data == null) {
+                stopProgress();
+                mRefreshLayout.endLoadingMore();
+                mRefreshLayout.endRefreshing();
+                Utilities.showToast("暂时没有数据", getActivity());
+                return;
+            }
             switch (msg.what) {
                 case StatusCode.FAILED:
                     Utilities.showToast(bean.msg, getActivity());
@@ -93,24 +104,32 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     Utilities.showToast(bean.msg, getActivity());
                     break;
                 case StatusCode.INFORMATION_SUCCESS:
+                    if (isRefreshing) {
+                        datas = bean.body.data;
+                    } else {
+                        datas.addAll(bean.body.data);
+                        Logger.e("INformation Fragment 此时datas的大小" + datas.size());
+                    }
+                    curPage = datas.size() / 10;
                     if (adapter == null) {
-                        adapter = new InformationAdapter(getActivity(), bean.body.data);
+                        adapter = new InformationAdapter(getActivity(), datas);
                         adapter.setOnItemButtonClickListener(new OnItemButtonClickListener() {
 
                             @Override
-                            public void buttonClick(View v, int position) {
+                            public void buttonClick(View v, int position, int contentPosition, Information.Comment comment) {
                                 // TODO Auto-generated method stub
                                 llCommentUpContainer.setVisibility(View.VISIBLE);
                                 etComment.setFocusable(true);
-                                etComment.setTag(new Object[]{position, bean.body.data.get(position).post_id});
+                                etComment.setTag(new Object[]{position, bean.body.data.get(position).post_id, comment, contentPosition});
                             }
                         });
                         mInformation.setAdapter(adapter);
                     } else {
-                        adapter.setData(bean.body.data);
+                        adapter.setData(datas);
                         adapter.notifyDataSetChanged();
-                        mRefreshLayout.endRefreshing();
                     }
+                    mRefreshLayout.endRefreshing();
+                    mRefreshLayout.endLoadingMore();
                     break;
                 case StatusCode.INFORMATION_COMMENT_SUCCESS:
                     int p = msg.arg1;
@@ -123,10 +142,17 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     etComment.setText("");
                     llCommentUpContainer.setVisibility(View.GONE);
                     break;
+                case StatusCode.INFORMATION_COMMENT_RESPONSE_SUCCESS:
+                    int p2 = msg.arg1;
+                    Information information2 = new Information();
+                    Information.CommentResponse response = information2.new CommentResponse();
+                    adapter.getDatas().get(p2).comment.get();////记录当前点击的位置
+                    break;
             }
             stopProgress();
         }
     };
+
 
     @Override
     protected int getLayoutId() {
@@ -139,27 +165,65 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
         uid = ((MainActivity) getActivity()).getUid();
         actionBar = ((MainActivity) getActivity()).getSupportActionBar();
         actionBar.show();
-        actionBar.setTitle("信息");
+        actionBar.setTitle("");
+        title = (TextView) getActivity().findViewById(R.id.tv_toolbar_title);
+        title.setText("信息");
+        title.setVisibility(View.VISIBLE);
         mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
         llCommentUpContainer = (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
         etComment = (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
         btComment = (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
-        mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
-        llCommentUpContainer.setVisibility(View.GONE);
 
-        btComment.setOnClickListener(this);
+        mInformation.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int lastPosition = -1;
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    lastPosition = layoutManager.findLastVisibleItemPosition();
+                    Logger.e("informationFragment==lastPosition==" + lastPosition);
+                    if (lastPosition == datas.size() - 1) {
+                        mRefreshLayout.setIsShowLoadingMoreView(true);
+                        mRefreshLayout.beginLoadingMore();
+                    }
+                }
+            }
+        });
         mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mRefreshLayout.setDelegate(this);
-        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
-        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+        initRefreshLayout();
+        llCommentUpContainer.setVisibility(View.GONE);
+        btComment.setOnClickListener(this);
         startProgress("加载中...");
-        initData();
+        isRefreshing = true;
+        initData(curPage);
     }
 
-    private void initData() {
+    private void initRefreshLayout() {
+        mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
+        mRefreshLayout.setDelegate(this);
+        mRefreshLayout.setIsShowLoadingMoreView(true);
+        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
+        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            title.setVisibility(View.VISIBLE);
+            title.setText("信息");
+        } else {
+            title.setVisibility(View.GONE);
+        }
+    }
+
+    private void initData(int page) {
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10050;
+        requester.body.put("page", String.valueOf(page));
+        requester.body.put("size", "10");
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new com.squareup.okhttp.Callback() {
@@ -197,20 +261,23 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        actionBar.show();;
+        actionBar.show();
+
     }
 
     @Override
     public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
         // 在这里加载最新数据
-        initData();
+        isRefreshing = true;
+        curPage = 0;//下拉刷新默认请求最新的一条数据
+        initData(curPage);
     }
 
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
-        mRefreshLayout.endLoadingMore();
-
+        isRefreshing = false;
+        initData(++curPage);
         return true;
     }
 
@@ -219,25 +286,30 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_comment:
-                String comment = etComment.getText().toString().trim();
+                String commentContent = etComment.getText().toString().trim();
                 Object[] objs = (Object[]) etComment.getTag();
                 String post_id = (String) objs[1];
                 int pos = (int) objs[0];
-                if (TextUtils.isEmpty(comment)) {
+                int contentPosition = (int) objs[3];
+                Information.Comment comment = (Information.Comment) objs[2];
+                if (TextUtils.isEmpty(commentContent)) {
                     Utilities.showToast("评论内容不能为空", getActivity());
                     return;
                 }
-                startUploadComment(pos, post_id, comment);
+                startUploadComment(pos, post_id, commentContent, comment, contentPosition);
                 break;
         }
     }
 
-    private void startUploadComment(final int position, String id, final String content) {
+    private void startUploadComment(final int position, String id, final String content, Information.Comment comment, final int contentPosition) {
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10051;
         requester.body.put("post_id", id);
         requester.body.put("comment_content", content);
+        if (comment != null) {
+            requester.body.put("comment_id", comment.comment_id);
+        }
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new com.squareup.okhttp.Callback() {
@@ -260,7 +332,9 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     msg.what = StatusCode.INFORMATION_COMMENT_SUCCESS;
                     msg.obj = json;
                     msg.arg1 = position;
+                    msg.arg2 = contentPosition;
                     mContentTree.put(position, content);
+                    markkk yixia
                 } else {
                     ResponseExceptBean bean = new ResponseExceptBean();
                     bean.st = response.code();

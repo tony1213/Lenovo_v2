@@ -71,17 +71,33 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 if (listener != null) {
-                    listener.buttonClick(v, position);
+                    listener.buttonClick(v, position,0,null);
                 }
             }
         });// 为评论注册点击事件
         vh.llCommentContainer.removeAllViews();
-        for (Information.Comment comment : info.comment) {
+        for (int i=0;i<info.comment.size();i++){
+            final Information.Comment comment=info.comment.get(i);
             TextView textView = new TextView(ctx);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             textView.setLayoutParams(params);
             textView.setText(comment.comment_user + ":" + comment.comment_content);
             vh.llCommentContainer.addView(textView);
+            for (Information.CommentResponse response:comment.comment_response){
+                TextView responseContent=new TextView(ctx);
+                ViewGroup.LayoutParams resTvParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(resTvParams);
+                responseContent.setText(response.comment_user+" 回复 "+comment.comment_user+":"+response.comment_content);
+            }
+            final int finalI = i;
+            textView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener!=null){
+                        listener.buttonClick(v,position, finalI,comment);
+                    }
+                }
+            });
         }
     }
 
@@ -136,6 +152,6 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
     }
 
     public interface OnItemButtonClickListener {
-        void buttonClick(View v, int position);
+        void buttonClick(View v, int position,int commentPosition ,Information.Comment comment);
     }
 }

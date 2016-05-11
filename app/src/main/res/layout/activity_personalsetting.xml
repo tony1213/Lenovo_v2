@@ -119,6 +119,16 @@
                     android:layout_toRightOf="@id/tv_gender"
                     android:drawableLeft="@mipmap/icon_calendar"
                     android:text="1990-10-10" />
+
+                <TextView
+                    android:id="@+id/tv_certificated_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_name"
+                    android:layout_below="@id/tv_gender"
+                    android:layout_marginTop="8dp"
+                    android:text="尚未通过认证"
+                    android:textColor="@color/lable_red" />
             </RelativeLayout>
 
             <LinearLayout
@@ -455,10 +465,10 @@
                     android:id="@+id/bt_upload_idcard_positive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="24dp"
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="17dp"
                     android:background="@color/simple_orange"
+                    android:minHeight="24dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:text="点击上传"
@@ -498,10 +508,10 @@
                     android:id="@+id/bt_upload_idcard_opposite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="24dp"
                     android:layout_marginLeft="17dp"
                     android:layout_marginTop="2dp"
                     android:background="@color/simple_orange"
+                    android:minHeight="24dp"
                     android:text="点击上传"
                     android:textColor="@color/main_white" />
 

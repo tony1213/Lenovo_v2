@@ -27,7 +27,7 @@ public class PersonalAccountServerDetailAdapter extends RecyclerView.Adapter<Per
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = ((PersonalAccountServerDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_server_detail, parent,false);//如果此处只用inflate（R.layout，null）；则只会生成view,不会设置layoutparams
+        View view = ((PersonalAccountServerDetailActivity) ctx).getLayoutInflater().inflate(R.layout.item_recyclerview_personal_account_server_detail, parent, false);//如果此处只用inflate（R.layout，null）；则只会生成view,不会设置layoutparams
         return new MyViewHolder(view);
     }
 
@@ -36,9 +36,9 @@ public class PersonalAccountServerDetailAdapter extends RecyclerView.Adapter<Per
         PersonalAccount.Workorder data = datas.get(position);
         holder.workorder_code.setText(data.workorder_code);
         holder.datetime.setText(data.datetime);
-        holder.issue_description.setText(data.issue_description);
+        holder.issue_description.setText(data.issue_type);
         holder.issue_type.setText(data.issue_type);
-        holder.taskType.setText(data.task_type);
+        holder.taskType.setText(data.task_typp);
     }
 
     @Override

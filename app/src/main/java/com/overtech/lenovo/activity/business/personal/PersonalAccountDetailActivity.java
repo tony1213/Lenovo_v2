@@ -96,7 +96,7 @@ public class PersonalAccountDetailActivity extends BaseActivity {
         setSupportActionBar(toolBar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("变化明细");
+        actionBar.setTitle("对账单");
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

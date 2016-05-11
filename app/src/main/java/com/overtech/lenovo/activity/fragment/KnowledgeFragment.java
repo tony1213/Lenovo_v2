@@ -1,19 +1,16 @@
 package com.overtech.lenovo.activity.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,16 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.knowledge.KnowledgeDetailActivity;
-import com.overtech.lenovo.activity.business.knowledge.Model;
 import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMainAdapter;
 import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMoreAdapter;
 import com.overtech.lenovo.activity.business.knowledge.adapter.ContractAdapter;
@@ -49,11 +45,8 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.internal.Util;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +66,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
     private ClassifyMainAdapter mainAdapter;
     private ClassifyMoreAdapter moreAdapter;
     private String uid;
+    private boolean isLoginOut = false;
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
         public void handleMessage(Message msg) {
@@ -86,11 +80,14 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
             int st = bean.st;
             if (st == -2 || st == -1) {
                 stopProgress();
-                Utilities.showToast(bean.msg, getActivity());
-                SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                if (!isLoginOut) {
+                    isLoginOut = true;
+                    Utilities.showToast(bean.msg, getActivity());
+                    SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
                 return;
             }
             super.handleMessage(msg);
@@ -102,6 +99,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
                     Utilities.showToast(bean.msg, getActivity());
                     break;
                 case StatusCode.KNOWLEDGE_PUBLIC_SUCCESS:
+                    isLoginOut = false;
                     datas = bean.body.data;
                     if (datas == null || datas.size() == 0) {
                         stopProgress();
@@ -129,6 +127,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
 
                     break;
                 case StatusCode.KNOWLEDGE_CONTRACT_SUCCESS:
+                    isLoginOut = false;
                     contractDatas = bean.body.data;
                     if (adapter == null) {
                         adapter = new ContractAdapter(contractDatas, getActivity());
@@ -156,7 +155,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
         initView();
         initPopupWindow();
-        initData(10021,"0",null);
+        initData(10021, "0", null);
         initContractData();
     }
 
@@ -164,22 +163,47 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_knowledge, menu);
-        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search));
-        searchView.setIconifiedByDefault(true);
+        Logger.e("knowledge fragment 菜单创建了");
         actionBar = ((MainActivity) getActivity()).getSupportActionBar();
         toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
-        toolbar.setTitle("知识");
+//        final TextView title = (TextView) getActivity().findViewById(R.id.tv_toolbar_title);
+        toolbar.setTitle("");
+        inflater.inflate(R.menu.menu_knowledge, menu);
+        MenuItem item = menu.findItem(R.id.menu_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setIconified(true);
+//        MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+//            @Override
+//            public boolean onMenuItemActionExpand(MenuItem item) {
+//                Logger.e("onActionExpandListener====Expand");
+//                title.setAlpha(0);
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onMenuItemActionCollapse(MenuItem item) {
+//                Logger.e("onActionExpandListener=====Collapse");
+//                title.setAlpha(1);
+//                return true;
+//            }
+//        });
+//        title.setVisibility(View.GONE);
+//        title.setText("知识");
         actionBar.show();
-
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
-                String query=searchView.getQuery().toString().trim();
-                if(!TextUtils.isEmpty(query)){
-                    searchView.onActionViewCollapsed();
-                    initData(10023,null,query);
+            public boolean onQueryTextSubmit(String query) {
+                Logger.e("searchview 搜索开始执行了");
+                if (!TextUtils.isEmpty(query)) {
+//                    searchView.onActionViewCollapsed();
+                    initData(10023, null, query);
                 }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
     }
@@ -235,13 +259,13 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         });
     }
 
-    private void initData(int cmd,String knowledgeType,String keyword) {
+    private void initData(int cmd, String knowledgeType, String keyword) {
         startProgress("加载中...");
         Requester requester = new Requester();
         requester.cmd = cmd;
         requester.uid = uid;
         requester.body.put("contract_code", knowledgeType);
-        requester.body.put("keyword",keyword);
+        requester.body.put("keyword", keyword);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -284,7 +308,7 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Utilities.showToast("您点击了" + position, getActivity());
                 popupWindow.dismiss();
-                initData(10021,contractDatas.get(position).contract_code,null);
+                initData(10021, contractDatas.get(position).contract_code, null);
             }
         });
         popupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

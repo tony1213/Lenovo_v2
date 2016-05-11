@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -77,6 +78,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     private TextView mTaskVisit;
     private TextView mTaskAccount;
     private TextView mTaskEvaluation;
+    private AppCompatTextView noPage;
     private TaskListAdapter workorderAdapter;
     private BGARefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -86,6 +88,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     private List<AD> adImgs = new ArrayList<AD>();
     private String uid;//用户唯一标识
     private String curTaskType;//记录当前状态
+    private boolean isLoginOut = false;//默认登录状态
     private Handler handler;// cyclerviewpager的handler
     private Runnable runnable;// cyclerviewpager的runnable
     private UIHandler uiHandler = new UIHandler(getActivity()) {
@@ -107,7 +110,8 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
             int st = bean.st;
             if (st == -2 || st == -1) {
                 stopProgress();
-                if (getActivity() != null) {
+                if (!isLoginOut) {
+                    isLoginOut = true;
                     Utilities.showToast(bean.msg, getActivity());
                     SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -125,6 +129,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                     Utilities.showToast(bean.msg, getActivity());
                     break;
                 case StatusCode.WORKORDER_AD_SUCCESS:
+                    isLoginOut = false;
                     adImgs = bean.body.ad;
                     views.clear();
                     if (adImgs == null) {
@@ -144,7 +149,14 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                     });
                     break;
                 case StatusCode.WORKORDER_ALL_SUCCESS:
+                    isLoginOut = false;
                     datas = bean.body.data;
+                    if (datas == null || datas.size() == 0) {
+                        noPage.setText("暂时没有分配给您的工单");
+                        noPage.setVisibility(View.VISIBLE);
+                    } else {
+                        noPage.setVisibility(View.GONE);
+                    }
                     workorderAdapter.setDatas(datas);
                     if (mRecyclerView.getAdapter() == null) {
                         mRecyclerView.setAdapter(workorderAdapter);
@@ -158,6 +170,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 case StatusCode.WORKORDER_HOME_SUCCESS:
                 case StatusCode.WORKORDER_ACCOUNT_SUCCESS:
                 case StatusCode.WORKORDER_EVALUATE_SUCCSS:
+                    isLoginOut = false;
                     if (st == -2 || st == -1) {
                         SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
                         Utilities.showToast(bean.msg, getActivity());
@@ -166,6 +179,12 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                         getActivity().finish();
                     } else if (st == 0) {
                         datas = bean.body.data;
+                        if (datas == null || datas.size() == 0) {
+                            noPage.setText("未找到指定订单");
+                            noPage.setVisibility(View.VISIBLE);
+                        } else {
+                            noPage.setVisibility(View.GONE);
+                        }
                         workorderAdapter.setDatas(datas);
                         workorderAdapter.notifyDataSetChanged();
                         handler.post(runnable);//刷新之后发现轮播图不会再自动刷新了
@@ -174,6 +193,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 case StatusCode.WORKORDER_RECEIVE_ACTION_SUCCESS:
                 case StatusCode.WORKORDER_APPOINT_ACTION_SUCCESS:
                 case StatusCode.WORKORDER_HOME_ACTION_SUCCESS:
+                    isLoginOut = false;
                     if (st == -2 || st == -1) {
                         Utilities.showToast(bean.msg, getActivity());
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -211,6 +231,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         mTitleFilter = (TextView) mRootView.findViewById(R.id.tv_task_list_filter);
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
         mNotification = (ImageView) mRootView.findViewById(R.id.iv_task_notification);
+        noPage = (AppCompatTextView) mRootView.findViewById(R.id.tv_no_page);
         uid = ((MainActivity) getActivity()).getUid();
         mCity.setText(((CustomApplication) getActivity().getApplication()).city);
         initRefreshLayout();//下拉刷新

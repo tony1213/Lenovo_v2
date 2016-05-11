@@ -71,6 +71,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private TextView tvName;
     private TextView tvGender;
     private TextView tvBirthday;
+    private TextView tvCertificateStatus;
     private AppCompatEditText etPhone;
     private AppCompatEditText etQQ;
     private AppCompatEditText etWeChat;
@@ -149,6 +150,11 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     } else if (TextUtils.equals(bean.body.sex, "0")) {
                         tvGender.setText("女");
                     }
+                    if (bean.body.isCertificated.equals("0")) {
+                        tvCertificateStatus.setText("尚未通过认证，请完善信息进行认证");
+                    } else if (bean.body.isCertificated.equals("1")) {
+                        tvCertificateStatus.setText("通过认证日期：" + bean.body.certificate_datetime);
+                    }
                     etPhone.setText(bean.body.mobile);
                     etQQ.setText(bean.body.qq);
                     etWeChat.setText(bean.body.wechat);
@@ -181,6 +187,11 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     break;
                 case StatusCode.PERSONAL_SETTING_UPDATE_SUCCESS:
                     Utilities.showToast(bean.msg, PersonalSettingActivity.this);
+                    if (bean.body.isCertificated.equals("0")) {
+                        tvCertificateStatus.setText("尚未通过认证，请完善信息进行认证");
+                    } else if (bean.body.isCertificated.equals("1")) {
+                        tvCertificateStatus.setText("通过认证时间：" + bean.body.certificate_datetime);
+                    }
                     etPhone.setEnabled(false);
                     etQQ.setEnabled(false);
                     etWeChat.setEnabled(false);
@@ -230,6 +241,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         tvName = (TextView) findViewById(R.id.tv_name);
         tvGender = (TextView) findViewById(R.id.tv_gender);
         tvBirthday = (TextView) findViewById(R.id.tv_birthday);
+        tvCertificateStatus = (TextView) findViewById(R.id.tv_certificated_status);
         etPhone = (AppCompatEditText) findViewById(R.id.et_personal_phone);
         etQQ = (AppCompatEditText) findViewById(R.id.et_personal_qq);
         etWeChat = (AppCompatEditText) findViewById(R.id.et_personal_wechat);
@@ -332,14 +344,15 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 etIdCard.setEnabled(true);
                 break;
             case R.id.tv_birthday:
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment pre = getSupportFragmentManager().findFragmentByTag("personal_birthday");
-                if (pre != null) {
-                    ft.remove(pre);
-                }
-                ft.addToBackStack(null);
-                PersonalBirthdayDialog birthdayDialog = PersonalBirthdayDialog.newInstance();
-                birthdayDialog.show(ft, "personal_birthday");
+//                因生日可以根据身份证获取，此处可不需要
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                Fragment pre = getSupportFragmentManager().findFragmentByTag("personal_birthday");
+//                if (pre != null) {
+//                    ft.remove(pre);
+//                }
+//                ft.addToBackStack(null);
+//                PersonalBirthdayDialog birthdayDialog = PersonalBirthdayDialog.newInstance();
+//                birthdayDialog.show(ft, "personal_birthday");
                 break;
             case R.id.bt_upload_idcard_positive:
                 curState = 0;

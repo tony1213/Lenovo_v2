@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
@@ -14,6 +16,17 @@
         android:background="@color/bg_qq_blue"
         app:popupTheme="@style/MyPopupTheme"
         app:theme="@style/ToolTheme"/>
+        <TextView
+            android:id="@+id/tv_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="haha"
+            android:textColor="@color/main_white"
+            android:textSize="@dimen/text_size_title"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/layout_content"
