@@ -1,7 +1,5 @@
 package com.overtech.lenovo.entity;
 
-import com.google.gson.Gson;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +10,7 @@ public class Requester {
     public String os = "android";
     public String ver = "v1.0";
     public String lg = "zh";
+    public String tenantcode="LENOVO";
     public int cmd;
     public String uid;
     public String pwd;

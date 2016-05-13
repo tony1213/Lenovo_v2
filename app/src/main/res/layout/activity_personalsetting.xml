@@ -99,8 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_toRightOf="@id/iv_avator"
-                    android:text="陈晓晨" />
+                    android:layout_toRightOf="@id/iv_avator" />
 
                 <TextView
                     android:id="@+id/tv_gender"
@@ -228,8 +227,8 @@
                     android:text="所在城市"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_city"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/sp_personal_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"

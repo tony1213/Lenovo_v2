@@ -134,7 +134,7 @@ public class TaskInformationFragment extends BaseFragment {
                         TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
                         TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
                         TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
@@ -145,7 +145,7 @@ public class TaskInformationFragment extends BaseFragment {
                         TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
                         TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
                         TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, "", "");
                         TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
@@ -158,7 +158,7 @@ public class TaskInformationFragment extends BaseFragment {
                         TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
                         TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
                         TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", body.feedback_solved_datetime, "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
                         TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
@@ -173,7 +173,7 @@ public class TaskInformationFragment extends BaseFragment {
                         TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
                         TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
                         TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", body.feedback_solved_datetime, "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution,body.shutdown_datetime, body.feedback_solved_datetime, "");
                         TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "", "", "", body.feedback);
                         TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
@@ -190,7 +190,7 @@ public class TaskInformationFragment extends BaseFragment {
                         TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
                         TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
                         TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, "", body.feedback_solved_datetime, "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
                         TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
@@ -236,7 +236,7 @@ public class TaskInformationFragment extends BaseFragment {
                             if (TextUtils.isEmpty(task.notification_item_time) && TextUtils.isEmpty(task.notification_item_who) && TextUtils.isEmpty(task.notification_item_content)) {
                                 tvMsg.setText("没有最新通知");
                             } else {
-                                tvMsg.setText(task.notification_item_time + "[" + task.notification_item_who + "]" + task.notification_item_content);
+                                tvMsg.setText(task.notification_item_time +"\n"+  task.notification_item_who + ":"+task.notification_item_content);
                             }
                             llNotificationContainer.addView(tvMsg);
                         }
@@ -267,7 +267,7 @@ public class TaskInformationFragment extends BaseFragment {
         ivRepairContactInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + repairPersonContactInformation));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + repairPersonContactInformation));
                 startActivity(intent);
             }
         });

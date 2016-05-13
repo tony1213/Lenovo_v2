@@ -181,14 +181,19 @@
                 android:layout_toRightOf="@id/iv_notification"
                 android:text="通知消息" />
 
-            <LinearLayout
-                android:id="@+id/ll_workorder_notification_container"
+            <ScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:layout_below="@id/tv_notification"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/iv_notification"
-                android:orientation="vertical" />
+                android:layout_toRightOf="@id/iv_notification">
+
+                <LinearLayout
+                    android:id="@+id/ll_workorder_notification_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </ScrollView>
 
             <TextView
                 android:id="@+id/tv_workorder_notification_datetime"

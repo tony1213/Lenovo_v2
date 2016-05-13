@@ -1,5 +1,7 @@
 package com.overtech.lenovo.entity.person;
 
+import java.util.List;
+
 /**
  * Created by Overtech on 16/4/22.
  */
@@ -7,7 +9,8 @@ public class Person {
     public int st;
     public String msg;
     public Body body;
-    public class Body{
+
+    public class Body {
         public String avator;
         public String finance;
         public String month_workorder_amount;
@@ -23,15 +26,21 @@ public class Person {
         public String qq;
         public String wechat;
         public String email;
-        public String territory_node_path;
+        public List<Type> territory_node_path;
         public String address;
-        public String degree;
-        public String english_ability;
+        public List<Type> degree;
+        public List<Type> english_ability;
         public String working_life;
-        public String self_orientation;
-        public String type_of_id;
+        public List<Type> self_orientation;
+        public List<Type> type_of_id;
         public String idcard;
         public String positive_identity_card;
         public String opposite_identity_card;
+    }
+
+    public class Type {
+        public String isDefault;
+        public String id;
+        public String name;
     }
 }

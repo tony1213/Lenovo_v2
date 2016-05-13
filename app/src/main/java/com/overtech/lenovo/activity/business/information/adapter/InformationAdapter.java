@@ -15,8 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
+import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.information.Information;
 import com.overtech.lenovo.utils.ImageCacheUtils;
+import com.overtech.lenovo.widget.NineGridView;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.squareup.picasso.Transformation;
 
@@ -34,11 +36,17 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
 
     @Override
     public int getItemCount() {
+        if(datas==null){
+            Logger.e("InformationAdapter==getItemCount=="+0);
+        }else{
+            Logger.e("InformationAdapter==getItemCount=="+datas.size());
+        }
         return datas == null ? 0 : datas.size();
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder vh, final int position) {
+        Logger.e("InformationAdapter==onBindViewHolder()===" + position);
         Information.InforItem info = datas.get(position);
         ImageLoader.getInstance().displayImage(info.create_user_img, vh.avator, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
                 new Transformation() {
@@ -49,7 +57,7 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
 
                     @Override
                     public String key() {
-                        return position+"";
+                        return position + "";
                     }
                 },
                 Config.RGB_565);// 处理头像
@@ -61,6 +69,8 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
             vh.picture.setAdapter(vh.itemAdapter);// 每个item内的图片描述
         } else {
             vh.itemAdapter.setUrls(info.create_img);
+//            vh.itemAdapter.getUrls().clear();
+//            vh.itemAdapter.getUrls().addAll(info.create_img);
             vh.itemAdapter.notifyDataSetChanged();// 当出现convertView重用的时候，就将adapter重新刷新
         }
         vh.time.setText(info.create_datetime);
@@ -71,30 +81,31 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 if (listener != null) {
-                    listener.buttonClick(v, position,0,null);
+                    listener.buttonClick(v, position, -1, null);
                 }
             }
         });// 为评论注册点击事件
         vh.llCommentContainer.removeAllViews();
-        for (int i=0;i<info.comment.size();i++){
-            final Information.Comment comment=info.comment.get(i);
+        for (int i = 0; i < info.comment.size(); i++) {
+            final Information.Comment comment = info.comment.get(i);
             TextView textView = new TextView(ctx);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             textView.setLayoutParams(params);
             textView.setText(comment.comment_user + ":" + comment.comment_content);
             vh.llCommentContainer.addView(textView);
-            for (Information.CommentResponse response:comment.comment_response){
-                TextView responseContent=new TextView(ctx);
-                ViewGroup.LayoutParams resTvParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            for (Information.CommentResponse response : comment.comment_response) {
+                TextView responseContent = new TextView(ctx);
+                LinearLayout.LayoutParams resTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 textView.setLayoutParams(resTvParams);
-                responseContent.setText(response.comment_user+" 回复 "+comment.comment_user+":"+response.comment_content);
+                responseContent.setText(response.comment_user + " 回复 " + comment.comment_user + ":" + response.comment_content);
+                vh.llCommentContainer.addView(responseContent);
             }
             final int finalI = i;
             textView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(listener!=null){
-                        listener.buttonClick(v,position, finalI,comment);
+                    if (listener != null) {
+                        listener.buttonClick(v, position, finalI, comment);
                     }
                 }
             });
@@ -113,7 +124,7 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
         ImageView avator;
         TextView name;
         TextView description;
-        GridView picture;
+        NineGridView picture;
         TextView time;
         ImageView commend;
         InformationItemAdapter itemAdapter;// 为每一个ViewHolder绑定一个图片gridview的adapter
@@ -128,7 +139,7 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
                     .findViewById(R.id.tv_information_name);
             description = (TextView) convertView
                     .findViewById(R.id.tv_information_description);
-            picture = (GridView) convertView
+            picture = (NineGridView) convertView
                     .findViewById(R.id.gv_information_picture);
             time = (TextView) convertView
                     .findViewById(R.id.tv_information_time);
@@ -152,6 +163,6 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
     }
 
     public interface OnItemButtonClickListener {
-        void buttonClick(View v, int position,int commentPosition ,Information.Comment comment);
+        void buttonClick(View v, int position, int commentPosition, Information.Comment comment);
     }
 }

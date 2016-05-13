@@ -122,13 +122,19 @@ public class TaskInfoFragAdapter extends BaseAdapter {
 
         } else if (task.taskType.equals(TaskProcess.SOLUTION)) {
             vh.mTaskState.setText("解决");
-            if (TextUtils.isEmpty(task.solution)) {
+            if (TextUtils.isEmpty(task.solution)&&TextUtils.isEmpty(task.shutdown_datetime)) {
                 vh.mTaskTime.setText("");
                 vh.mOther.setText("请提交解决方案");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("解决方案");
                 vh.mButton.setTag("解决方案");
-            } else {
+            } else if(!TextUtils.isEmpty(task.solution)&&TextUtils.isEmpty(task.shutdown_datetime)) {
+                vh.mTaskTime.setText(task.feedback_solved_datetime);
+                vh.mOther.setText(task.solution);
+                vh.mButton.setVisibility(View.VISIBLE);
+                vh.mButton.setText("解决方案");
+                vh.mButton.setTag("解决方案");
+            }else{
                 vh.mTaskTime.setText(task.feedback_solved_datetime);
                 vh.mOther.setText(task.solution);
                 vh.mButton.setVisibility(View.GONE);

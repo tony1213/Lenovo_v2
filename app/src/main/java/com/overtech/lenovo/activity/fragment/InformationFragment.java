@@ -89,7 +89,7 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
-            if (bean.body == null || bean.body.data == null) {
+            if (bean.body == null) {
                 stopProgress();
                 mRefreshLayout.endLoadingMore();
                 mRefreshLayout.endRefreshing();
@@ -110,6 +110,10 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                         datas.addAll(bean.body.data);
                         Logger.e("INformation Fragment 此时datas的大小" + datas.size());
                     }
+                    if(datas==null){
+                        Utilities.showToast("暂时没有数据",getActivity());
+                        return;
+                    }
                     curPage = datas.size() / 10;
                     if (adapter == null) {
                         adapter = new InformationAdapter(getActivity(), datas);
@@ -120,7 +124,7 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                                 // TODO Auto-generated method stub
                                 llCommentUpContainer.setVisibility(View.VISIBLE);
                                 etComment.setFocusable(true);
-                                etComment.setTag(new Object[]{position, bean.body.data.get(position).post_id, comment, contentPosition});
+                                etComment.setTag(new Object[]{position, datas.get(position).post_id, comment, contentPosition});
                             }
                         });
                         mInformation.setAdapter(adapter);
@@ -133,20 +137,25 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     break;
                 case StatusCode.INFORMATION_COMMENT_SUCCESS:
                     int p = msg.arg1;
+                    int commentPosition = msg.arg2;
                     Information information = new Information();
-                    Information.Comment comment = information.new Comment();
-                    comment.comment_content = bean.body.comment_content;
-                    comment.comment_user = bean.body.comment_user;
-                    adapter.getDatas().get(p).comment.add(comment);
+                    if (commentPosition != -1) {//点击的已评论的内容
+                        Information.CommentResponse response = information.new CommentResponse();
+                        response.comment_content = bean.body.comment_content;
+                        response.comment_user = bean.body.comment_user;
+                        adapter.getDatas().get(p).comment.get(commentPosition).comment_response.add(response);//获取帖子集合-->获取帖子对象--》获取帖子回复的集合--》添加到回复的集合里
+                    } else {//点击的是帖子评论
+                        Information.Comment comment = information.new Comment();
+                        comment.comment_content = bean.body.comment_content;
+                        comment.comment_user = bean.body.comment_user;
+                        adapter.getDatas().get(p).comment.add(comment);
+                    }
                     adapter.notifyDataSetChanged();
                     etComment.setText("");
                     llCommentUpContainer.setVisibility(View.GONE);
                     break;
                 case StatusCode.INFORMATION_COMMENT_RESPONSE_SUCCESS:
-                    int p2 = msg.arg1;
-                    Information information2 = new Information();
-                    Information.CommentResponse response = information2.new CommentResponse();
-                    adapter.getDatas().get(p2).comment.get();////记录当前点击的位置
+
                     break;
             }
             stopProgress();
@@ -334,7 +343,6 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     msg.arg1 = position;
                     msg.arg2 = contentPosition;
                     mContentTree.put(position, content);
-                    markkk yixia
                 } else {
                     ResponseExceptBean bean = new ResponseExceptBean();
                     bean.st = response.code();

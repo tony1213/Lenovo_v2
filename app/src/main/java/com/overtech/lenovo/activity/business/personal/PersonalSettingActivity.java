@@ -29,11 +29,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
+import com.overtech.lenovo.activity.business.personal.adapter.PersonalSpinnerAdapter;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
@@ -76,7 +78,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private AppCompatEditText etQQ;
     private AppCompatEditText etWeChat;
     private AppCompatEditText etEmail;
-    private AppCompatEditText etCity;
+    private AppCompatSpinner spCity;
     private AppCompatEditText etAddress;
     private AppCompatSpinner spEdu;
     private AppCompatSpinner spEnglish;
@@ -159,17 +161,36 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     etQQ.setText(bean.body.qq);
                     etWeChat.setText(bean.body.wechat);
                     etEmail.setText(bean.body.email);
-                    etCity.setText(bean.body.territory_node_path);
                     etAddress.setText(bean.body.address);
-                    spEdu.setPrompt(bean.body.degree);
-                    spEnglish.setSelection(1);
-                    etWorkYears.setText(bean.body.working_life);
-                    spIdentity.setSelection(1);
-                    if (bean.body.type_of_id.equals("二代身份证")) {
-                        spIdStyle.setPrompt("二代身份证");
-                    } else {
-                        spIdStyle.setPrompt("其他");
+                    PersonalSpinnerAdapter adapter = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.territory_node_path);
+                    spCity.setAdapter(adapter);
+                    spCity.setPrompt(adapter.getDefault());
+
+                    PersonalSpinnerAdapter adapter1 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.degree);
+                    spEdu.setAdapter(adapter1);
+                    for (Person.Type type : bean.body.degree) {
+                        if (type.isDefault.equals("1")) {
+                            Logger.e("最高学历" + type.name);
+                            spEdu.setSelection(2);
+                        }
                     }
+                    spEdu.setPrompt(adapter1.getDefault());
+
+
+                    PersonalSpinnerAdapter adapter2 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.english_ability);
+                    spEnglish.setAdapter(adapter2);
+                    spEnglish.setPrompt(adapter2.getDefault());
+
+                    PersonalSpinnerAdapter adapter3 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.self_orientation);
+                    spIdentity.setAdapter(adapter3);
+                    spIdentity.setPrompt(adapter3.getDefault());
+
+
+                    PersonalSpinnerAdapter adapter4 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.type_of_id);
+                    spIdStyle.setAdapter(adapter4);
+                    spIdStyle.setPrompt(adapter4.getDefault());
+
+                    etWorkYears.setText(bean.body.working_life);
                     etIdCard.setText(bean.body.idcard);
                     ImageLoader.getInstance().displayImage(bean.body.avator, ivAvator, R.mipmap.icon_avator_default, R.mipmap.icon_common_default_error, new Transformation() {
                         @Override
@@ -196,7 +217,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     etQQ.setEnabled(false);
                     etWeChat.setEnabled(false);
                     etEmail.setEnabled(false);
-                    etCity.setEnabled(false);
+                    spCity.setEnabled(false);
                     etAddress.setEnabled(false);
                     spEdu.setEnabled(false);
                     spEnglish.setEnabled(false);
@@ -246,7 +267,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         etQQ = (AppCompatEditText) findViewById(R.id.et_personal_qq);
         etWeChat = (AppCompatEditText) findViewById(R.id.et_personal_wechat);
         etEmail = (AppCompatEditText) findViewById(R.id.et_personal_email);
-        etCity = (AppCompatEditText) findViewById(R.id.et_personal_city);
+        spCity = (AppCompatSpinner) findViewById(R.id.sp_personal_city);
         etAddress = (AppCompatEditText) findViewById(R.id.et_personal_address);
 
         spEdu = (AppCompatSpinner) findViewById(R.id.sp_personal_edu);
@@ -330,7 +351,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 etQQ.setEnabled(true);
                 etWeChat.setEnabled(true);
                 etEmail.setEnabled(true);
-                etCity.setEnabled(true);
+                spCity.setEnabled(true);
                 etAddress.setEnabled(true);
                 break;
             case R.id.tv_edit_tec:
@@ -394,15 +415,14 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 requester.body.put("qq", etQQ.getText().toString().trim());
                 requester.body.put("wechat", etWeChat.getText().toString().trim());
                 requester.body.put("email", etEmail.getText().toString().trim());
-                requester.body.put("territory_node_path", etCity.getText().toString().trim());
+                requester.body.put("city_id", spCity.getSelectedItem()==null?"":spCity.getSelectedItem().toString().trim());
                 requester.body.put("address", etAddress.getText().toString().trim());
-                requester.body.put("degree", spEdu.getSelectedItem().toString().trim());
-                requester.body.put("english_ability", spEnglish.getSelectedItem().toString().trim());
+                requester.body.put("degree_id", spEdu.getSelectedItem().toString().trim());
+                requester.body.put("english_id", spEnglish.getSelectedItem().toString().trim());
                 requester.body.put("working_life", etWorkYears.getText().toString().trim());
-                requester.body.put("self_orientation", spIdentity.getSelectedItem().toString().trim());
-                requester.body.put("type_of_id", spIdStyle.getSelectedItemPosition() + "");
-                requester.body.put("type_of_id_name", spIdStyle.getSelectedItem().toString());
-                requester.body.put("idcard", etIdCard.getText().toString().trim());
+                requester.body.put("self_orientate_id", spIdentity.getSelectedItem().toString().trim());
+                requester.body.put("idcard_type_id", spIdStyle.getSelectedItem().toString().trim());
+                requester.body.put("idcard", id);
                 Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call call = httpEngine.createRequestCall(request);
                 call.enqueue(new Callback() {
