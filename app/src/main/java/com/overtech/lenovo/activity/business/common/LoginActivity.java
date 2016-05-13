@@ -121,6 +121,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onFailure(Request request, IOException e) {
                 Logger.e(request.toString());
+//                Utilities.showToast("网络错误",LoginActivity.this);
                 stopProgress();
             }
 
@@ -139,6 +140,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             if (response.isSuccessful()) {
                                 JSONObject jsonObject = new JSONObject(json);
                                 int st = jsonObject.getInt("st");
+                                String msg=jsonObject.getString("msg");
                                 if (st == 0) {
                                     JSONObject body = jsonObject.getJSONObject("body");
                                     Logger.e(body.getInt("uid") + "===是什么值");
@@ -148,9 +150,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     startActivity(intent);
                                     finish();
                                 } else if (st == 1) {
-                                    Utilities.showToast("用户名或者密码错误", LoginActivity.this);
+                                    Utilities.showToast(msg, LoginActivity.this);
                                 } else {
-                                    Utilities.showToast("illegal request", LoginActivity.this);
+                                    Utilities.showToast(msg, LoginActivity.this);
                                 }
                             } else {
                                 Utilities.showToast("服务器异常", LoginActivity.this);

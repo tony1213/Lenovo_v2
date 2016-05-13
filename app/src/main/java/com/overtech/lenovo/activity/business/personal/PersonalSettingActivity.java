@@ -174,22 +174,34 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                             spEdu.setSelection(2);
                         }
                     }
-                    spEdu.setPrompt(adapter1.getDefault());
 
 
                     PersonalSpinnerAdapter adapter2 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.english_ability);
                     spEnglish.setAdapter(adapter2);
-                    spEnglish.setPrompt(adapter2.getDefault());
+                    for (Person.Type type : bean.body.degree) {
+                        if (type.isDefault.equals("1")) {
+                            Logger.e("英语能力" + type.name);
+                            spEdu.setSelection(2);
+                        }
+                    }
 
                     PersonalSpinnerAdapter adapter3 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.self_orientation);
                     spIdentity.setAdapter(adapter3);
-                    spIdentity.setPrompt(adapter3.getDefault());
-
+                    for (Person.Type type : bean.body.degree) {
+                        if (type.isDefault.equals("1")) {
+                            Logger.e("最高学历" + type.name);
+                            spEdu.setSelection(2);
+                        }
+                    }
 
                     PersonalSpinnerAdapter adapter4 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.type_of_id);
                     spIdStyle.setAdapter(adapter4);
-                    spIdStyle.setPrompt(adapter4.getDefault());
-
+                    for (Person.Type type : bean.body.degree) {
+                        if (type.isDefault.equals("1")) {
+                            Logger.e("最高学历" + type.name);
+                            spEdu.setSelection(2);
+                        }
+                    }
                     etWorkYears.setText(bean.body.working_life);
                     etIdCard.setText(bean.body.idcard);
                     ImageLoader.getInstance().displayImage(bean.body.avator, ivAvator, R.mipmap.icon_avator_default, R.mipmap.icon_common_default_error, new Transformation() {
@@ -420,7 +432,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 requester.body.put("degree_id", spEdu.getSelectedItem().toString().trim());
                 requester.body.put("english_id", spEnglish.getSelectedItem().toString().trim());
                 requester.body.put("working_life", etWorkYears.getText().toString().trim());
-                requester.body.put("self_orientate_id", spIdentity.getSelectedItem().toString().trim());
+                requester.body.put("self_orientation_id", spIdentity.getSelectedItem().toString().trim());
                 requester.body.put("idcard_type_id", spIdStyle.getSelectedItem().toString().trim());
                 requester.body.put("idcard", id);
                 Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));

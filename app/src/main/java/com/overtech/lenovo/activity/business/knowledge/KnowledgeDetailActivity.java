@@ -94,6 +94,7 @@ public class KnowledgeDetailActivity extends BaseActivity implements View.OnClic
         webView.requestFocus();
         webView.setInitialScale(25);
         WebSettings settings = webView.getSettings();
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         settings.setUseWideViewPort(true);
         settings.setJavaScriptEnabled(true);//启用支持javascript
         settings.setSupportZoom(true);

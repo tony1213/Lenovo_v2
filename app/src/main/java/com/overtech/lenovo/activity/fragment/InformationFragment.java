@@ -3,17 +3,15 @@ package com.overtech.lenovo.activity.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +34,6 @@ import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
-import com.overtech.lenovo.widget.itemdecoration.DividerItemDecoration;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -46,20 +43,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
-import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
-import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
-
 //
 
-public class InformationFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, View.OnClickListener {
+public class InformationFragment extends BaseFragment implements View.OnClickListener {
 
     private ActionBar actionBar;
     private RecyclerView mInformation;
     public LinearLayout llCommentUpContainer;
     private AppCompatEditText etComment;
     private AppCompatButton btComment;
-    private BGARefreshLayout mRefreshLayout;
+    //    private BGARefreshLayout mRefreshLayout;
+    private SwipeRefreshLayout refreshLayout;
     private TextView title;
     private InformationAdapter adapter;
     private List<Information.InforItem> datas;
@@ -91,8 +85,8 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
             }
             if (bean.body == null) {
                 stopProgress();
-                mRefreshLayout.endLoadingMore();
-                mRefreshLayout.endRefreshing();
+//                mRefreshLayout.endLoadingMore();
+//                mRefreshLayout.endRefreshing();
                 Utilities.showToast("暂时没有数据", getActivity());
                 return;
             }
@@ -104,14 +98,15 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     Utilities.showToast(bean.msg, getActivity());
                     break;
                 case StatusCode.INFORMATION_SUCCESS:
+                    refreshLayout.setRefreshing(false);
                     if (isRefreshing) {
                         datas = bean.body.data;
                     } else {
                         datas.addAll(bean.body.data);
                         Logger.e("INformation Fragment 此时datas的大小" + datas.size());
                     }
-                    if(datas==null){
-                        Utilities.showToast("暂时没有数据",getActivity());
+                    if (datas == null) {
+                        Utilities.showToast("暂时没有数据", getActivity());
                         return;
                     }
                     curPage = datas.size() / 10;
@@ -132,8 +127,8 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                         adapter.setData(datas);
                         adapter.notifyDataSetChanged();
                     }
-                    mRefreshLayout.endRefreshing();
-                    mRefreshLayout.endLoadingMore();
+//                    mRefreshLayout.endRefreshing();
+//                    mRefreshLayout.endLoadingMore();
                     break;
                 case StatusCode.INFORMATION_COMMENT_SUCCESS:
                     int p = msg.arg1;
@@ -178,7 +173,9 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
         title = (TextView) getActivity().findViewById(R.id.tv_toolbar_title);
         title.setText("信息");
         title.setVisibility(View.VISIBLE);
+        initRefreshLayout();
         mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
+        mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         llCommentUpContainer = (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
         etComment = (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
         btComment = (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
@@ -193,14 +190,14 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
                     lastPosition = layoutManager.findLastVisibleItemPosition();
                     Logger.e("informationFragment==lastPosition==" + lastPosition);
                     if (lastPosition == datas.size() - 1) {
-                        mRefreshLayout.setIsShowLoadingMoreView(true);
-                        mRefreshLayout.beginLoadingMore();
+//                        mRefreshLayout.setIsShowLoadingMoreView(true);
+//                        mRefreshLayout.beginLoadingMore();
                     }
                 }
             }
         });
-        mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        initRefreshLayout();
+
+
         llCommentUpContainer.setVisibility(View.GONE);
         btComment.setOnClickListener(this);
         startProgress("加载中...");
@@ -209,11 +206,17 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
     }
 
     private void initRefreshLayout() {
-        mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh_info);
-        mRefreshLayout.setDelegate(this);
-        mRefreshLayout.setIsShowLoadingMoreView(true);
-        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
-        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefresh);
+        refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.material_colors));
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Utilities.showToast("下拉刷新", getActivity());
+                isRefreshing = true;
+                curPage = 0;//下拉刷新默认请求最新的一条数据
+                initData(curPage);
+            }
+        });
     }
 
     @Override
@@ -274,21 +277,13 @@ public class InformationFragment extends BaseFragment implements BGARefreshLayou
 
     }
 
-    @Override
-    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
-        // 在这里加载最新数据
-        isRefreshing = true;
-        curPage = 0;//下拉刷新默认请求最新的一条数据
-        initData(curPage);
-    }
-
-    @Override
-    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
-        isRefreshing = false;
-        initData(++curPage);
-        return true;
-    }
+//    @Override
+//    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
+//        // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
+//        isRefreshing = false;
+//        initData(++curPage);
+//        return true;
+//    }
 
 
     @Override

@@ -142,12 +142,12 @@ public class ImageCacheUtils {
     	return pic;
     }
     /**
-     * 圆角图片的实现
-     * @param source
-     * @return
-     */
-    public static Bitmap toRoundBitmap(Bitmap source){
-    	int STROKE_WIDTH = 2;
+	 * 圆角图片的实现
+	 * @param source
+	 * @return
+	 */
+	public static Bitmap toRoundBitmap(Bitmap source){
+		int STROKE_WIDTH = 2;
 		int width = source.getWidth();
 		int height = source.getHeight();
 		float roundPx;
@@ -214,7 +214,7 @@ public class ImageCacheUtils {
 //		canvas.drawCircle(width / 2, width / 2,
 //				width / 2 - STROKE_WIDTH / 2, paint);
 		return output;
-    }
+	}
     /** 
      * 获取合适的sampleSize. 
      * 这里就简单实现都是2的倍数啦. 
