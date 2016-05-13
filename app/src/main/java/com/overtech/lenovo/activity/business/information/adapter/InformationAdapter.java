@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,8 +17,10 @@ import com.overtech.lenovo.R;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.information.Information;
 import com.overtech.lenovo.utils.ImageCacheUtils;
-import com.overtech.lenovo.widget.NineGridView;
+import com.overtech.lenovo.utils.ScreenTools;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
+import com.overtech.lenovo.widget.ninegrid.CustomImageView;
+import com.overtech.lenovo.widget.ninegrid.NineGridlayout;
 import com.squareup.picasso.Transformation;
 
 import java.util.List;
@@ -36,10 +37,10 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
 
     @Override
     public int getItemCount() {
-        if(datas==null){
-            Logger.e("InformationAdapter==getItemCount=="+0);
-        }else{
-            Logger.e("InformationAdapter==getItemCount=="+datas.size());
+        if (datas == null) {
+            Logger.e("InformationAdapter==getItemCount==" + 0);
+        } else {
+            Logger.e("InformationAdapter==getItemCount==" + datas.size());
         }
         return datas == null ? 0 : datas.size();
     }
@@ -63,16 +64,19 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
                 Config.RGB_565);// 处理头像
         vh.name.setText(info.create_user_name);
         vh.description.setText(info.create_user_content);
-
-        if (vh.itemAdapter == null) {
-            vh.itemAdapter = new InformationItemAdapter(ctx, info.create_img);// 初始化item的adapter
-            vh.picture.setAdapter(vh.itemAdapter);// 每个item内的图片描述
+        if (info.create_img.isEmpty()) {
+            vh.ivOneImg.setVisibility(View.GONE);
+            vh.picture.setVisibility(View.GONE);
+        } else if (info.create_img.size() == 1) {
+            vh.picture.setVisibility(View.GONE);
+            vh.ivOneImg.setVisibility(View.VISIBLE);
+            handlerOneImage(vh, info.create_img.get(0).img);
         } else {
-            vh.itemAdapter.setUrls(info.create_img);
-//            vh.itemAdapter.getUrls().clear();
-//            vh.itemAdapter.getUrls().addAll(info.create_img);
-            vh.itemAdapter.notifyDataSetChanged();// 当出现convertView重用的时候，就将adapter重新刷新
+            vh.picture.setVisibility(View.VISIBLE);
+            vh.ivOneImg.setVisibility(View.GONE);
+            vh.picture.setImagesData(info.create_img);
         }
+
         vh.time.setText(info.create_datetime);
 
         vh.commend.setOnClickListener(new OnClickListener() {
@@ -112,6 +116,29 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
         }
     }
 
+    private void handlerOneImage(MyViewHolder vh, String url) {
+        int totalWidth;
+        int imageWidth;
+        int imageHeight;
+        ScreenTools screentools = ScreenTools.instance(ctx);
+        totalWidth = screentools.getScreenWidth() - screentools.dip2px(80);
+        imageWidth = screentools.dip2px(245);//当前使用真机对应的dp值
+        imageHeight = screentools.dip2px(151);
+        if (imageWidth > totalWidth) {
+            imageWidth = totalWidth;
+            imageHeight = (int) (imageWidth * 0.618);//采用黄金比例
+        }
+
+        ViewGroup.LayoutParams layoutparams = vh.ivOneImg.getLayoutParams();
+        layoutparams.height = imageHeight;
+        layoutparams.width = imageWidth;
+        vh.ivOneImg.setLayoutParams(layoutparams);
+        vh.ivOneImg.setClickable(true);
+        vh.ivOneImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        vh.ivOneImg.setImageUrl(url);
+
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // TODO Auto-generated method stub
@@ -124,10 +151,10 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
         ImageView avator;
         TextView name;
         TextView description;
-        NineGridView picture;
+        NineGridlayout picture;
+        CustomImageView ivOneImg;
         TextView time;
         ImageView commend;
-        InformationItemAdapter itemAdapter;// 为每一个ViewHolder绑定一个图片gridview的adapter
         LinearLayout llCommentContainer;
 
         public MyViewHolder(View convertView) {
@@ -139,8 +166,10 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
                     .findViewById(R.id.tv_information_name);
             description = (TextView) convertView
                     .findViewById(R.id.tv_information_description);
-            picture = (NineGridView) convertView
-                    .findViewById(R.id.gv_information_picture);
+            picture = (NineGridlayout) convertView
+                    .findViewById(R.id.ninegrid_information);
+            ivOneImg = (CustomImageView) convertView
+                    .findViewById(R.id.iv_oneimg);
             time = (TextView) convertView
                     .findViewById(R.id.tv_information_time);
             commend = (ImageView) convertView
