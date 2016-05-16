@@ -12,8 +12,6 @@ import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -27,15 +25,14 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
-import com.overtech.lenovo.activity.business.personal.adapter.PersonalSpinnerAdapter;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
@@ -51,7 +48,6 @@ import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
-import com.overtech.lenovo.widget.dialog.PersonalBirthdayDialog;
 import com.overtech.lenovo.widget.popwindow.DimPopupWindow;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -162,44 +158,45 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     etWeChat.setText(bean.body.wechat);
                     etEmail.setText(bean.body.email);
                     etAddress.setText(bean.body.address);
-                    PersonalSpinnerAdapter adapter = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.territory_node_path);
+                    ArrayAdapter<Person.Type> adapter = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.territory_node_path);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spCity.setAdapter(adapter);
-                    spCity.setPrompt(adapter.getDefault());
-
-                    PersonalSpinnerAdapter adapter1 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.degree);
+                    for (int i = 0; i < bean.body.territory_node_path.size(); i++) {
+                        if (bean.body.territory_node_path.get(i).isDefault.equals("1")) {
+                            spCity.setSelection(i);
+                        }
+                    }
+                    ArrayAdapter<Person.Type> adapter1 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.degree);
+                    adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spEdu.setAdapter(adapter1);
-                    for (Person.Type type : bean.body.degree) {
-                        if (type.isDefault.equals("1")) {
-                            Logger.e("最高学历" + type.name);
-                            spEdu.setSelection(2);
+                    for (int i = 0; i < bean.body.degree.size(); i++) {
+                        if (bean.body.degree.get(i).isDefault.equals("1")) {
+                            spEdu.setSelection(i);
                         }
                     }
-
-
-                    PersonalSpinnerAdapter adapter2 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.english_ability);
+                    ArrayAdapter<Person.Type> adapter2 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.english_ability);
+                    adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spEnglish.setAdapter(adapter2);
-                    for (Person.Type type : bean.body.degree) {
-                        if (type.isDefault.equals("1")) {
-                            Logger.e("英语能力" + type.name);
-                            spEdu.setSelection(2);
+                    for (int i = 0; i < bean.body.english_ability.size(); i++) {
+                        if (bean.body.english_ability.get(i).isDefault.equals("1")) {
+                            spEnglish.setSelection(i);
                         }
                     }
 
-                    PersonalSpinnerAdapter adapter3 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.self_orientation);
+                    ArrayAdapter<Person.Type> adapter3 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.self_orientation);
+                    adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spIdentity.setAdapter(adapter3);
-                    for (Person.Type type : bean.body.degree) {
-                        if (type.isDefault.equals("1")) {
-                            Logger.e("最高学历" + type.name);
-                            spEdu.setSelection(2);
+                    for (int i = 0; i < bean.body.self_orientation.size(); i++) {
+                        if (bean.body.self_orientation.get(i).isDefault.equals("1")) {
+                            spIdentity.setSelection(i);
                         }
                     }
-
-                    PersonalSpinnerAdapter adapter4 = new PersonalSpinnerAdapter(PersonalSettingActivity.this, bean.body.type_of_id);
+                    ArrayAdapter<Person.Type> adapter4 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.type_of_id);
+                    adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spIdStyle.setAdapter(adapter4);
-                    for (Person.Type type : bean.body.degree) {
-                        if (type.isDefault.equals("1")) {
-                            Logger.e("最高学历" + type.name);
-                            spEdu.setSelection(2);
+                    for (int i = 0; i < bean.body.type_of_id.size(); i++) {
+                        if (bean.body.type_of_id.get(i).isDefault.equals("1")) {
+                            spIdStyle.setSelection(i);
                         }
                     }
                     etWorkYears.setText(bean.body.working_life);
@@ -427,13 +424,13 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 requester.body.put("qq", etQQ.getText().toString().trim());
                 requester.body.put("wechat", etWeChat.getText().toString().trim());
                 requester.body.put("email", etEmail.getText().toString().trim());
-                requester.body.put("city_id", spCity.getSelectedItem()==null?"":spCity.getSelectedItem().toString().trim());
+                requester.body.put("city_id", spCity.getSelectedItem() == null ? "" : ((Person.Type) spCity.getSelectedItem()).id);
                 requester.body.put("address", etAddress.getText().toString().trim());
-                requester.body.put("degree_id", spEdu.getSelectedItem().toString().trim());
-                requester.body.put("english_id", spEnglish.getSelectedItem().toString().trim());
+                requester.body.put("degree_id", ((Person.Type) spEdu.getSelectedItem()).id);
+                requester.body.put("english_id", ((Person.Type) spEnglish.getSelectedItem()).id);
                 requester.body.put("working_life", etWorkYears.getText().toString().trim());
-                requester.body.put("self_orientation_id", spIdentity.getSelectedItem().toString().trim());
-                requester.body.put("idcard_type_id", spIdStyle.getSelectedItem().toString().trim());
+                requester.body.put("self_orientate_id", ((Person.Type) spIdentity.getSelectedItem()).id);
+                requester.body.put("idcard_type_id", ((Person.Type) spIdStyle.getSelectedItem()).id);
                 requester.body.put("idcard", id);
                 Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call call = httpEngine.createRequestCall(request);

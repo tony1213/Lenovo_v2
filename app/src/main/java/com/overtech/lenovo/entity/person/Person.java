@@ -42,5 +42,10 @@ public class Person {
         public String isDefault;
         public String id;
         public String name;
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

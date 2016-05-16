@@ -51,8 +51,8 @@ public class CustomApplication extends Application {
             // TODO Auto-generated method stub
             if (location != null) {
                 city = location.getCity();
-                latitude=location.getLatitude();
-                longitude=location.getLongitude();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
                 locationService.stop();
             } else {
                 locationService.start();

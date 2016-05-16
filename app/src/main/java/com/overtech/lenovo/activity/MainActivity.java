@@ -1,7 +1,6 @@
 package com.overtech.lenovo.activity;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -17,7 +16,6 @@ import com.overtech.lenovo.activity.fragment.KnowledgeFragment;
 import com.overtech.lenovo.activity.fragment.PersonalFragment;
 import com.overtech.lenovo.activity.fragment.TaskListFragment;
 import com.overtech.lenovo.activity.fragment.callback.FragmentCallback;
-import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.FragmentUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
