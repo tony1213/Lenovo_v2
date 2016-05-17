@@ -424,13 +424,13 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 requester.body.put("qq", etQQ.getText().toString().trim());
                 requester.body.put("wechat", etWeChat.getText().toString().trim());
                 requester.body.put("email", etEmail.getText().toString().trim());
-                requester.body.put("city_id", spCity.getSelectedItem() == null ? "" : ((Person.Type) spCity.getSelectedItem()).id);
+                requester.body.put("city_id", spCity.getSelectedItem() == null ? "" : ((Person.Type) spCity.getSelectedItem())._id);
                 requester.body.put("address", etAddress.getText().toString().trim());
-                requester.body.put("degree_id", ((Person.Type) spEdu.getSelectedItem()).id);
-                requester.body.put("english_id", ((Person.Type) spEnglish.getSelectedItem()).id);
+                requester.body.put("degree_id", ((Person.Type) spEdu.getSelectedItem())._id);
+                requester.body.put("english_id", ((Person.Type) spEnglish.getSelectedItem())._id);
                 requester.body.put("working_life", etWorkYears.getText().toString().trim());
-                requester.body.put("self_orientate_id", ((Person.Type) spIdentity.getSelectedItem()).id);
-                requester.body.put("idcard_type_id", ((Person.Type) spIdStyle.getSelectedItem()).id);
+                requester.body.put("self_orientate_id", ((Person.Type) spIdentity.getSelectedItem())._id);
+                requester.body.put("idcard_type_id", ((Person.Type) spIdStyle.getSelectedItem())._id);
                 requester.body.put("idcard", id);
                 Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
                 Call call = httpEngine.createRequestCall(request);

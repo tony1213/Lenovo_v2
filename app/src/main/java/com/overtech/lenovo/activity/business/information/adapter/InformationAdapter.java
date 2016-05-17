@@ -3,6 +3,7 @@ package com.overtech.lenovo.activity.business.information.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -25,10 +26,19 @@ import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
-public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder> {
+public class InformationAdapter extends Adapter<RecyclerView.ViewHolder> {
     private List<Information.InforItem> datas;
     private Context ctx;
     private OnItemButtonClickListener listener;
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_FOOTER = 1;
+    public static final int PULLUP_LOAD_MORE = 0;
+    public static final int LOADING_MORE = 1;
+    private int load_more_status = 0;
+
+    public InformationAdapter(Context ctx) {
+        this.ctx = ctx;
+    }
 
     public InformationAdapter(Context ctx, List<Information.InforItem> datas) {
         this.ctx = ctx;
@@ -42,81 +52,121 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
         } else {
             Logger.e("InformationAdapter==getItemCount==" + datas.size());
         }
-        return datas == null ? 0 : datas.size();
+        return datas == null ? 0 : datas.size() + 1;
+    }
+
+    /**
+     * 下拉刷新添加数据
+     *
+     * @param newDatas
+     */
+    public void addItem(List<Information.InforItem> newDatas) {
+        datas.clear();
+        datas.addAll(newDatas);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 上拉加载添加数据
+     *
+     * @param newDatas
+     */
+    public void addMoreItem(List<Information.InforItem> newDatas) {
+        if(datas==null){//第一次加载时
+            datas=newDatas;
+            notifyDataSetChanged();
+        }else{
+            int preLastPosition = datas.size() - 1;
+            datas.addAll(newDatas);
+            notifyItemRangeInserted(preLastPosition, newDatas.size());
+        }
+    }
+
+    public void changeLoadMoreStatus(int load_more_status) {
+        this.load_more_status = load_more_status;
+        notifyItemChanged(datas.size());
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder vh, final int position) {
-        Logger.e("InformationAdapter==onBindViewHolder()===" + position);
-        Information.InforItem info = datas.get(position);
-        ImageLoader.getInstance().displayImage(info.create_user_img, vh.avator, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
-                new Transformation() {
-                    @Override
-                    public Bitmap transform(Bitmap source) {
-                        return ImageCacheUtils.toRoundBitmap(source);
-                    }
+    public void onBindViewHolder(ViewHolder vh, final int position) {
+        if (vh instanceof NormalViewHolder) {
+            Logger.e("InformationAdapter==onBindViewHolder()===" + position);
+            Information.InforItem info = datas.get(position);
+            ImageLoader.getInstance().displayImage(info.create_user_img, ((NormalViewHolder) vh).avator, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
+                    new Transformation() {
+                        @Override
+                        public Bitmap transform(Bitmap source) {
+                            return ImageCacheUtils.toRoundBitmap(source);
+                        }
 
-                    @Override
-                    public String key() {
-                        return position + "";
-                    }
-                },
-                Config.RGB_565);// 处理头像
-        vh.name.setText(info.create_user_name);
-        vh.description.setText(info.create_user_content);
-        if (info.create_img.isEmpty()) {
-            vh.ivOneImg.setVisibility(View.GONE);
-            vh.picture.setVisibility(View.GONE);
-        } else if (info.create_img.size() == 1) {
-            vh.picture.setVisibility(View.GONE);
-            vh.ivOneImg.setVisibility(View.VISIBLE);
-            handlerOneImage(vh, info.create_img.get(0).img);
-        } else {
-            vh.picture.setVisibility(View.VISIBLE);
-            vh.ivOneImg.setVisibility(View.GONE);
-            vh.picture.setImagesData(info.create_img);
-        }
-
-        vh.time.setText(info.create_datetime);
-
-        vh.commend.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (listener != null) {
-                    listener.buttonClick(v, position, -1, null);
-                }
+                        @Override
+                        public String key() {
+                            return position + "";
+                        }
+                    },
+                    Config.RGB_565);// 处理头像
+            ((NormalViewHolder) vh).name.setText(info.create_user_name);
+            ((NormalViewHolder) vh).description.setText(info.create_user_content);
+            if (info.create_img.isEmpty()) {
+                ((NormalViewHolder) vh).ivOneImg.setVisibility(View.GONE);
+                ((NormalViewHolder) vh).picture.setVisibility(View.GONE);
+            } else if (info.create_img.size() == 1) {
+                ((NormalViewHolder) vh).picture.setVisibility(View.GONE);
+                ((NormalViewHolder) vh).ivOneImg.setVisibility(View.VISIBLE);
+                handlerOneImage(((NormalViewHolder) vh), info.create_img.get(0).img);
+            } else {
+                ((NormalViewHolder) vh).picture.setVisibility(View.VISIBLE);
+                ((NormalViewHolder) vh).ivOneImg.setVisibility(View.GONE);
+                ((NormalViewHolder) vh).picture.setImagesData(info.create_img);
             }
-        });// 为评论注册点击事件
-        vh.llCommentContainer.removeAllViews();
-        for (int i = 0; i < info.comment.size(); i++) {
-            final Information.Comment comment = info.comment.get(i);
-            TextView textView = new TextView(ctx);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            textView.setLayoutParams(params);
-            textView.setText(comment.comment_user + ":" + comment.comment_content);
-            vh.llCommentContainer.addView(textView);
-            for (Information.CommentResponse response : comment.comment_response) {
-                TextView responseContent = new TextView(ctx);
-                LinearLayout.LayoutParams resTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                textView.setLayoutParams(resTvParams);
-                responseContent.setText(response.comment_user + " 回复 " + comment.comment_user + ":" + response.comment_content);
-                vh.llCommentContainer.addView(responseContent);
-            }
-            final int finalI = i;
-            textView.setOnClickListener(new OnClickListener() {
+
+            ((NormalViewHolder) vh).time.setText(info.create_datetime);
+
+            ((NormalViewHolder) vh).commend.setOnClickListener(new OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
+                    // TODO Auto-generated method stub
                     if (listener != null) {
-                        listener.buttonClick(v, position, finalI, comment);
+                        listener.buttonClick(v, position, -1, null);
                     }
                 }
-            });
+            });// 为评论注册点击事件
+            ((NormalViewHolder) vh).llCommentContainer.removeAllViews();
+            for (int i = 0; i < info.comment.size(); i++) {
+                final Information.Comment comment = info.comment.get(i);
+                TextView textView = new TextView(ctx);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(params);
+                textView.setText(comment.comment_user + ":" + comment.comment_content);
+                ((NormalViewHolder) vh).llCommentContainer.addView(textView);
+                for (Information.CommentResponse response : comment.comment_response) {
+                    TextView responseContent = new TextView(ctx);
+                    LinearLayout.LayoutParams resTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    textView.setLayoutParams(resTvParams);
+                    responseContent.setText(response.comment_user + " 回复 " + comment.comment_user + ":" + response.comment_content);
+                    ((NormalViewHolder) vh).llCommentContainer.addView(responseContent);
+                }
+                final int finalI = i;
+                textView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (listener != null) {
+                            listener.buttonClick(v, position, finalI, comment);
+                        }
+                    }
+                });
+            }
+        } else if (vh instanceof MyFooterViewHolder) {
+            if (load_more_status == PULLUP_LOAD_MORE) {
+                ((MyFooterViewHolder) vh).tvLoading.setText("上拉加载更多");
+            } else if (load_more_status == LOADING_MORE) {
+                ((MyFooterViewHolder) vh).tvLoading.setText("正在加载中");
+            }
         }
     }
 
-    private void handlerOneImage(MyViewHolder vh, String url) {
+    private void handlerOneImage(NormalViewHolder vh, String url) {
         int totalWidth;
         int imageWidth;
         int imageHeight;
@@ -140,14 +190,36 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // TODO Auto-generated method stub
-        MyViewHolder vh = new MyViewHolder(LayoutInflater.from(ctx).inflate(
-                R.layout.item_recyclerview_information, parent, false));
-        return vh;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_NORMAL) {
+            NormalViewHolder vh = new NormalViewHolder(LayoutInflater.from(ctx).inflate(
+                    R.layout.item_recyclerview_information, parent, false));
+            return vh;
+        } else {
+            MyFooterViewHolder vh = new MyFooterViewHolder(LayoutInflater.from(ctx).inflate(R.layout.loading_more_footerview, parent, false));
+            return vh;
+        }
     }
 
-    class MyViewHolder extends ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        if (position + 1 == getItemCount()) {
+            return TYPE_FOOTER;
+        } else {
+            return TYPE_NORMAL;
+        }
+    }
+
+    class MyFooterViewHolder extends ViewHolder {
+        TextView tvLoading;
+
+        public MyFooterViewHolder(View itemView) {
+            super(itemView);
+            tvLoading = (TextView) itemView.findViewById(R.id.tv_footerview_loading);
+        }
+    }
+
+    class NormalViewHolder extends ViewHolder {
         ImageView avator;
         TextView name;
         TextView description;
@@ -157,7 +229,7 @@ public class InformationAdapter extends Adapter<InformationAdapter.MyViewHolder>
         ImageView commend;
         LinearLayout llCommentContainer;
 
-        public MyViewHolder(View convertView) {
+        public NormalViewHolder(View convertView) {
             super(convertView);
             // TODO Auto-generated constructor stub
             avator = (ImageView) convertView

@@ -52,12 +52,10 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
     public LinearLayout llCommentUpContainer;
     private AppCompatEditText etComment;
     private AppCompatButton btComment;
-    //    private BGARefreshLayout mRefreshLayout;
     private SwipeRefreshLayout refreshLayout;
     private TextView title;
     private InformationAdapter adapter;
     private List<Information.InforItem> datas;
-    private boolean isRefreshing;//用于标记当前是上拉刷新还是下拉加载更多
     private int curPage = 0;//记录当前的页码
     private Map mContentTree = new HashMap();
     private String uid;
@@ -85,8 +83,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
             }
             if (bean.body == null) {
                 stopProgress();
-//                mRefreshLayout.endLoadingMore();
-//                mRefreshLayout.endRefreshing();
                 Utilities.showToast("暂时没有数据", getActivity());
                 return;
             }
@@ -98,37 +94,19 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     Utilities.showToast(bean.msg, getActivity());
                     break;
                 case StatusCode.INFORMATION_SUCCESS:
-                    refreshLayout.setRefreshing(false);
-                    if (isRefreshing) {
-                        datas = bean.body.data;
+                    datas = bean.body.data;
+                    if (refreshLayout.isRefreshing()) {
+                        adapter.addItem(datas);
                     } else {
-                        datas.addAll(bean.body.data);
+                        adapter.addMoreItem(datas);
+                        adapter.changeLoadMoreStatus(InformationAdapter.PULLUP_LOAD_MORE);
                         Logger.e("INformation Fragment 此时datas的大小" + datas.size());
                     }
-                    if (datas == null) {
-                        Utilities.showToast("暂时没有数据", getActivity());
-                        return;
-                    }
+//
                     curPage = datas.size() / 10;
-                    if (adapter == null) {
-                        adapter = new InformationAdapter(getActivity(), datas);
-                        adapter.setOnItemButtonClickListener(new OnItemButtonClickListener() {
-
-                            @Override
-                            public void buttonClick(View v, int position, int contentPosition, Information.Comment comment) {
-                                // TODO Auto-generated method stub
-                                llCommentUpContainer.setVisibility(View.VISIBLE);
-                                etComment.setFocusable(true);
-                                etComment.setTag(new Object[]{position, datas.get(position).post_id, comment, contentPosition});
-                            }
-                        });
-                        mInformation.setAdapter(adapter);
-                    } else {
-                        adapter.setData(datas);
-                        adapter.notifyDataSetChanged();
+                    if (refreshLayout.isRefreshing()) {
+                        refreshLayout.setRefreshing(false);
                     }
-//                    mRefreshLayout.endRefreshing();
-//                    mRefreshLayout.endLoadingMore();
                     break;
                 case StatusCode.INFORMATION_COMMENT_SUCCESS:
                     int p = msg.arg1;
@@ -176,6 +154,18 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         initRefreshLayout();
         mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
         mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        adapter = new InformationAdapter(getActivity());
+        adapter.setOnItemButtonClickListener(new OnItemButtonClickListener() {
+
+            @Override
+            public void buttonClick(View v, int position, int contentPosition, Information.Comment comment) {
+                // TODO Auto-generated method stub
+                llCommentUpContainer.setVisibility(View.VISIBLE);
+                etComment.setFocusable(true);
+                etComment.setTag(new Object[]{position, datas.get(position).post_id, comment, contentPosition});
+            }
+        });
+        mInformation.setAdapter(adapter);
         llCommentUpContainer = (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
         etComment = (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
         btComment = (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
@@ -189,9 +179,9 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     lastPosition = layoutManager.findLastVisibleItemPosition();
                     Logger.e("informationFragment==lastPosition==" + lastPosition);
-                    if (lastPosition == datas.size() - 1) {
-//                        mRefreshLayout.setIsShowLoadingMoreView(true);
-//                        mRefreshLayout.beginLoadingMore();
+                    if (lastPosition == adapter.getItemCount() - 1) {
+                        adapter.changeLoadMoreStatus(InformationAdapter.LOADING_MORE);
+                        initData(++curPage);
                     }
                 }
             }
@@ -201,7 +191,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         llCommentUpContainer.setVisibility(View.GONE);
         btComment.setOnClickListener(this);
         startProgress("加载中...");
-        isRefreshing = true;
         initData(curPage);
     }
 
@@ -212,7 +201,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void onRefresh() {
                 Utilities.showToast("下拉刷新", getActivity());
-                isRefreshing = true;
                 curPage = 0;//下拉刷新默认请求最新的一条数据
                 initData(curPage);
             }
@@ -276,15 +264,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         actionBar.show();
 
     }
-
-//    @Override
-//    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-//        // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
-//        isRefreshing = false;
-//        initData(++curPage);
-//        return true;
-//    }
-
 
     @Override
     public void onClick(View v) {

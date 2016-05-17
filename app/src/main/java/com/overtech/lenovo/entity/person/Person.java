@@ -40,7 +40,7 @@ public class Person {
 
     public class Type {
         public String isDefault;
-        public String id;
+        public String _id;
         public String name;
 
         @Override

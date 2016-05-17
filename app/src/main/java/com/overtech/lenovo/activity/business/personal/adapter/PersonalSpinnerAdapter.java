@@ -32,7 +32,7 @@ public class PersonalSpinnerAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return data.get(position).id;
+        return data.get(position)._id;
     }
 
     @Override
