@@ -18,6 +18,11 @@ public class Knowledges {
         public List<Knowledge> knowledges;
         public String contract_code;
         public String contract_name;
+
+        @Override
+        public String toString() {
+            return contract_name;
+        }
     }
     public class Knowledge{
         public String knowledge_id;

@@ -49,6 +49,7 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
         TextView title = (TextView) findViewById(R.id.tv_toolbar_title);
         title.setVisibility(View.GONE);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();

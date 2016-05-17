@@ -48,505 +48,510 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp">
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                app:contentPadding="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:drawableLeft="@mipmap/icon_basic_info"
-                    android:text="基本信息" />
-
-                <TextView
-                    android:id="@+id/tv_edit_basic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"
-                    android:drawableLeft="@mipmap/icon_edit"
-                    android:text="编辑" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="39dp"
-                android:layout_marginTop="15dp">
-
-                <ImageView
-                    android:id="@+id/iv_avator"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/icon_avator_default" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="60dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/iv_avator" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_toRightOf="@id/iv_avator" />
-
-                <TextView
-                    android:id="@+id/tv_gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/tv_name"
-                    android:layout_below="@id/tv_name"
-                    android:text="男" />
-
-                <TextView
-                    android:id="@+id/tv_birthday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/tv_gender"
-                    android:layout_marginLeft="15dp"
-                    android:layout_toRightOf="@id/tv_gender"
-                    android:drawableLeft="@mipmap/icon_calendar"
-                    android:text="1990-10-10" />
-
-                <TextView
-                    android:id="@+id/tv_certificated_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/tv_name"
-                    android:layout_below="@id/tv_gender"
-                    android:layout_marginTop="8dp"
-                    android:text="尚未通过认证"
-                    android:textColor="@color/lable_red" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="41dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="手机号码"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_phone"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <LinearLayout
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@mipmap/icon_basic_info"
+                            android:text="基本信息" />
+
+                        <TextView
+                            android:id="@+id/tv_edit_basic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:drawableLeft="@mipmap/icon_edit"
+                            android:text="编辑" />
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <ImageView
+                            android:id="@+id/iv_avator"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/icon_avator_default" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="60dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/iv_avator" />
+
+                        <TextView
+                            android:id="@+id/tv_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toRightOf="@id/iv_avator" />
+
+                        <TextView
+                            android:id="@+id/tv_gender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@id/tv_name"
+                            android:layout_below="@id/tv_name"
+                            android:text="男" />
+
+                        <TextView
+                            android:id="@+id/tv_birthday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/tv_gender"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toRightOf="@id/tv_gender"
+                            android:drawableLeft="@mipmap/icon_calendar"
+                            android:text="1990-10-10" />
+
+                        <TextView
+                            android:id="@+id/tv_certificated_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@id/tv_name"
+                            android:layout_below="@id/tv_gender"
+                            android:layout_marginTop="8dp"
+                            android:text="尚未通过认证"
+                            android:textColor="@color/lable_red" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="手机号码"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/et_personal_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="QQ账号"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/et_personal_qq"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="微信账号"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/et_personal_wechat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="邮箱地址"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/et_personal_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="所在城市"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatSpinner
+                            android:id="@+id/sp_personal_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="详细地址"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/et_personal_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="41dp"
-                android:orientation="horizontal">
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                app:contentPadding="16dp">
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="QQ账号"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_qq"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <LinearLayout
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@mipmap/icon_tec_info"
+                            android:text="技能信息" />
+
+                        <TextView
+                            android:id="@+id/tv_edit_tec"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:drawableLeft="@mipmap/icon_edit"
+                            android:text="编辑" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="学历"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatSpinner
+                            android:id="@+id/sp_personal_edu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false"
+                            android:entries="@array/edu_type" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="英语能力"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatSpinner
+                            android:id="@+id/sp_personal_english"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false"
+                            android:entries="@array/english_level" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="工作年限"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/et_personal_work_years"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="自我定位"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatSpinner
+                            android:id="@+id/sp_personal_identity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false"
+                            android:entries="@array/self_orientation" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="41dp"
-                android:orientation="horizontal">
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                app:contentPadding="16dp">
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="微信账号"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_wechat"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="41dp"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="邮箱地址"
-                    android:textStyle="bold" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false" />
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@mipmap/icon_auth_info"
+                            android:text="认证信息" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="41dp"
-                android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tv_edit_ca"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:drawableLeft="@mipmap/icon_edit"
+                            android:text="编辑" />
+                    </RelativeLayout>
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="所在城市"
-                    android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/sp_personal_city"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false" />
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="身份证类型"
+                            android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="41dp"
-                android:orientation="horizontal"
-                android:paddingBottom="20dp">
+                        <android.support.v7.widget.AppCompatSpinner
+                            android:id="@+id/sp_persoanl_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false"
+                            android:entries="@array/id_card_type"
+                            android:text="二代身份证" />
+                    </LinearLayout>
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="详细地址"
-                    android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false" />
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="身份证号"
+                            android:textStyle="bold" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey" />
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/et_personal_idcard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:enabled="false"
+                            android:hint="请输入您的身份证号" />
+                    </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp">
+                    <android.support.v7.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:drawableLeft="@mipmap/icon_tec_info"
-                    android:text="技能信息" />
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="身份证正面"
+                            android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_edit_tec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"
-                    android:drawableLeft="@mipmap/icon_edit"
-                    android:text="编辑" />
-            </RelativeLayout>
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/bt_upload_idcard_positive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:layout_marginLeft="17dp"
+                            android:background="@color/simple_orange"
+                            android:minHeight="24dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:text="点击上传"
+                            android:textColor="@color/main_white" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="41dp"
-                android:paddingTop="10dp">
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cb_idcard_positive_upload_success"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:enabled="false"
+                            android:text="上传成功"
+                            android:visibility="invisible" />
+                    </android.support.v7.widget.LinearLayoutCompat>
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="学历"
-                    android:textStyle="bold" />
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/iv_positive_idcard"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginLeft="100dp"
+                        android:scaleType="centerInside" />
 
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/sp_personal_edu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false"
-                    android:entries="@array/edu_type" />
-            </LinearLayout>
+                    <android.support.v7.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="41dp">
+                        <TextView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="身份证反面"
+                            android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="英语能力"
-                    android:textStyle="bold" />
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/bt_upload_idcard_opposite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="17dp"
+                            android:layout_marginTop="2dp"
+                            android:background="@color/simple_orange"
+                            android:minHeight="24dp"
+                            android:text="点击上传"
+                            android:textColor="@color/main_white" />
 
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/sp_personal_english"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false"
-                    android:entries="@array/english_level" />
-            </LinearLayout>
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/cb_idcard_opposite_upload_success"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:enabled="false"
+                            android:text="上传成功"
+                            android:visibility="invisible" />
+                    </android.support.v7.widget.LinearLayoutCompat>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="41dp">
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/iv_oppositive_idcard"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginLeft="100dp"
+                        android:scaleType="centerInside" />
 
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="工作年限"
-                    android:textStyle="bold" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="2dp">
 
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_work_years"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="15dp"
-                android:paddingLeft="41dp">
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="自我定位"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/sp_personal_identity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false"
-                    android:entries="@array/self_orientation" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingTop="15dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:drawableLeft="@mipmap/icon_auth_info"
-                    android:text="认证信息" />
-
-                <TextView
-                    android:id="@+id/tv_edit_ca"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"
-                    android:drawableLeft="@mipmap/icon_edit"
-                    android:text="编辑" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="41dp">
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="身份证类型"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/sp_persoanl_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false"
-                    android:entries="@array/id_card_type"
-                    android:text="二代身份证" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="41dp">
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="身份证号"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/et_personal_idcard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:enabled="false"
-                    android:hint="请输入您的身份证号" />
-            </LinearLayout>
-
-            <android.support.v7.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="41dp">
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="身份证正面"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/bt_upload_idcard_positive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginLeft="17dp"
-                    android:background="@color/simple_orange"
-                    android:minHeight="24dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="点击上传"
-                    android:textColor="@color/main_white" />
-
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/cb_idcard_positive_upload_success"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="false"
-                    android:text="上传成功"
-                    android:visibility="invisible" />
-            </android.support.v7.widget.LinearLayoutCompat>
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/iv_positive_idcard"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginLeft="128dp"
-                android:scaleType="centerInside" />
-
-            <android.support.v7.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="41dp">
-
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="身份证反面"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/bt_upload_idcard_opposite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/simple_orange"
-                    android:minHeight="24dp"
-                    android:text="点击上传"
-                    android:textColor="@color/main_white" />
-
-                <android.support.v7.widget.AppCompatCheckBox
-                    android:id="@+id/cb_idcard_opposite_upload_success"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="false"
-                    android:text="上传成功"
-                    android:visibility="invisible" />
-            </android.support.v7.widget.LinearLayoutCompat>
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/iv_oppositive_idcard"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginLeft="128dp"
-                android:scaleType="centerInside" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="2dp">
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/bt_save_upload"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@color/simple_orange"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="确认信息提交"
-                    android:textColor="@color/main_white" />
-            </RelativeLayout>
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/bt_save_upload"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@color/simple_orange"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="确认信息提交"
+                            android:textColor="@color/main_white" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

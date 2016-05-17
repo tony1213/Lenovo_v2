@@ -4,20 +4,20 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.DragEvent;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -29,7 +29,6 @@ import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.knowledge.KnowledgeDetailActivity;
 import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMainAdapter;
 import com.overtech.lenovo.activity.business.knowledge.adapter.ClassifyMoreAdapter;
-import com.overtech.lenovo.activity.business.knowledge.adapter.ContractAdapter;
 import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
@@ -38,6 +37,7 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.knowledge.Knowledges;
 import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.ScreenTools;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.Utilities;
@@ -50,12 +50,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class KnowledgeFragment extends BaseFragment implements View.OnClickListener {
+public class KnowledgeFragment extends BaseFragment {
 
     private ActionBar actionBar;
     private Toolbar toolbar;
+    private TextView title;
     private ListViewCompat lvContracts;
-    private ContractAdapter adapter;
+    //    private ContractAdapter adapter;
+    private ArrayAdapter<Knowledges.KnowledgeAndContract> adapter;
     private List<Knowledges.KnowledgeAndContract> datas;
     private List<Knowledges.KnowledgeAndContract> contractDatas;
     private SearchView searchView;
@@ -129,13 +131,16 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
                 case StatusCode.KNOWLEDGE_CONTRACT_SUCCESS:
                     isLoginOut = false;
                     contractDatas = bean.body.data;
-                    if (adapter == null) {
-                        adapter = new ContractAdapter(contractDatas, getActivity());
-                        lvContracts.setAdapter(adapter);
-                    } else {
-                        adapter.setData(contractDatas);
-                        adapter.notifyDataSetChanged();
-                    }
+//                    if (adapter == null) {
+//                        adapter = new ContractAdapter(contractDatas, getActivity());
+                    adapter = new ArrayAdapter<Knowledges.KnowledgeAndContract>(getActivity(), android.R.layout.simple_spinner_item, contractDatas);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    lvContracts.setAdapter(adapter);
+//                    } else {
+////                        adapter.setData(contractDatas);
+//                        adapter.
+//                        adapter.notifyDataSetChanged();
+//                    }
 
                     break;
                 case StatusCode.KNOWLEDGE_CONTENT_SUCCESS:
@@ -166,8 +171,9 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         Logger.e("knowledge fragment 菜单创建了");
         actionBar = ((MainActivity) getActivity()).getSupportActionBar();
         toolbar = (Toolbar) getActivity().findViewById(R.id.tool_bar);
-//        final TextView title = (TextView) getActivity().findViewById(R.id.tv_toolbar_title);
-        toolbar.setTitle("");
+        title = (TextView) getActivity().findViewById(R.id.tv_toolbar_title);
+        title.setVisibility(View.VISIBLE);
+        title.setText("知识");
         inflater.inflate(R.menu.menu_knowledge, menu);
         MenuItem item = menu.findItem(R.id.menu_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
@@ -212,13 +218,24 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_contract:
-                popupWindow.showAtLocation(toolbar, Gravity.NO_GRAVITY, toolbar.getWidth() / 5 * 4, toolbar.getHeight() + getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android")));
-
+//                popupWindow.showAtLocation(toolbar, Gravity.NO_GRAVITY, toolbar.getWidth() / 5 * 3, toolbar.getHeight());
+                PopupWindowCompat.showAsDropDown(popupWindow, toolbar, 0, 0, GravityCompat.END);
                 return true;
             default:
-                Utilities.showToast("默认支持", getActivity());
+//                Utilities.showToast("默认支持", getActivity());
                 return super.onOptionsItemSelected(item);
 
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            title.setVisibility(View.VISIBLE);
+            title.setText("知识");
+        } else {
+            title.setVisibility(View.GONE);
         }
     }
 
@@ -311,12 +328,10 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
                 initData(10021, contractDatas.get(position).contract_code, null);
             }
         });
-        popupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setContentView(contentView);
-        popupWindow.setFocusable(true);
-        popupWindow.setTouchable(true);
+        popupWindow = new PopupWindow(contentView, ScreenTools.instance(getActivity()).dip2px(56 * 3), ScreenTools.instance(getActivity()).dip2px(144));
+        popupWindow.setFocusable(true);//设置焦点，此时的事件交给popupwindow自己处理，
         popupWindow.setOutsideTouchable(true);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.bg_qq_blue)));
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));//设置背景点击空白处和back可以让pop消失
     }
 
     private void initView() {
@@ -346,20 +361,4 @@ public class KnowledgeFragment extends BaseFragment implements View.OnClickListe
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent();
-        switch (v.getId()) {
-//            case R.id.rl_title_knowledge_filter:
-//                Utilities.showToast("doFilter",getActivity());
-//                intent.setClass(getActivity(), KnowledgeFilterActivity.class);
-//                startActivity(intent);
-//                break;
-//            case R.id.rl_title_knowledge_search:
-//                Utilities.showToast("doSearch",getActivity());
-//                intent.setClass(getActivity(), KnowledgeSearchActivity.class);
-//                startActivity(intent);
-//                break;
-        }
-    }
 }
