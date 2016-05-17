@@ -1,15 +1,17 @@
 package com.overtech.lenovo.activity.business.common;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
-import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 
@@ -17,6 +19,7 @@ import com.overtech.lenovo.utils.SharedPreferencesKeys;
  * Created by Overtech on 16/4/7.
  */
 public class WelcomeActivity extends BaseActivity {
+    private TextView tvVersion;
     private boolean isFirstLogin;
 
     @Override
@@ -26,7 +29,18 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        tvVersion = (TextView) findViewById(R.id.tv_version);
         isFirstLogin = (boolean) SharePreferencesUtils.get(this, SharedPreferencesKeys.FIRSTLOGIN, true);
+        PackageManager pm = getPackageManager();
+        try {
+            PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
+            String versionName = info.versionName;
+            int versionCode = info.versionCode;
+            tvVersion.setText(versionName + versionCode);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         new Handler(getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {

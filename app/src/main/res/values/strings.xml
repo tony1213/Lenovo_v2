@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lenovo</string>
+    <string name="app_name">DJOMS</string>
     <!-- Strings related to splash -->
     <string name="splash_in">立即开启</string>
     <string name="commom_login">登 录</string>
