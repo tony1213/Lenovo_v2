@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".activity.app.CustomApplication"
@@ -46,7 +47,7 @@
         <activity android:name=".activity.business.common.LoginActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.business.common.register.RegisterActivity" />
-        <activity android:name=".activity.business.common.password.FindbackPasswordActivity"/>
+        <activity android:name=".activity.business.common.password.FindbackPasswordActivity" />
         <activity android:name=".activity.business.knowledge.KnowledgeDetailActivity" />
         <activity android:name=".test.TestActivity" />
         <activity android:name=".activity.business.common.password.ResetPasswordActivity" />
@@ -54,13 +55,14 @@
         <activity android:name=".activity.business.common.register.RegisterSetPasswordActivity" />
         <activity android:name=".activity.business.tasklist.TaskDetailActivity" />
         <activity android:name=".activity.business.tasklist.TaskInformationActivity" />
+        <activity android:name=".activity.business.tasklist.TaskSolveActivity" />
         <activity android:name=".activity.business.personal.PersonalSettingActivity" />
         <activity android:name=".activity.business.knowledge.KnowledgeSearchActivity" />
-        <activity android:name=".activity.business.knowledge.KnowledgeFilterActivity"/>
-        <activity android:name=".activity.business.tasklist.StoreRepairInformationActivity"/>
-        <activity android:name=".activity.business.tasklist.WorkorderMsgActivity"/>
-        <activity android:name=".activity.business.personal.PersonalAccountDetailActivity"/>
-        <activity android:name=".activity.business.personal.PersonalAccountServerDetailActivity"/>
+        <activity android:name=".activity.business.knowledge.KnowledgeFilterActivity" />
+        <activity android:name=".activity.business.tasklist.StoreRepairInformationActivity" />
+        <activity android:name=".activity.business.tasklist.WorkorderMsgActivity" />
+        <activity android:name=".activity.business.personal.PersonalAccountDetailActivity" />
+        <activity android:name=".activity.business.personal.PersonalAccountServerDetailActivity" />
     </application>
 
 </manifest>

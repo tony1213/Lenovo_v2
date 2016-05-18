@@ -29,6 +29,7 @@ import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
+import com.overtech.lenovo.activity.business.tasklist.TaskSolveActivity;
 import com.overtech.lenovo.activity.business.tasklist.WorkorderMsgActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
 import com.overtech.lenovo.config.StatusCode;
@@ -37,6 +38,7 @@ import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.RequestExceptBean;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
+import com.overtech.lenovo.entity.person.PersonalAccount;
 import com.overtech.lenovo.entity.tasklist.taskbean.AD;
 import com.overtech.lenovo.entity.tasklist.taskbean.Task;
 import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
@@ -637,11 +639,12 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                 showWindow(titleView);
                 break;
             case R.id.iv_task_notification:
-                mNotification.setImageResource(R.drawable.anim_task_notification);
-                AnimationDrawable anmation = (AnimationDrawable) mNotification.getDrawable();
-                anmation.start();
+//                mNotification.setImageResource(R.drawable.anim_task_notification);
+//                AnimationDrawable anmation = (AnimationDrawable) mNotification.getDrawable();
+//                anmation.start();
 
                 Intent intent = new Intent(getActivity(), WorkorderMsgActivity.class);
+//                Intent intent=new Intent(getActivity(), TaskSolveActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_task_all:

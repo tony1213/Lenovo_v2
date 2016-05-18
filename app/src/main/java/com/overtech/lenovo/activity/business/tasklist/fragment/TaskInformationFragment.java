@@ -1,5 +1,6 @@
 package com.overtech.lenovo.activity.business.tasklist.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
+import com.overtech.lenovo.activity.business.tasklist.TaskSolveActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskInfoFragAdapter;
 import com.overtech.lenovo.config.Debug;
 import com.overtech.lenovo.config.StatusCode;
@@ -63,6 +65,7 @@ public class TaskInformationFragment extends BaseFragment {
     private String repairPersonContactInformation;
     private String workorderCode;
     private String uid;
+    private static final int SOLVE_CODE = 0;
     private boolean isFirstLoading = true;//第一次加载
     private UIHandler uiHandler = new UIHandler(getActivity()) {
         @Override
@@ -173,7 +176,7 @@ public class TaskInformationFragment extends BaseFragment {
                         TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
                         TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
                         TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution,body.shutdown_datetime, body.feedback_solved_datetime, "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
                         TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
                         TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "", "", "", body.feedback);
                         TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
@@ -185,7 +188,7 @@ public class TaskInformationFragment extends BaseFragment {
                         datas.add(task6);
                         datas.add(task10);
                         datas.add(task7);
-                    }else if(taskType.equals("6")){
+                    } else if (taskType.equals("6")) {
                         TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
                         TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
                         TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, "", body.home_datetime, "", "", "", "");
@@ -198,7 +201,7 @@ public class TaskInformationFragment extends BaseFragment {
                         datas.add(task4);
                         datas.add(task5);
                         datas.add(task6);
-                        if(!TextUtils.isEmpty(body.feedback)){
+                        if (!TextUtils.isEmpty(body.feedback)) {
                             TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "", "", "", body.feedback);
                             datas.add(task10);
                         }
@@ -236,7 +239,7 @@ public class TaskInformationFragment extends BaseFragment {
                             if (TextUtils.isEmpty(task.notification_item_time) && TextUtils.isEmpty(task.notification_item_who) && TextUtils.isEmpty(task.notification_item_content)) {
                                 tvMsg.setText("没有最新通知");
                             } else {
-                                tvMsg.setText(task.notification_item_time +"\n"+  task.notification_item_who + ":"+task.notification_item_content);
+                                tvMsg.setText(task.notification_item_time + "\n" + task.notification_item_who + ":" + task.notification_item_content);
                             }
                             llNotificationContainer.addView(tvMsg);
                         }
@@ -368,14 +371,33 @@ public class TaskInformationFragment extends BaseFragment {
     }
 
     private void showSolveDialog() {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("workorder_solve");
-        if (pre != null) {
-            ft.remove(pre);
+//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//        Fragment pre = getActivity().getSupportFragmentManager().findFragmentByTag("workorder_solve");
+//        if (pre != null) {
+//            ft.remove(pre);
+//        }
+//        ft.addToBackStack(null);
+//        WorkorderSolveDialog workorderSolveDialog = WorkorderSolveDialog.newInstance(WorkorderSolveDialog.DETAILACTIVITY);
+//        workorderSolveDialog.show(ft, "workorder_solve");
+        Intent intent = new Intent(getActivity(), TaskSolveActivity.class);
+        intent.putExtra("workorder_code", workorderCode);
+        startActivityForResult(intent, SOLVE_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Logger.e("requestCode="+requestCode+"   resultCode="+resultCode);
+        switch (requestCode) {
+            case SOLVE_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Logger.e("solve_code 已经执行到这里了");
+                    startLoading();
+                }else if(resultCode==Activity.RESULT_CANCELED){
+                    startLoading();
+                }
+                break;
         }
-        ft.addToBackStack(null);
-        WorkorderSolveDialog workorderSolveDialog = WorkorderSolveDialog.newInstance(WorkorderSolveDialog.DETAILACTIVITY);
-        workorderSolveDialog.show(ft, "workorder_solve");
     }
 
     @Override
@@ -440,7 +462,6 @@ public class TaskInformationFragment extends BaseFragment {
      */
 
     public void doReceiveNegativeClick() {
-        Utilities.showToast("你接单了", getActivity());
         startProgress("请等待接单结果");
         Requester requester = new Requester();
         requester.cmd = 10002;
@@ -491,7 +512,6 @@ public class TaskInformationFragment extends BaseFragment {
      * 预约对话框确认
      */
     public void doAppointNegativeClick(String selectTime) {
-        Utilities.showToast("你预约了", getActivity());
         startProgress("预约中");
         Requester requester = new Requester();
         requester.cmd = 10002;
