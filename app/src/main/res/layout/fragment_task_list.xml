@@ -8,24 +8,24 @@
         android:id="@+id/rl_task_list_title"
         layout="@layout/layout_title_task_list" />
 
-    <cn.bingoogolapple.refreshlayout.BGARefreshLayout
-        android:id="@+id/rl_modulename_refresh"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_task_list_title">
+        android:layout_below="@id/rl_task_list_title">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-    </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_no_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_modulename_refresh"
+        android:layout_below="@id/swipeRefresh"
         android:gravity="center"
         android:text="暂时没有分配给您的工单"
         android:textSize="24sp"

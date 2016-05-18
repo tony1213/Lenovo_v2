@@ -3,13 +3,13 @@ package com.overtech.lenovo.activity.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +29,6 @@ import com.overtech.lenovo.activity.base.BaseFragment;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
 import com.overtech.lenovo.activity.business.tasklist.TaskInformationActivity;
-import com.overtech.lenovo.activity.business.tasklist.TaskSolveActivity;
 import com.overtech.lenovo.activity.business.tasklist.WorkorderMsgActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.TaskListAdapter;
 import com.overtech.lenovo.config.StatusCode;
@@ -38,7 +37,6 @@ import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.RequestExceptBean;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
-import com.overtech.lenovo.entity.person.PersonalAccount;
 import com.overtech.lenovo.entity.tasklist.taskbean.AD;
 import com.overtech.lenovo.entity.tasklist.taskbean.Task;
 import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
@@ -63,11 +61,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
-import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
-import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
-
-public class TaskListFragment extends BaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate, View.OnClickListener, TaskListAdapter.OnItemClickListener {
+public class TaskListFragment extends BaseFragment implements View.OnClickListener, TaskListAdapter.OnItemClickListener {
 
     private View titleView, contentView;
     private TextView mCity;
@@ -82,7 +76,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
     private TextView mTaskEvaluation;
     private AppCompatTextView noPage;
     private TaskListAdapter workorderAdapter;
-    private BGARefreshLayout mRefreshLayout;
+    private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
     private CycleViewPager cycleViewPager;
     private List<Task> datas;
@@ -215,7 +209,7 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
                     break;
             }
             stopProgress();
-            mRefreshLayout.endRefreshing();
+            mRefreshLayout.setRefreshing(false);
         }
     };
 
@@ -244,10 +238,61 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
 
 
     private void initRefreshLayout() {
-        mRefreshLayout = (BGARefreshLayout) mRootView.findViewById(R.id.rl_modulename_refresh);
-        mRefreshLayout.setDelegate(this);
-        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(getActivity(), true);
-        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
+        mRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefresh);
+        mRefreshLayout.setColorSchemeColors(R.array.material_colors);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Logger.e("tasklistfragment 下拉刷新 currentTask" + curTaskType);
+                Requester requester = new Requester();
+                requester.cmd = 10001;
+                requester.uid = uid;
+                requester.body.put("taskType", curTaskType);
+                Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+                Call call = httpEngine.createRequestCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        Message msg = uiHandler.obtainMessage();
+                        RequestExceptBean bean = new RequestExceptBean();
+                        bean.st = 0;
+                        bean.msg = "网络异常";
+                        msg.what = StatusCode.FAILED;
+                        msg.obj = gson.toJson(bean);
+                        uiHandler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        Message msg = uiHandler.obtainMessage();
+                        if (response.isSuccessful()) {
+                            String json = response.body().string();
+                            if (curTaskType.equals("-1")) {
+                                msg.what = StatusCode.WORKORDER_ALL_SUCCESS;
+                            } else if (curTaskType.equals("0")) {
+                                msg.what = StatusCode.WORKORDER_RECEIVE_SUCCESS;
+                            } else if (curTaskType.equals("1")) {
+                                msg.what = StatusCode.WORKORDER_APPOINT_SUCCESS;
+                            } else if (curTaskType.equals("2")) {
+                                msg.what = StatusCode.WORKORDER_HOME_SUCCESS;
+                            } else if (curTaskType.equals("10")) {
+                                msg.what = StatusCode.WORKORDER_EVALUATE_SUCCSS;
+                            } else if (curTaskType.equals("5")) {
+                                msg.what = StatusCode.WORKORDER_ACCOUNT_SUCCESS;
+                            }
+                            msg.obj = json;
+                        } else {
+                            ResponseExceptBean bean = new ResponseExceptBean();
+                            bean.st = response.code();
+                            bean.msg = response.message();
+                            msg.what = StatusCode.SERVER_EXCEPTION;
+                            msg.obj = gson.toJson(bean);
+                        }
+                        uiHandler.sendMessage(msg);
+                    }
+                });
+            }
+        });
     }
 
     private void initAD() {
@@ -566,67 +611,6 @@ public class TaskListFragment extends BaseFragment implements BGARefreshLayout.B
         Utilities.showToast("没有上门", getActivity());
     }
 
-    @Override
-    public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout refreshLayout) {
-        // 在这里加载最新数据
-        startProgress("加载中");
-        Logger.e("tasklistfragment 下拉刷新 currentTask" + curTaskType);
-        Requester requester = new Requester();
-        requester.cmd = 10001;
-        requester.uid = uid;
-        requester.body.put("taskType", curTaskType);
-        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
-        Call call = httpEngine.createRequestCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Message msg = uiHandler.obtainMessage();
-                RequestExceptBean bean = new RequestExceptBean();
-                bean.st = 0;
-                bean.msg = "网络异常";
-                msg.what = StatusCode.FAILED;
-                msg.obj = gson.toJson(bean);
-                uiHandler.sendMessage(msg);
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                Message msg = uiHandler.obtainMessage();
-                if (response.isSuccessful()) {
-                    String json = response.body().string();
-                    if (curTaskType.equals("-1")) {
-                        msg.what = StatusCode.WORKORDER_ALL_SUCCESS;
-                    } else if (curTaskType.equals("0")) {
-                        msg.what = StatusCode.WORKORDER_RECEIVE_SUCCESS;
-                    } else if (curTaskType.equals("1")) {
-                        msg.what = StatusCode.WORKORDER_APPOINT_SUCCESS;
-                    } else if (curTaskType.equals("2")) {
-                        msg.what = StatusCode.WORKORDER_HOME_SUCCESS;
-                    } else if (curTaskType.equals("10")) {
-                        msg.what = StatusCode.WORKORDER_EVALUATE_SUCCSS;
-                    } else if (curTaskType.equals("5")) {
-                        msg.what = StatusCode.WORKORDER_ACCOUNT_SUCCESS;
-                    }
-                    msg.obj = json;
-                } else {
-                    ResponseExceptBean bean = new ResponseExceptBean();
-                    bean.st = response.code();
-                    bean.msg = response.message();
-                    msg.what = StatusCode.SERVER_EXCEPTION;
-                    msg.obj = gson.toJson(bean);
-                }
-                uiHandler.sendMessage(msg);
-            }
-        });
-
-    }
-
-    @Override
-    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        // 在这里加载更多数据，或者更具产品需求实现上拉刷新也可以
-
-        return false;
-    }
 
     @Override
     public void onClick(View v) {
