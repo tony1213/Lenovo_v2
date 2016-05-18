@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.Menu;
@@ -59,6 +60,7 @@ import java.io.IOException;
 
 
 public class PersonalFragment extends BaseFragment implements View.OnClickListener {
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView mAvator;
     private TextView tv_finance;
     private TextView tv_month_workorder_amount;
@@ -127,6 +129,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                     Utilities.showToast(bean.msg, getActivity());
                     break;
             }
+            swipeRefreshLayout.setRefreshing(false);
             stopProgress();
         }
     };
@@ -149,9 +152,25 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mAccountServerDetail = (LinearLayout) mRootView.findViewById(R.id.ll_account_server_detail);
         rb_satisfaction = (RatingBar) mRootView.findViewById(R.id.rb_satisfaction);
         setting = (LinearLayout) mRootView.findViewById(R.id.ll_personal_setting);
+        swipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefresh);
         uid = ((MainActivity) getActivity()).getUid();
 
+        swipeRefreshLayout.setColorSchemeColors(R.array.material_colors);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                startLoading();
+            }
+        });
+        mAvator.setOnClickListener(this);
+        mAccountDetail.setOnClickListener(this);
+        mAccountServerDetail.setOnClickListener(this);
+        setting.setOnClickListener(this);
         startProgress("加载中");
+        startLoading();
+    }
+
+    private void startLoading() {
         Requester requester = new Requester();
         requester.cmd = 10010;
         requester.uid = uid;
@@ -186,11 +205,6 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 uiHandler.sendMessage(msg);
             }
         });
-
-        mAvator.setOnClickListener(this);
-        mAccountDetail.setOnClickListener(this);
-        mAccountServerDetail.setOnClickListener(this);
-        setting.setOnClickListener(this);
     }
 
     @Override

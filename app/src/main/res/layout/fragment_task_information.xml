@@ -204,4 +204,6 @@
                 android:layout_marginRight="21dp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
+
 </LinearLayout>
