@@ -95,6 +95,7 @@
                 android:id="@+id/tv_task_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="顾客用的WiFi网络无法使用" />
         </LinearLayout>
 
@@ -113,6 +114,7 @@
                 android:id="@+id/tv_task_remark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="携带测线网，备用网线，笔记本" />
         </LinearLayout>
     </LinearLayout>

@@ -3,6 +3,7 @@ package com.overtech.lenovo.activity.business.tasklist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,7 @@ import java.util.List;
  */
 public class StoreRepairInformationActivity extends BaseActivity {
     private Toolbar toolbar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private String branchCode;
     private String branchName;
@@ -50,6 +52,9 @@ public class StoreRepairInformationActivity extends BaseActivity {
             Logger.e("storeRepairInformaition   " + json);
             StoreInfo bean = gson.fromJson(json, StoreInfo.class);
             if (bean == null) {
+                if(swipeRefreshLayout.isRefreshing()){
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 stopProgress();
                 return;
             }
@@ -73,9 +78,17 @@ public class StoreRepairInformationActivity extends BaseActivity {
                     break;
                 case StatusCode.WORKORDER_STORE_REPAIR_INFO_SUCCESS:
                     datas = bean.body.data;
-                    adapter = new StoreRepairInforAdapter(StoreRepairInformationActivity.this, datas);
-                    recyclerView.setAdapter(adapter);
+                    if(adapter==null){
+                        adapter = new StoreRepairInforAdapter(StoreRepairInformationActivity.this, datas);
+                        recyclerView.setAdapter(adapter);
+                    }else{
+                        adapter.setDatas(datas);
+                        adapter.notifyDataSetChanged();
+                    }
                     break;
+            }
+            if(swipeRefreshLayout.isRefreshing()){
+                swipeRefreshLayout.setRefreshing(false);
             }
             stopProgress();
         }
@@ -92,6 +105,8 @@ public class StoreRepairInformationActivity extends BaseActivity {
         branchName = getIntent().getStringExtra("name");
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
         Logger.e("code===" + branchCode + "name===" + branchName);
+        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_store_repair_infor);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -105,13 +120,19 @@ public class StoreRepairInformationActivity extends BaseActivity {
                 finish();
             }
         });
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_store_repair_infor);
+        swipeRefreshLayout.setColorSchemeColors(R.array.material_colors);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
 
+        startProgress("加载中...");
         initData();
     }
 
     private void initData() {
-        startProgress("加载中...");
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10009;

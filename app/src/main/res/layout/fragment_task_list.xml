@@ -1,8 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.fragment.TaskListFragment">
+    tools:context=".activity.fragment.TaskListFragment"
+    android:orientation="vertical"
+    >
 
     <include
         android:id="@+id/rl_task_list_title"
@@ -11,8 +13,9 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_task_list_title">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -24,11 +27,11 @@
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_no_page"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/swipeRefresh"
+        android:layout_height="240dp"
+        android:layout_gravity="center"
         android:gravity="center"
         android:text="暂时没有分配给您的工单"
         android:textSize="24sp"
         android:visibility="gone" />
 
-</RelativeLayout>
+</LinearLayout>

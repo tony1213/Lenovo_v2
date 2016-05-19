@@ -3,6 +3,7 @@ package com.overtech.lenovo.activity.business.personal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,22 +38,29 @@ import java.io.IOException;
  */
 public class PersonalAccountServerDetailActivity extends BaseActivity {
     private Toolbar toolbar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private PersonalAccountServerDetailAdapter adapter;
     private String uid;
-    private UIHandler uiHandler=new UIHandler(this){
+    private UIHandler uiHandler = new UIHandler(this) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
-            Logger.e("服务明细===="+json);
+            Logger.e("服务明细====" + json);
             PersonalAccount bean = gson.fromJson(json, PersonalAccount.class);
             if (bean == null) {
+                if(swipeRefreshLayout.isRefreshing()){
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 stopProgress();
                 return;
             }
             int st = bean.st;
             if (st == -1 || st == -2) {
+                if(swipeRefreshLayout.isRefreshing()){
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 stopProgress();
                 SharePreferencesUtils.put(PersonalAccountServerDetailActivity.this, SharedPreferencesKeys.UID, "");
                 Utilities.showToast(bean.msg, PersonalAccountServerDetailActivity.this);
@@ -62,21 +70,25 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
-            switch (msg.what){
+            switch (msg.what) {
                 case StatusCode.FAILED:
-                    Utilities.showToast(bean.msg,PersonalAccountServerDetailActivity.this);
+                    Utilities.showToast(bean.msg, PersonalAccountServerDetailActivity.this);
                     break;
                 case StatusCode.SERVER_EXCEPTION:
-                    Utilities.showToast(bean.msg,PersonalAccountServerDetailActivity.this);
+                    Utilities.showToast(bean.msg, PersonalAccountServerDetailActivity.this);
                     break;
                 case StatusCode.PERSONAL_ACCOUNT_SERVER_SUCCESS:
-                    adapter=new PersonalAccountServerDetailAdapter(PersonalAccountServerDetailActivity.this,bean.body.data);
+                    adapter = new PersonalAccountServerDetailAdapter(PersonalAccountServerDetailActivity.this, bean.body.data);
                     recyclerView.setAdapter(adapter);
                     break;
+            }
+            if(swipeRefreshLayout.isRefreshing()){
+                swipeRefreshLayout.setRefreshing(false);
             }
             stopProgress();
         }
     };
+
     @Override
     protected int getLayoutIds() {
         return R.layout.activity_personal_account_server_detail;
@@ -85,10 +97,12 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
-        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
-        toolbar= (Toolbar) findViewById(R.id.tool_bar);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+
         setSupportActionBar(toolbar);
-        ActionBar actionBar=getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("服务明细");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -97,11 +111,18 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
                 finish();
             }
         });
+        swipeRefreshLayout.setColorSchemeColors(R.array.material_colors);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
+        startProgress("加载中");
         initData();
     }
 
     private void initData() {
-        startProgress("加载中");
         Requester requester = new Requester();
         requester.cmd = 10015;
         requester.uid = uid;

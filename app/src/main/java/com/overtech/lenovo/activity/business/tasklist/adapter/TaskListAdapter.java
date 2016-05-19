@@ -120,7 +120,13 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
                 LatLng curLoc = new LatLng(latitude, longitude);
                 LatLng desLoc = new LatLng(task.latitude, task.longitude);
                 double dis = DistanceUtil.getDistance(curLoc,desLoc);
-                holder.taskDistance.setText((int)dis / 1000 + "km");
+                if(dis<100){
+                    holder.taskDistance.setText("<100m");
+                }else if(dis<1000){
+                    holder.taskDistance.setText((int)dis+"m");
+                }else{
+                    holder.taskDistance.setText((int)dis / 1000 + "km");
+                }
             }
         }
         if (task.appointment_home_mills == 0) {

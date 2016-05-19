@@ -26,7 +26,7 @@ public class StoreRepairInforAdapter extends RecyclerView.Adapter<StoreRepairInf
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_recyclerview_store_repair_infor, parent,false));
+        MyViewHolder viewHolder = new MyViewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_recyclerview_store_repair_infor, parent, false));
         return viewHolder;
     }
 
@@ -42,6 +42,10 @@ public class StoreRepairInforAdapter extends RecyclerView.Adapter<StoreRepairInf
     @Override
     public int getItemCount() {
         return datas == null ? 0 : datas.size();
+    }
+
+    public void setDatas(List<StoreInfo.RepairInfo> datas) {
+        this.datas = datas;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

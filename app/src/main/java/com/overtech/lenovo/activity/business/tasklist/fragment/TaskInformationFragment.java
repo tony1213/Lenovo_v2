@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -239,7 +240,7 @@ public class TaskInformationFragment extends BaseFragment {
                             if (TextUtils.isEmpty(task.notification_item_time) && TextUtils.isEmpty(task.notification_item_who) && TextUtils.isEmpty(task.notification_item_content)) {
                                 tvMsg.setText("没有最新通知");
                             } else {
-                                tvMsg.setText(task.notification_item_time + "\n" + task.notification_item_who + ":" + task.notification_item_content);
+                                tvMsg.setText(task.notification_item_time + "  " + task.notification_item_who + "\n" +"     "+ task.notification_item_content);
                             }
                             llNotificationContainer.addView(tvMsg);
                         }
@@ -387,13 +388,13 @@ public class TaskInformationFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("requestCode="+requestCode+"   resultCode="+resultCode);
+        Logger.e("requestCode=" + requestCode + "   resultCode=" + resultCode);
         switch (requestCode) {
             case SOLVE_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     Logger.e("solve_code 已经执行到这里了");
                     startLoading();
-                }else if(resultCode==Activity.RESULT_CANCELED){
+                } else if (resultCode == Activity.RESULT_CANCELED) {
                     startLoading();
                 }
                 break;

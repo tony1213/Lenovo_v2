@@ -85,6 +85,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="20dp"
+                        android:textSize="18sp"
                         android:background="@color/simple_orange"
                         android:text="提现"
                         android:textColor="@color/main_white" />

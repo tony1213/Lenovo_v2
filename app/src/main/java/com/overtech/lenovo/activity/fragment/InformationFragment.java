@@ -82,6 +82,9 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                 return;
             }
             if (bean.body == null) {
+                if (refreshLayout.isRefreshing()) {
+                    refreshLayout.setRefreshing(false);
+                }
                 stopProgress();
                 Utilities.showToast("暂时没有数据", getActivity());
                 return;
@@ -132,6 +135,9 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     break;
             }
             stopProgress();
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
+            }
         }
     };
 
@@ -200,7 +206,6 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Utilities.showToast("下拉刷新", getActivity());
                 curPage = 0;//下拉刷新默认请求最新的一条数据
                 initData(curPage);
             }

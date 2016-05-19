@@ -1,8 +1,19 @@
 package com.overtech.lenovo.activity.business.knowledge;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.DrawableUtils;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
@@ -10,6 +21,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
@@ -26,20 +38,22 @@ import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
+import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.internal.Util;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-public class KnowledgeDetailActivity extends BaseActivity implements View.OnClickListener {
+public class KnowledgeDetailActivity extends BaseActivity {
 
-    private WebView webView;
-    private ProgressBar bar;
-    private ImageView mDoBack;
-    private ImageView mDoShare;
+    private Toolbar toolbar;
+    private TextView knowledgeContent;
     private String knowledge_id;
     private String uid;
     private UIHandler uiHandler = new UIHandler(this) {
@@ -68,7 +82,7 @@ public class KnowledgeDetailActivity extends BaseActivity implements View.OnClic
                     Utilities.showToast(bean.msg, KnowledgeDetailActivity.this);
                     break;
                 case StatusCode.KNOWLEDGE_CONTENT_SUCCESS:
-                    webView.loadDataWithBaseURL(null, "<html><body>"+bean.body.content+"<body><html>", "text/html", "utf-8", null);
+                    knowledgeContent.setText(Html.fromHtml(bean.body.content, new UrlImageGetter(knowledgeContent), null));
                     break;
             }
         }
@@ -84,23 +98,21 @@ public class KnowledgeDetailActivity extends BaseActivity implements View.OnClic
         knowledge_id = getIntent().getStringExtra("knowledge_id");
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
         Logger.e("前面传过来的值是" + knowledge_id);
-        webView = (WebView) findViewById(R.id.webView);
-        bar = (ProgressBar) findViewById(R.id.webViewProgressBar);
-        mDoBack = (ImageView) findViewById(R.id.iv_knowledge_detail_back);
-        mDoShare = (ImageView) findViewById(R.id.iv_knowledge_detail_share);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        knowledgeContent = (TextView) findViewById(R.id.tv_knowledge_content);
+        knowledgeContent.setMovementMethod(ScrollingMovementMethod.getInstance());
 
-        mDoBack.setOnClickListener(this);
-        mDoShare.setOnClickListener(this);
-        webView.requestFocus();
-        webView.setInitialScale(25);
-        WebSettings settings = webView.getSettings();
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        settings.setUseWideViewPort(true);
-        settings.setJavaScriptEnabled(true);//启用支持javascript
-        settings.setSupportZoom(true);
-        settings.setDefaultTextEncodingName("utf-8");
-        settings.setBuiltInZoomControls(true);
-        settings.setBlockNetworkImage(false);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(0);
+        actionBar.setTitle("");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         initData();
     }
 
@@ -141,31 +153,56 @@ public class KnowledgeDetailActivity extends BaseActivity implements View.OnClic
             }
         });
 
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    bar.setVisibility(View.INVISIBLE);
-                } else {
-                    if (View.INVISIBLE == bar.getVisibility()) {
-                        bar.setVisibility(View.VISIBLE);
-                    }
-                    bar.setProgress(newProgress);
-                }
-                super.onProgressChanged(view, newProgress);
-            }
-        });
+
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_knowledge_detail_share:
-                Utilities.showToast("您点击了分享", this);
-                break;
-            case R.id.iv_knowledge_detail_back:
-                finish();
-                break;
+    public class UrlImageGetter implements Html.ImageGetter {
+        private TextView container;
+
+        public UrlImageGetter(TextView container) {
+            this.container = container;
+        }
+
+        @Override
+        public Drawable getDrawable(String source) {
+            Logger.e("执行到这里了呀==getDrawable()===" + source);
+
+            LevelListDrawable d = new LevelListDrawable();
+            Drawable empty = getResources().getDrawable(R.mipmap.ic_launcher);
+            d.addLevel(0, 0, empty);
+            d.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
+            new ImageGetterAsyncTask().execute(source, d);
+            return d;
+        }
+
+        public class ImageGetterAsyncTask extends AsyncTask<Object, Void, Bitmap> {
+            private LevelListDrawable mDrawable;
+
+            @Override
+            protected Bitmap doInBackground(Object... params) {
+
+                mDrawable = (LevelListDrawable) params[1];
+                try {
+                    InputStream inputStream = new URL((String) params[0]).openStream();
+                    return BitmapFactory.decodeStream(inputStream);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if (bitmap != null) {
+                    BitmapDrawable d = new BitmapDrawable(bitmap);
+                    mDrawable.addLevel(1, 1, d);
+                    mDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                    mDrawable.setLevel(1);
+                }
+                 CharSequence t=container.getText();
+                container.setText(t);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.overtech.lenovo.activity.business.tasklist.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 
 public class DetailInformationFragment extends BaseFragment {
+    private SwipeRefreshLayout swipeRefreshLayout;
     private TextView tvContractDescription;
     private TextView tvContractManager;
     private TextView tvContractManagerPhone;
@@ -68,6 +70,9 @@ public class DetailInformationFragment extends BaseFragment {
             }
             int st = bean.st;
             if (st == -1 || st == -2) {
+                if(swipeRefreshLayout.isRefreshing()){
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 stopProgress();
                 Utilities.showToast(bean.msg, getActivity());
                 SharePreferencesUtils.put(getActivity(), SharedPreferencesKeys.UID, "");
@@ -115,6 +120,9 @@ public class DetailInformationFragment extends BaseFragment {
                     break;
             }
             stopProgress();
+            if(swipeRefreshLayout.isRefreshing()){
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
     };
 
@@ -127,6 +135,7 @@ public class DetailInformationFragment extends BaseFragment {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
+        swipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefresh);
         tvContractDescription = (TextView) mRootView.findViewById(R.id.tv_contract_description);
         tvContractManager = (TextView) mRootView.findViewById(R.id.tv_contract_manager);
         tvContractManagerPhone = (TextView) mRootView.findViewById(R.id.tv_contract_manager_phone);
@@ -158,6 +167,13 @@ public class DetailInformationFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
+        swipeRefreshLayout.setColorSchemeColors(R.array.material_colors);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                startLoading();
+            }
+        });
     }
 
     @Override
@@ -170,48 +186,51 @@ public class DetailInformationFragment extends BaseFragment {
                 //开始网络加载
                 uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
                 workorderCode = ((TaskDetailActivity) getActivity()).getWorkorderCode();
-
                 startProgress("加载中...");
-                Requester requester = new Requester();
-                requester.uid = uid;
-                requester.cmd = 10004;
-                requester.body.put("workorder_code", workorderCode);
-                Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
-                Call call = httpEngine.createRequestCall(request);
-                call.enqueue(new com.squareup.okhttp.Callback() {
-                    @Override
-                    public void onFailure(Request request, IOException e) {
-                        RequestExceptBean bean = new RequestExceptBean();
-                        bean.st = 0;
-                        bean.msg = "网络异常";
-                        Message msg = uiHandler.obtainMessage();
-                        msg.what = StatusCode.FAILED;
-                        msg.obj = gson.toJson(bean);
-                        uiHandler.sendMessage(msg);
-                    }
-
-                    @Override
-                    public void onResponse(final Response response) throws IOException {
-                        Message msg = uiHandler.obtainMessage();
-                        if (response.isSuccessful()) {
-                            String json = response.body().string();
-                            msg.what = StatusCode.WORKORDER_DETAIL_INFORMATION_SUCCESS;
-                            msg.obj = json;
-
-                        } else {
-                            ResponseExceptBean bean = new ResponseExceptBean();
-                            bean.st = response.code();
-                            bean.msg = response.message();
-                            msg.what = StatusCode.SERVER_EXCEPTION;
-                            msg.obj = gson.toJson(bean);
-                        }
-                        uiHandler.sendMessage(msg);
-                    }
-                });
+                startLoading();
             }
         } else {
             //取消加载
         }
+    }
+
+    private void startLoading() {
+        Requester requester = new Requester();
+        requester.uid = uid;
+        requester.cmd = 10004;
+        requester.body.put("workorder_code", workorderCode);
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new com.squareup.okhttp.Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.WORKORDER_DETAIL_INFORMATION_SUCCESS;
+                    msg.obj = json;
+
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
+            }
+        });
     }
 
 }

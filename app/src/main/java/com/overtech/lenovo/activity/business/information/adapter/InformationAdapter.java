@@ -6,6 +6,7 @@ import android.graphics.Bitmap.Config;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,9 +49,9 @@ public class InformationAdapter extends Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         if (datas == null) {
-            Logger.e("InformationAdapter==getItemCount==" + 0);
+//            Logger.e("InformationAdapter==getItemCount==" + 0);
         } else {
-            Logger.e("InformationAdapter==getItemCount==" + datas.size());
+//            Logger.e("InformationAdapter==getItemCount==" + datas.size());
         }
         return datas == null ? 0 : datas.size() + 1;
     }
@@ -72,10 +73,10 @@ public class InformationAdapter extends Adapter<RecyclerView.ViewHolder> {
      * @param newDatas
      */
     public void addMoreItem(List<Information.InforItem> newDatas) {
-        if(datas==null){//第一次加载时
-            datas=newDatas;
+        if (datas == null) {//第一次加载时
+            datas = newDatas;
             notifyDataSetChanged();
-        }else{
+        } else {
             int preLastPosition = datas.size() - 1;
             datas.addAll(newDatas);
             notifyItemRangeInserted(preLastPosition, newDatas.size());
@@ -138,14 +139,21 @@ public class InformationAdapter extends Adapter<RecyclerView.ViewHolder> {
                 TextView textView = new TextView(ctx);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 textView.setLayoutParams(params);
-                textView.setText(comment.comment_user + ":" + comment.comment_content);
+                textView.setText(Html.fromHtml("<font color=\'#19A4D7\'>" + comment.comment_user + "</font>" + ":" + comment.comment_content));
                 ((NormalViewHolder) vh).llCommentContainer.addView(textView);
-                for (Information.CommentResponse response : comment.comment_response) {
-                    TextView responseContent = new TextView(ctx);
-                    LinearLayout.LayoutParams resTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    textView.setLayoutParams(resTvParams);
-                    responseContent.setText(response.comment_user + " 回复 " + comment.comment_user + ":" + response.comment_content);
-                    ((NormalViewHolder) vh).llCommentContainer.addView(responseContent);
+
+                if (comment.comment_response != null) {
+                    for (Information.CommentResponse response : comment.comment_response) {
+                        TextView responseUser = new TextView(ctx);
+                        LinearLayout.LayoutParams resTvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        responseUser.setLayoutParams(resTvParams);
+                        responseUser.setText(Html.fromHtml("<font color=\'#19A4D7\'>" + response.comment_user + "</font>"
+                                + " 回复 "
+                                + "<font color=\'#19A4D7\'>" + comment.comment_user + "</font>"
+                                + ":" + response.comment_content));
+
+                        ((NormalViewHolder) vh).llCommentContainer.addView(responseUser);
+                    }
                 }
                 final int finalI = i;
                 textView.setOnClickListener(new OnClickListener() {

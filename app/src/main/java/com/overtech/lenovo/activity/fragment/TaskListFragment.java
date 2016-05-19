@@ -95,11 +95,17 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
             Logger.e("后台返回的数据====" + json);
             if (json == null) {
                 stopProgress();
+                if (mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(false);
+                }
                 return;
             }
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             if (bean == null) {
                 stopProgress();
+                if (mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(false);
+                }
                 Utilities.showToast("无数据", getActivity());
                 return;//加上无数据页面
             }
@@ -209,7 +215,9 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
                     break;
             }
             stopProgress();
-            mRefreshLayout.setRefreshing(false);
+            if (mRefreshLayout.isRefreshing()) {
+                mRefreshLayout.setRefreshing(false);
+            }
         }
     };
 
@@ -300,7 +308,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
         workorderAdapter.setHeader(LayoutInflater.from(getContext()).inflate(R.layout.item_recyclerview_header, null));
         workorderAdapter.setOnItemClickListener(TaskListFragment.this);
         cycleViewPager = (CycleViewPager) getFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);
-        cycleViewPager.setTime(2000); // 设置轮播时间，默认5000ms
+        cycleViewPager.setTime(5000); // 设置轮播时间，默认5000ms
         cycleViewPager.setIndicatorCenter();// 设置圆点指示图标组居中显示，默认靠右
         handler = cycleViewPager.getHandler();
         runnable = cycleViewPager.getRunnable();

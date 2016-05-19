@@ -129,7 +129,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                     Utilities.showToast(bean.msg, getActivity());
                     break;
             }
-            swipeRefreshLayout.setRefreshing(false);
+            if(swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
             stopProgress();
         }
     };

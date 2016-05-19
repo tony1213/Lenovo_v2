@@ -3,6 +3,7 @@ package com.overtech.lenovo.activity.business.personal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +38,7 @@ import java.io.IOException;
  */
 public class PersonalAccountDetailActivity extends BaseActivity {
     private Toolbar toolBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private PersonalAccountDetailAdapter adapter;
     private String uid;
@@ -48,6 +50,9 @@ public class PersonalAccountDetailActivity extends BaseActivity {
             Logger.e("personalaccount detail====" + json);
             PersonalAccount bean = gson.fromJson(json, PersonalAccount.class);
             if (bean == null) {
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 stopProgress();
                 return;
             }
@@ -62,9 +67,12 @@ public class PersonalAccountDetailActivity extends BaseActivity {
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
-            if(st==1){
+            if (st == 1) {
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 stopProgress();
-                Utilities.showToast(bean.msg,PersonalAccountDetailActivity.this);
+                Utilities.showToast(bean.msg, PersonalAccountDetailActivity.this);
                 return;
             }
             switch (msg.what) {
@@ -79,6 +87,9 @@ public class PersonalAccountDetailActivity extends BaseActivity {
                     recyclerView.setAdapter(adapter);
                     break;
             }
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
             stopProgress();
         }
     };
@@ -91,8 +102,10 @@ public class PersonalAccountDetailActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolBar = (Toolbar) findViewById(R.id.tool_bar);
+
         setSupportActionBar(toolBar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -103,11 +116,19 @@ public class PersonalAccountDetailActivity extends BaseActivity {
                 finish();
             }
         });
+        swipeRefreshLayout.setColorSchemeColors(R.array.material_colors);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
+
+        startProgress("加载中");
         initData();
     }
 
     private void initData() {
-        startProgress("加载中");
         Requester requester = new Requester();
         requester.cmd = 10014;
         requester.uid = uid;

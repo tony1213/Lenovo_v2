@@ -3,6 +3,7 @@ package com.overtech.lenovo.activity.business.tasklist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +38,7 @@ import java.util.List;
  */
 public class WorkorderMsgActivity extends BaseActivity {
     private Toolbar toolbar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private List<Task> data;
     private WorkorderMsgAdapter adapter;
@@ -49,6 +51,9 @@ public class WorkorderMsgActivity extends BaseActivity {
             Logger.e("workordermsg   " + json);
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             if (bean == null) {
+                if(swipeRefreshLayout.isRefreshing()){
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 stopProgress();
                 return;
             }
@@ -76,6 +81,9 @@ public class WorkorderMsgActivity extends BaseActivity {
                     recyclerView.setAdapter(adapter);
                     break;
             }
+            if(swipeRefreshLayout.isRefreshing()){
+                swipeRefreshLayout.setRefreshing(false);
+            }
             stopProgress();
         }
     };
@@ -89,7 +97,9 @@ public class WorkorderMsgActivity extends BaseActivity {
     protected void afterCreate(Bundle savedInstanceState) {
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.rv_workorder_msg);
+
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("消息");
@@ -100,12 +110,18 @@ public class WorkorderMsgActivity extends BaseActivity {
                 finish();
             }
         });
-
+        swipeRefreshLayout.setColorSchemeColors(R.array.material_colors);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
+        startProgress("加载中...");
         initData();
     }
 
     private void initData() {
-        startProgress("加载中...");
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10040;
