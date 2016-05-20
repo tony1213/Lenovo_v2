@@ -81,6 +81,14 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
+            if (st == 1) {
+                Utilities.showToast(bean.msg, getActivity());
+                stopProgress();
+                if (refreshLayout.isRefreshing()) {
+                    refreshLayout.setRefreshing(false);
+                }
+                return;
+            }
             if (bean.body == null) {
                 if (refreshLayout.isRefreshing()) {
                     refreshLayout.setRefreshing(false);
@@ -168,7 +176,8 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                 // TODO Auto-generated method stub
                 llCommentUpContainer.setVisibility(View.VISIBLE);
                 etComment.setFocusable(true);
-                etComment.setTag(new Object[]{position, datas.get(position).post_id, comment, contentPosition});
+                etComment.setTag(new Object[]{position, ((InformationAdapter) mInformation.getAdapter()).getItem(position).post_id, comment, contentPosition});
+
             }
         });
         mInformation.setAdapter(adapter);

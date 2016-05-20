@@ -11,14 +11,11 @@
     <dimen name="text_size_hint">12sp</dimen>
     <dimen name="text_size_xsmall">10sp</dimen>
     <dimen name="text_size_small">8sp</dimen>
-    <!-- pullToRefresh -->
-    <dimen name="indicator_right_padding">10dp</dimen>
-    <dimen name="indicator_corner_radius">12dp</dimen>
-    <dimen name="indicator_internal_padding">4dp</dimen>
-    <dimen name="header_footer_left_right_padding">24dp</dimen>
-    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+
     <!-- nifitydialog UI  -->
     <dimen name="dialog_padding">35dp</dimen>
     <dimen name="common_margin">16dip</dimen>
     <dimen name="common_warning_line_space">5dp</dimen>
+    <dimen name="login_input_width">236dp</dimen>
+    <dimen name="login_input_height">41dp</dimen>
 </resources>

@@ -51,7 +51,7 @@ public class WorkorderMsgActivity extends BaseActivity {
             Logger.e("workordermsg   " + json);
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             if (bean == null) {
-                if(swipeRefreshLayout.isRefreshing()){
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 stopProgress();
@@ -77,11 +77,14 @@ public class WorkorderMsgActivity extends BaseActivity {
                     break;
                 case StatusCode.WORKORDER_MSG_SUCCESS:
                     data = bean.body.data;
+                    if (bean.body.msg_latest_datetime != null) {
+                        SharePreferencesUtils.put(WorkorderMsgActivity.this, SharedPreferencesKeys.LATEST_MSG_DATETIME, bean.body.msg_latest_datetime);
+                    }
                     adapter = new WorkorderMsgAdapter(data, WorkorderMsgActivity.this);
                     recyclerView.setAdapter(adapter);
                     break;
             }
-            if(swipeRefreshLayout.isRefreshing()){
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
             }
             stopProgress();

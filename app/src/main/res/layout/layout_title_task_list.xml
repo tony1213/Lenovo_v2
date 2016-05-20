@@ -19,12 +19,31 @@
         android:drawableRight="@mipmap/arrow_down_white"
         android:text="所有工单" />
 
-    <ImageView
-        android:id="@+id/iv_task_notification"
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        android:src="@mipmap/icon_common_notification" />
+        android:layout_marginRight="14dp">
+
+        <ImageView
+            android:id="@+id/iv_task_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/icon_common_notification" />
+
+        <TextView
+            android:id="@+id/tv_new_msg_nums"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:background="@drawable/shape_textview_red_circle"
+            android:gravity="center"
+            android:text="6"
+            android:textColor="@color/main_white"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </FrameLayout>
 </RelativeLayout>

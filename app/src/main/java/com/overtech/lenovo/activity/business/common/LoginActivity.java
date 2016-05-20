@@ -1,7 +1,9 @@
 package com.overtech.lenovo.activity.business.common;
 
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -11,15 +13,17 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.google.gson.Gson;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.MainActivity;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.password.FindbackPasswordActivity;
 import com.overtech.lenovo.activity.business.common.register.RegisterActivity;
+import com.overtech.lenovo.config.StatusCode;
 import com.overtech.lenovo.config.SystemConfig;
 import com.overtech.lenovo.debug.Logger;
+import com.overtech.lenovo.entity.RequestExceptBean;
 import com.overtech.lenovo.entity.Requester;
+import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -30,10 +34,10 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -43,7 +47,51 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private ToggleButton toggleButton;
     private EditTextWithDelete etLoginName;
     private EditTextWithDelete etLoginPwd;
-    private UIHandler uiHandler;
+    private UIHandler uiHandler = new UIHandler(this) {
+        @Override
+        public void handleMessage(Message msg) {
+            String json = (String) msg.obj;
+            Logger.e("登陆传过来的信息===" + json);
+            JSONObject jsonObject = null;
+            int st = -100;
+            String info = null;
+            try {
+                jsonObject = new JSONObject(json);
+                st = jsonObject.getInt("st");
+                info = jsonObject.getString("msg");
+            } catch (JSONException e) {
+                Utilities.showToast(getResources().getString(R.string.common_no_data), LoginActivity.this);
+                stopProgress();
+                return;
+            }
+
+            switch (msg.what) {
+                case StatusCode.FAILED:
+                    Utilities.showToast(info, LoginActivity.this);
+                    break;
+                case StatusCode.SERVER_EXCEPTION:
+                    Utilities.showToast(info, LoginActivity.this);
+                    break;
+                case StatusCode.LOGIN_SUCCESS:
+                    if (st == 0) {
+                        try {
+                            JSONObject body = jsonObject.getJSONObject("body");
+                            SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("uid") + "");
+                            Intent intent = new Intent();
+                            intent.setClass(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } catch (JSONException e) {
+                            Utilities.showToast(getResources().getString(R.string.common_no_data), LoginActivity.this);
+                        }
+                    } else {
+                        Utilities.showToast(info, LoginActivity.this);
+                    }
+                    break;
+            }
+            stopProgress();
+        }
+    };
 
     @Override
     protected int getLayoutIds() {
@@ -52,7 +100,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        uiHandler = new UIHandler(this);
         mDoLogin = (Button) findViewById(R.id.btn_login);
         mDoRegister = (TextView) findViewById(R.id.tv_register_account);
         mDoLostPassword = (TextView) findViewById(R.id.tv_lost_password);
@@ -110,61 +157,45 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
         startProgress("登录中...");
+
+
         Requester requester = new Requester();
         requester.cmd = 1;
         requester.uid = name;
         requester.pwd = pwd;
-        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
-
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Logger.e(request.toString());
-//                Utilities.showToast("网络错误",LoginActivity.this);
-                stopProgress();
+                Message msg = uiHandler.obtainMessage();
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = getResources().getString(R.string.common_request_exception);
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
             }
 
             @Override
-            public void onResponse(final Response response) throws IOException {
-                final String json = response.body().string();
-                Logger.e(json);
-                if (json == null) {
-                    return;
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.LOGIN_SUCCESS;
+                    msg.obj = json;
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
                 }
-                uiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            stopProgress();
-                            if (response.isSuccessful()) {
-                                JSONObject jsonObject = new JSONObject(json);
-                                int st = jsonObject.getInt("st");
-                                String msg=jsonObject.getString("msg");
-                                if (st == 0) {
-                                    JSONObject body = jsonObject.getJSONObject("body");
-                                    Logger.e(body.getInt("uid") + "===是什么值");
-                                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("uid") + "");
-                                    Intent intent = new Intent();
-                                    intent.setClass(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else if (st == 1) {
-                                    Utilities.showToast(msg, LoginActivity.this);
-                                } else {
-                                    Utilities.showToast(msg, LoginActivity.this);
-                                }
-                            } else {
-                                Utilities.showToast("服务器异常", LoginActivity.this);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
+                uiHandler.sendMessage(msg);
             }
         });
     }
+
 }
 

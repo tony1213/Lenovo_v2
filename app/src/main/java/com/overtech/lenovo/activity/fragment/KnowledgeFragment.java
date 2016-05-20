@@ -80,7 +80,7 @@ public class KnowledgeFragment extends BaseFragment {
                 return;
             }
             int st = bean.st;
-            if (st == -2 || st == -1) {
+            if (st == -2 || st == -1||st==500) {
                 stopProgress();
                 if (!isLoginOut) {
                     isLoginOut = true;

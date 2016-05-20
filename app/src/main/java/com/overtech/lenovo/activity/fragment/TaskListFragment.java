@@ -64,6 +64,7 @@ import java.util.List;
 public class TaskListFragment extends BaseFragment implements View.OnClickListener, TaskListAdapter.OnItemClickListener {
 
     private View titleView, contentView;
+    private TextView mNewMsgNums;
     private TextView mCity;
     private PopupWindow popupWindow;
     private ImageView mNotification;
@@ -85,6 +86,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
     private String uid;//用户唯一标识
     private String curTaskType;//记录当前状态
     private boolean isLoginOut = false;//默认登录状态
+    private String latestMsgDatetime;//最近记录消息的时间
     private Handler handler;// cyclerviewpager的handler
     private Runnable runnable;// cyclerviewpager的runnable
     private UIHandler uiHandler = new UIHandler(getActivity()) {
@@ -167,6 +169,15 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
                         handler.post(runnable);
                     }
                     break;
+                case StatusCode.LATEST_MSG_DATETIME_SUCCESS:
+                    isLoginOut = false;
+                    if (bean.body.new_msg_nums.equals("0")) {
+                        mNewMsgNums.setVisibility(View.GONE);
+                    } else {
+                        mNewMsgNums.setVisibility(View.VISIBLE);
+                        mNewMsgNums.setText(bean.body.new_msg_nums);
+                    }
+                    break;
                 case StatusCode.WORKORDER_RECEIVE_SUCCESS:
                 case StatusCode.WORKORDER_APPOINT_SUCCESS:
                 case StatusCode.WORKORDER_HOME_SUCCESS:
@@ -231,16 +242,19 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         titleView = mRootView.findViewById(R.id.rl_task_list_title);
+        mNewMsgNums = (TextView) mRootView.findViewById(R.id.tv_new_msg_nums);
         mCity = (TextView) mRootView.findViewById(R.id.tv_location_city);
         mTitleFilter = (TextView) mRootView.findViewById(R.id.tv_task_list_filter);
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
         mNotification = (ImageView) mRootView.findViewById(R.id.iv_task_notification);
         noPage = (AppCompatTextView) mRootView.findViewById(R.id.tv_no_page);
         uid = ((MainActivity) getActivity()).getUid();
+        latestMsgDatetime = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.LATEST_MSG_DATETIME, "");
         mCity.setText(((CustomApplication) getActivity().getApplication()).city);
         initRefreshLayout();//下拉刷新
         initAD();
         initRecyclerView();
+        initNewMsg();
         initEvent();
     }
 
@@ -299,6 +313,44 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
                         uiHandler.sendMessage(msg);
                     }
                 });
+            }
+        });
+    }
+
+    private void initNewMsg() {
+        Requester requester = new Requester();
+        requester.cmd = 10042;
+        requester.uid = uid;
+        requester.body.put("msg_latest_datetime", latestMsgDatetime);
+        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+        Call call = httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                RequestExceptBean bean = new RequestExceptBean();
+                bean.st = 0;
+                bean.msg = "网络异常";
+                Message msg = uiHandler.obtainMessage();
+                msg.what = StatusCode.FAILED;
+                msg.obj = gson.toJson(bean);
+                uiHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                Message msg = uiHandler.obtainMessage();
+                if (response.isSuccessful()) {
+                    String json = response.body().string();
+                    msg.what = StatusCode.LATEST_MSG_DATETIME_SUCCESS;
+                    msg.obj = json;
+                } else {
+                    ResponseExceptBean bean = new ResponseExceptBean();
+                    bean.st = response.code();
+                    bean.msg = response.message();
+                    msg.what = StatusCode.SERVER_EXCEPTION;
+                    msg.obj = gson.toJson(bean);
+                }
+                uiHandler.sendMessage(msg);
             }
         });
     }

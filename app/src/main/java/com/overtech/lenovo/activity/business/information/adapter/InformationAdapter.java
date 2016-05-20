@@ -217,7 +217,9 @@ public class InformationAdapter extends Adapter<RecyclerView.ViewHolder> {
             return TYPE_NORMAL;
         }
     }
-
+    public Information.InforItem getItem(int position){
+        return datas.get(position);
+    }
     class MyFooterViewHolder extends ViewHolder {
         TextView tvLoading;
 

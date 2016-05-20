@@ -152,6 +152,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_task_info_frag_button_bg"
                         android:text="拍照"
+                        android:visibility="gone"
                         android:textSize="@dimen/text_size_large" />
                 </LinearLayout>
 
