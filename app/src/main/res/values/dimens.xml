@@ -11,6 +11,8 @@
     <dimen name="text_size_hint">12sp</dimen>
     <dimen name="text_size_xsmall">10sp</dimen>
     <dimen name="text_size_small">8sp</dimen>
+    <dimen name="text_size_task_state">17sp</dimen>
+    <dimen name="text_size_task_info">13sp</dimen>
 
     <!-- nifitydialog UI  -->
     <dimen name="dialog_padding">35dp</dimen>
@@ -18,4 +20,7 @@
     <dimen name="common_warning_line_space">5dp</dimen>
     <dimen name="login_input_width">236dp</dimen>
     <dimen name="login_input_height">41dp</dimen>
+    <dimen name="toolbat_height">34dp</dimen>
+    <dimen name="toolbat_title">15dp</dimen>
+    <dimen name="tablayout_height">33dp</dimen>
 </resources>

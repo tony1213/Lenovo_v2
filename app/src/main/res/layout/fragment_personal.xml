@@ -21,13 +21,13 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@drawable/shape_personal_bg">
+                    android:layout_height="123dp"
+                    android:background="@mipmap/icon_mine_title_bg">
 
                     <ImageView
                         android:id="@+id/iv_avator"
-                        android:layout_width="95dp"
-                        android:layout_height="95dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_centerInParent="true"
                         android:scaleType="centerCrop" />
                 </RelativeLayout>
@@ -80,13 +80,15 @@
                     </LinearLayout>
 
                     <android.support.v7.widget.AppCompatButton
-                        android:layout_width="wrap_content"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
+                        android:minHeight="26dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="20dp"
-                        android:textSize="18sp"
-                        android:background="@color/simple_orange"
+                        android:paddingLeft="4dp"
+                        android:textSize="@dimen/text_size_task_info"
+                        android:background="@drawable/selector_withdraw"
                         android:text="提现"
                         android:textColor="@color/main_white" />
                 </RelativeLayout>

@@ -32,7 +32,7 @@
     <color name="main_line">#ffdcdcdc</color>
     <color name="bg_mask">#78000000</color><!-- 蒙层色，50%纯黑 -->
 
-    <color name="bg_qq_blue">#19A4D7</color>
+    <color name="toolbar_bg">#000000</color>
     <color name="calendar_cell_novalidate">#ffc8d2dc</color>
     <color name="calendar_text_inactive">#40778088</color>
     <color name="contents_text">#ff000000</color>
@@ -91,6 +91,7 @@
     <color name="tasklist_item_bg">#F5F2F1</color>
     <color name="task_information_title">#726d69</color>
     <color name="blue">#3751B5</color>
+    <color name="tab_indicator_color">#2fa2cf</color>
     <color name="tab_text_color">#A19D97</color>
     <color name="grey">#e7e6e3</color>
     <color name="orange">#ff4700</color>

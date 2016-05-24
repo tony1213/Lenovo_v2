@@ -1,11 +1,13 @@
 package com.overtech.lenovo.activity.business.tasklist.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
@@ -75,6 +77,7 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("接单");
                 vh.mButton.setTag("接单");
+                vh.mButton.setCompoundDrawables(null, null, null, null);
             } else {
                 vh.mTaskTime.setVisibility(View.VISIBLE);
                 vh.mTaskTime.setText("接单时间：" + task.confirm_datetime);
@@ -91,6 +94,9 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("预约");
                 vh.mButton.setTag("预约");
+                Drawable drawable = ctx.getResources().getDrawable(R.drawable.selector_task_appoint);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                vh.mButton.setCompoundDrawables(drawable, null, null, null);
             } else {
                 if (TextUtils.isEmpty(task.home_datetime)) {
                     vh.mTaskTime.setText("预约时间：" + task.appointment_datetime);
@@ -98,11 +104,15 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                     vh.mButton.setVisibility(View.VISIBLE);
                     vh.mButton.setText("改约");
                     vh.mButton.setTag("改约");
+                    Drawable drawable = ctx.getResources().getDrawable(R.drawable.selector_task_change);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    vh.mButton.setCompoundDrawables(drawable, null, null, null);
                 } else {
                     vh.mTaskTime.setText("预约时间：" + task.appointment_datetime);
                     vh.mOther.setText("已完成");
                     vh.mButton.setVisibility(View.GONE);
                     vh.mButton.setTag("");
+                    vh.mButton.setCompoundDrawables(null, null, null, null);
                 }
             }
         } else if (task.taskType.equals(TaskProcess.HOME)) {//到场
@@ -113,32 +123,39 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("到场");
                 vh.mButton.setTag("到场");
+                Drawable drawable = ctx.getResources().getDrawable(R.drawable.selector_task_visit);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                vh.mButton.setCompoundDrawables(drawable, null, null, null);
             } else {
                 vh.mTaskTime.setText("到场时间：" + task.home_datetime);
                 vh.mOther.setText("已到场");
                 vh.mButton.setVisibility(View.GONE);
                 vh.mButton.setTag("");
+                vh.mButton.setCompoundDrawables(null, null, null, null);
             }
 
         } else if (task.taskType.equals(TaskProcess.SOLUTION)) {
             vh.mTaskState.setText("解决");
-            if (TextUtils.isEmpty(task.solution)&&TextUtils.isEmpty(task.shutdown_datetime)) {
+            if (TextUtils.isEmpty(task.solution) && TextUtils.isEmpty(task.shutdown_datetime)) {
                 vh.mTaskTime.setText("");
                 vh.mOther.setText("请提交解决方案");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("解决方案");
                 vh.mButton.setTag("解决方案");
-            } else if(!TextUtils.isEmpty(task.solution)&&TextUtils.isEmpty(task.shutdown_datetime)) {
+                vh.mButton.setCompoundDrawables(null, null, null, null);
+            } else if (!TextUtils.isEmpty(task.solution) && TextUtils.isEmpty(task.shutdown_datetime)) {
                 vh.mTaskTime.setText(task.feedback_solved_datetime);
                 vh.mOther.setText(task.solution);
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("解决方案");
                 vh.mButton.setTag("解决方案");
-            }else{
+                vh.mButton.setCompoundDrawables(null, null, null, null);
+            } else {
                 vh.mTaskTime.setText(task.feedback_solved_datetime);
                 vh.mOther.setText(task.solution);
                 vh.mButton.setVisibility(View.GONE);
                 vh.mButton.setTag("");
+                vh.mButton.setCompoundDrawables(null, null, null, null);
             }
         } else if (task.taskType.equals(TaskProcess.SHUTDOWN)) {
             vh.mTaskState.setText("关单");
@@ -147,11 +164,13 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                 vh.mOther.setText("等待关单");
                 vh.mButton.setVisibility(View.GONE);
                 vh.mButton.setTag("");
+                vh.mButton.setCompoundDrawables(null, null, null, null);
             } else {
                 vh.mTaskTime.setText(task.shutdown_datetime);
                 vh.mOther.setText("已关单");
                 vh.mButton.setVisibility(View.GONE);
                 vh.mButton.setTag("");
+                vh.mButton.setCompoundDrawables(null, null, null, null);
             }
         } else if (task.taskType.equals(TaskProcess.EVALUATE)) {
             vh.mTaskState.setText("评价");
@@ -159,6 +178,7 @@ public class TaskInfoFragAdapter extends BaseAdapter {
             vh.mOther.setText(task.feedback);
             vh.mButton.setVisibility(View.GONE);
             vh.mButton.setTag("");
+            vh.mButton.setCompoundDrawables(null, null, null, null);
         } else if (task.taskType.equals(TaskProcess.ACCOUNT)) {
             if (datas.get(datas.size() - 1).taskType.equals(TaskProcess.ACCOUNT)) {
                 vh.mTaskState.setText("结单");
@@ -171,12 +191,14 @@ public class TaskInfoFragAdapter extends BaseAdapter {
             }
             vh.mButton.setTag("");
             vh.mButton.setVisibility(View.GONE);
+            vh.mButton.setCompoundDrawables(null, null, null, null);
         } else if (task.taskType.equals(TaskProcess.COMPLITE)) {
             vh.mTaskState.setText("完成");
             vh.mTaskTime.setText("");
             vh.mOther.setText("工单已完成");
             vh.mButton.setTag("");
             vh.mButton.setVisibility(View.GONE);
+            vh.mButton.setCompoundDrawables(null, null, null, null);
         }
 
         vh.mButton.setOnClickListener(new View.OnClickListener() {
@@ -195,14 +217,15 @@ public class TaskInfoFragAdapter extends BaseAdapter {
         TextView mTaskState;
         TextView mTaskTime;
         TextView mOther;
-        AppCompatButton mButton;
+        TextView mButton;
 
         public ViewHolder(View view) {
             mTaskState = (TextView) view
                     .findViewById(R.id.tv_task_process_state);
             mTaskTime = (TextView) view.findViewById(R.id.tv_task_process_time);
             mOther = (TextView) view.findViewById(R.id.tv_task_process_other);
-            mButton = (AppCompatButton) view.findViewById(R.id.bt_task_action);
+            mButton = (TextView) view.findViewById(R.id.bt_task_action);
+
         }
     }
 

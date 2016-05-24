@@ -24,7 +24,18 @@
                 android:layout_height="wrap_content"
                 android:text="通知标题"
                 android:textSize="30sp" />
-
+            <TextView
+                android:id="@+id/tv_msg_datetime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="default"
+                />
+            <TextView
+                android:id="@+id/tv_msg_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="default"
+                />
             <TextView
                 android:id="@+id/tv_msg_content"
                 android:layout_width="wrap_content"

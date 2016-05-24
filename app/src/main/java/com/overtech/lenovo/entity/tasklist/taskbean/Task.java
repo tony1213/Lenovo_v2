@@ -21,6 +21,8 @@ public class Task {
 
     public String title;//工单通知消息标题
     public String content;//工单通知消息内容
+    public String username;//工单通知消息发送人
+    public String datetime;//工单通知消息时间
 
     public String notification_item_time;//消息通知时间
     public String notification_item_who;//消息通知发送者

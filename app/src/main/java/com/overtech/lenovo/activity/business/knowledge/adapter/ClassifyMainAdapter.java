@@ -55,9 +55,9 @@ public class ClassifyMainAdapter extends BaseAdapter {
             hold = (Holder) view.getTag();
         }
         hold.txt.setText(list.get(arg0).knowledge_type);
-        hold.layout.setBackgroundColor(0xFFEBEBEB);
+        hold.layout.setBackgroundResource(R.mipmap.icon_knowledge_button_up);
         if (arg0 == position) {
-            hold.layout.setBackgroundColor(0xFFFFFFFF);
+            hold.layout.setBackgroundResource(R.mipmap.icon_knowledge_button_down);
         }
         return view;
     }

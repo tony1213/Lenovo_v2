@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -43,6 +44,8 @@ public class WorkorderMsgActivity extends BaseActivity {
     private List<Task> data;
     private WorkorderMsgAdapter adapter;
     private String uid;
+    private int curPage = 0;
+
     private UIHandler uiHandler = new UIHandler(this) {
         @Override
         public void handleMessage(Message msg) {
@@ -80,8 +83,18 @@ public class WorkorderMsgActivity extends BaseActivity {
                     if (bean.body.msg_latest_datetime != null) {
                         SharePreferencesUtils.put(WorkorderMsgActivity.this, SharedPreferencesKeys.LATEST_MSG_DATETIME, bean.body.msg_latest_datetime);
                     }
-                    adapter = new WorkorderMsgAdapter(data, WorkorderMsgActivity.this);
-                    recyclerView.setAdapter(adapter);
+                    if (adapter == null) {
+                        adapter = new WorkorderMsgAdapter(data, WorkorderMsgActivity.this);
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            adapter.pulldownFresh(bean.body.data);
+                        } else {
+                            adapter.changeLoadingState(WorkorderMsgAdapter.RELAX);
+                            adapter.addMore(bean.body.data);
+                        }
+                    }
+                    curPage = (adapter.getItemCount() - 1) / 6;
                     break;
             }
             if (swipeRefreshLayout.isRefreshing()) {
@@ -117,17 +130,38 @@ public class WorkorderMsgActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initData();
+                initData(0);
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    int lastPosition = layoutManager.findLastVisibleItemPosition();
+                    if (lastPosition == recyclerView.getAdapter().getItemCount() - 1) {
+                        initData(++curPage);
+                        adapter.changeLoadingState(WorkorderMsgAdapter.LOADING);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
         startProgress("加载中...");
-        initData();
+        initData(curPage);
     }
 
-    private void initData() {
+    private void initData(int page) {
         Requester requester = new Requester();
         requester.uid = uid;
         requester.cmd = 10040;
+        requester.body.put("page", page + "");
+        requester.body.put("size", "5");
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new com.squareup.okhttp.Callback() {
@@ -143,7 +177,7 @@ public class WorkorderMsgActivity extends BaseActivity {
             }
 
             @Override
-            public void onResponse(final Response response) throws IOException {
+            public void onResponse(Response response) throws IOException {
                 Message msg = uiHandler.obtainMessage();
                 if (response.isSuccessful()) {
                     String json = response.body().string();

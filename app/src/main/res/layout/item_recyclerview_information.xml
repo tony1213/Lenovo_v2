@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="张先生"
-                    android:textColor="@color/bg_qq_blue"
+                    android:textColor="@color/toolbar_bg"
                     android:textStyle="bold" />
 
                 <TextView

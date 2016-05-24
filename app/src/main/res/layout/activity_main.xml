@@ -11,7 +11,7 @@
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/bg_qq_blue"
+        android:background="@color/toolbar_bg"
         app:popupTheme="@style/MyPopupTheme"
         app:theme="@style/ToolTheme">
 
@@ -37,7 +37,7 @@
         android:id="@+id/view_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_qq_blue"
+        android:background="@mipmap/main_bg"
         android:orientation="horizontal" />
 
 </LinearLayout>

@@ -10,7 +10,7 @@
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/bg_qq_blue"
+        android:background="@color/toolbar_bg"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <TextView

@@ -3,21 +3,37 @@
     android:layout_height="match_parent"
     android:background="@mipmap/bg_signin"
     android:orientation="vertical">
-
+    <ImageView
+        android:layout_width="67dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="96dp"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="179dp"
-        android:text="大聚服务DJService"
+        android:layout_marginTop="20dp"
+        android:text="大聚服务"
+        android:typeface="sans"
         android:textColor="@color/main_white"
         android:textSize="27sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="DA JU SERVICE"
+        android:typeface="sans"
+        android:layout_marginTop="10dp"
+        android:textSize="27sp"
+        android:textColor="@color/main_white"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="6dp"
         android:text="网聚IT人才，助力客户业务发展"
         android:textColor="@color/main_white"
         android:textSize="14sp" />
@@ -76,6 +92,7 @@
         android:layout_height="@dimen/login_input_height"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="21dp"
+        android:textSize="16dp"
         android:background="@drawable/shape_input"
         android:text="@string/commom_login"
         android:textColor="@color/black" />

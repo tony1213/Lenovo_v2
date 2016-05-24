@@ -17,7 +17,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
             android:text="KFC徐家汇店（K00895）"
-            android:textColor="@color/bg_qq_blue"
+            android:textColor="@color/toolbar_bg"
             android:textSize="@dimen/text_size_title" />
 
         <android.support.v7.widget.AppCompatButton

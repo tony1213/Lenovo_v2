@@ -171,11 +171,13 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
                     break;
                 case StatusCode.LATEST_MSG_DATETIME_SUCCESS:
                     isLoginOut = false;
-                    if (bean.body.new_msg_nums.equals("0")) {
-                        mNewMsgNums.setVisibility(View.GONE);
-                    } else {
-                        mNewMsgNums.setVisibility(View.VISIBLE);
-                        mNewMsgNums.setText(bean.body.new_msg_nums);
+                    if (bean.body != null) {
+                        if (bean.body.new_msg_nums.equals("0")) {
+                            mNewMsgNums.setVisibility(View.GONE);
+                        } else {
+                            mNewMsgNums.setVisibility(View.VISIBLE);
+                            mNewMsgNums.setText(bean.body.new_msg_nums);
+                        }
                     }
                     break;
                 case StatusCode.WORKORDER_RECEIVE_SUCCESS:
@@ -250,6 +252,8 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
         noPage = (AppCompatTextView) mRootView.findViewById(R.id.tv_no_page);
         uid = ((MainActivity) getActivity()).getUid();
         latestMsgDatetime = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.LATEST_MSG_DATETIME, "");
+
+        Logger.e("latestMsgDatetime===="+latestMsgDatetime);
         mCity.setText(((CustomApplication) getActivity().getApplication()).city);
         initRefreshLayout();//下拉刷新
         initAD();
@@ -322,7 +326,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
         requester.cmd = 10042;
         requester.uid = uid;
         requester.body.put("msg_latest_datetime", latestMsgDatetime);
-        Request request = httpEngine.createRequest(SystemConfig.IP, new Gson().toJson(requester));
+        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -686,7 +690,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
 //                mNotification.setImageResource(R.drawable.anim_task_notification);
 //                AnimationDrawable anmation = (AnimationDrawable) mNotification.getDrawable();
 //                anmation.start();
-
+                mNewMsgNums.setVisibility(View.GONE);
                 Intent intent = new Intent(getActivity(), WorkorderMsgActivity.class);
 //                Intent intent=new Intent(getActivity(), TaskSolveActivity.class);
                 startActivity(intent);
