@@ -69,7 +69,6 @@ public class WorkorderMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        com.overtech.lenovo.debug.Logger.e("getItemCount===="+(data.size()+1));
         if (data == null) {
             return 0;
         } else {

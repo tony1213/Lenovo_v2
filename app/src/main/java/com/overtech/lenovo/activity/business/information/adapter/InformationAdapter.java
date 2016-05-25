@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.information.Information;
-import com.overtech.lenovo.utils.ImageCacheUtils;
+import com.overtech.lenovo.utils.ImageUtils;
 import com.overtech.lenovo.utils.ScreenTools;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.ninegrid.CustomImageView;
@@ -97,7 +97,7 @@ public class InformationAdapter extends Adapter<RecyclerView.ViewHolder> {
                     new Transformation() {
                         @Override
                         public Bitmap transform(Bitmap source) {
-                            return ImageCacheUtils.toRoundBitmap(source);
+                            return ImageUtils.toRoundBitmap(source);
                         }
 
                         @Override

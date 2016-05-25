@@ -10,7 +10,7 @@ public class Requester {
     public String os = "android";
     public String ver = "v1.0";
     public String lg = "zh";
-    public String tenantcode="LENOVO";
+    public String tenantcode="djtech";
     public int cmd;
     public String uid;
     public String pwd;

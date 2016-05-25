@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -41,10 +42,9 @@ import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.person.Person;
 import com.overtech.lenovo.http.webservice.UIHandler;
-import com.overtech.lenovo.utils.ImageCacheUtils;
+import com.overtech.lenovo.utils.ImageUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
-import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.overtech.lenovo.widget.popwindow.DimPopupWindow;
@@ -72,7 +72,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private LinearLayout setting;
     private String uid;
     public final int CAMERA = 0x1;
-    public final int PHOTO = 0x2;
+    public final int SELECT_PICK_KITKAT = 0x2;
+    public final int SELECT_PICK=0x3;
     private File camera;
     private Uri cameraUri;
     private String avatorPath;
@@ -110,7 +111,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                                 @Override
                                 public Bitmap transform(Bitmap source) {
                                     // TODO Auto-generated method stub
-                                    return ImageCacheUtils.toRoundBitmap(source);
+                                    return ImageUtils.toRoundBitmap(source);
                                 }
 
                                 @Override
@@ -271,10 +272,14 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void openPhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
-        startActivityForResult(intent, PHOTO);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/jpeg");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            startActivityForResult(intent, SELECT_PICK_KITKAT);
+        } else {
+            startActivityForResult(intent, SELECT_PICK);
+        }
     }
 
     private void openCamera() {
@@ -304,18 +309,31 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                     avatorPath = camera.getAbsolutePath();
                     String[] strings = avatorPath.split("\\.");
                     startUploadAvator(avatorPath, strings[strings.length - 1]);
-                    Bitmap bitmap = BitmapFactory.decodeFile(avatorPath);
-                    mAvator.setImageBitmap(ImageCacheUtils.toRoundBitmap(bitmap));
+                    Bitmap bitmap = ImageUtils.getSmallBitmap(avatorPath);
+                    mAvator.setImageBitmap(ImageUtils.toRoundBitmap(bitmap));
                 }
                 break;
-            case PHOTO:
+            case SELECT_PICK_KITKAT:
                 if (resultCode == Activity.RESULT_OK) {
-                    avatorPath = getPhoto(data.getData());
+                    avatorPath = ImageUtils.getPath(getActivity(),data.getData());
                     if (avatorPath != null) {
                         String[] strings = avatorPath.split("\\.");
                         startUploadAvator(avatorPath, strings[strings.length - 1]);
-                        Bitmap bitmap = BitmapFactory.decodeFile(avatorPath);
-                        mAvator.setImageBitmap(ImageCacheUtils.toRoundBitmap(bitmap));
+                        Bitmap bitmap =ImageUtils.getSmallBitmap(avatorPath);
+                        mAvator.setImageBitmap(ImageUtils.toRoundBitmap(bitmap));
+                    } else {
+                        Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", getActivity());
+                    }
+                }
+                break;
+            case SELECT_PICK:
+                if (resultCode == Activity.RESULT_OK) {
+                    avatorPath = ImageUtils.getPath(getActivity(),data.getData());
+                    if (avatorPath != null) {
+                        String[] strings = avatorPath.split("\\.");
+                        startUploadAvator(avatorPath, strings[strings.length - 1]);
+                        Bitmap bitmap =ImageUtils.getSmallBitmap(avatorPath);
+                        mAvator.setImageBitmap(ImageUtils.toRoundBitmap(bitmap));
                     } else {
                         Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", getActivity());
                     }
@@ -326,16 +344,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
     private void startUploadAvator(String avatorPath, String name) {
         startProgress("正在上传");
-        String fileStr = "";
-        try {
-            FileInputStream fis = new FileInputStream(avatorPath);
-            byte[] buffer = new byte[fis.available()];
-            while (fis.read(buffer) != -1) {
-                fileStr += Base64.encodeToString(buffer, Base64.DEFAULT);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String fileStr = ImageUtils.bitmapToString(avatorPath);
         Requester requester = new Requester();
         requester.cmd = 10013;
         requester.uid = uid;

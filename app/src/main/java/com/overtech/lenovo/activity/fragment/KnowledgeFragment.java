@@ -202,7 +202,7 @@ public class KnowledgeFragment extends BaseFragment {
                 Logger.e("searchview 搜索开始执行了");
                 if (!TextUtils.isEmpty(query)) {
 //                    searchView.onActionViewCollapsed();
-                    initData(10023, null, query);
+                    initData(10021, null, query);
                 }
                 return true;
             }

@@ -107,7 +107,7 @@ public class StoreInformationFragment extends BaseFragment {
                         TextView textView = new TextView(getActivity());
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         textView.setLayoutParams(params);
-                        textView.setText(remark.create_datetime + "[" + remark.create_user_name + "]" + remark.create_content);
+                        textView.setText(remark.create_datetime + " [" + remark.create_user_name + "] " +"\n"+ remark.create_content);
                         llStoreRemarks.addView(textView);
                     }
                     isRemarkFirstLoading = false;

@@ -7,9 +7,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
@@ -42,7 +44,7 @@ import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.person.Person;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.AppUtils;
-import com.overtech.lenovo.utils.ImageCacheUtils;
+import com.overtech.lenovo.utils.ImageUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.StackManager;
@@ -100,6 +102,9 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
      * 打开照相机的requestcode.
      */
     private final int CAMERA = 0x2;
+
+    private final int SELECT_PICK = 0x3;
+    private final int SELECT_PICK_KITKAT = 0x4;
     private File outFile;
     private Uri cameraUri;
     private String idcardPositivePath;
@@ -166,6 +171,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                             spCity.setSelection(i);
                         }
                     }
+                    spCity.setEnabled(false);
+
                     ArrayAdapter<Person.Type> adapter1 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.degree);
                     adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spEdu.setAdapter(adapter1);
@@ -174,6 +181,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                             spEdu.setSelection(i);
                         }
                     }
+                    spEdu.setEnabled(false);
+
                     ArrayAdapter<Person.Type> adapter2 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.english_ability);
                     adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spEnglish.setAdapter(adapter2);
@@ -182,6 +191,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                             spEnglish.setSelection(i);
                         }
                     }
+                    spEnglish.setEnabled(false);
 
                     ArrayAdapter<Person.Type> adapter3 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.self_orientation);
                     adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -191,6 +201,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                             spIdentity.setSelection(i);
                         }
                     }
+                    spIdentity.setEnabled(false);
+
                     ArrayAdapter<Person.Type> adapter4 = new ArrayAdapter<Person.Type>(PersonalSettingActivity.this, android.R.layout.simple_spinner_item, bean.body.type_of_id);
                     adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spIdStyle.setAdapter(adapter4);
@@ -199,12 +211,14 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                             spIdStyle.setSelection(i);
                         }
                     }
+                    spIdStyle.setEnabled(false);
+
                     etWorkYears.setText(bean.body.working_life);
                     etIdCard.setText(bean.body.idcard);
                     ImageLoader.getInstance().displayImage(bean.body.avator, ivAvator, R.mipmap.icon_avator_default, R.mipmap.icon_common_default_error, new Transformation() {
                         @Override
                         public Bitmap transform(Bitmap source) {
-                            return ImageCacheUtils.toRoundBitmap(source);
+                            return ImageUtils.toRoundBitmap(source);
                         }
 
                         @Override
@@ -429,7 +443,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                 requester.body.put("degree_id", ((Person.Type) spEdu.getSelectedItem())._id);
                 requester.body.put("english_id", ((Person.Type) spEnglish.getSelectedItem())._id);
                 requester.body.put("working_life", etWorkYears.getText().toString().trim());
-                requester.body.put("self_orientate_id", ((Person.Type) spIdentity.getSelectedItem())._id);
+                requester.body.put("self_orientation_id", ((Person.Type) spIdentity.getSelectedItem())._id);
                 requester.body.put("idcard_type_id", ((Person.Type) spIdStyle.getSelectedItem())._id);
                 requester.body.put("idcard", id);
                 Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
@@ -467,25 +481,16 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         }
     }
 
-    /**
-     * 获取拍照后的图片的路径
-     */
-    private String getPhotoPath(Uri imageUri) {
-        ContentResolver resolver = getContentResolver();
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = resolver.query(imageUri, proj, null, null, null);
-        int columIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToNext()) {
-            return cursor.getString(columIndex);
-        }
-        return null;
-    }
 
     private void openPhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
-        startActivityForResult(intent, PHOTO);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/jpeg");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            startActivityForResult(intent, SELECT_PICK_KITKAT);
+        } else {
+            startActivityForResult(intent, SELECT_PICK);
+        }
     }
 
     private void openCamera() {
@@ -546,7 +551,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                         if (idcardPositivePath != null) {
                             String[] strings = idcardPositivePath.split("\\.");
                             startUploadIdPositive(idcardPositivePath, strings[strings.length - 1]);
-                            ivPositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardPositivePath));
+                            ivPositiveIdcard.setImageBitmap(ImageUtils.getSmallBitmap(idcardPositivePath));
                         } else {
                             Utilities.showToast("获取相机图片失败，请重新尝试或使用相册", this);
                         }
@@ -556,32 +561,63 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                         if (idcardOppositePath != null) {
                             String[] strings = idcardOppositePath.split("\\.");
                             startUploadIdOpposite(idcardOppositePath, strings[strings.length - 1]);
-                            ivOppositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardOppositePath));
+                            ivOppositiveIdcard.setImageBitmap(ImageUtils.getSmallBitmap(idcardOppositePath));
                         } else {
                             Utilities.showToast("获取相机图片失败，请重新尝试或使用相册", this);
                         }
                     }
                 }
                 break;
-            case PHOTO:
+            case SELECT_PICK:
+                Logger.e("select_pick=====" + data.getDataString());
+
                 if (resultCode == Activity.RESULT_OK) {
+                    Logger.e("获取照片的路径===" + data.getDataString());
                     if (curState == 0) {
-                        idcardPositivePath = getPhotoPath(data.getData());
+                        idcardPositivePath = ImageUtils.getPath(this, data.getData());
                         Logger.e("正面路径" + idcardPositivePath);
                         if (idcardPositivePath != null) {
                             String[] strings = idcardPositivePath.split("\\.");
                             startUploadIdPositive(idcardPositivePath, strings[strings.length - 1]);
-                            ivPositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardPositivePath));
+                            ivPositiveIdcard.setImageBitmap(ImageUtils.getSmallBitmap(idcardPositivePath));
                         } else {
                             Utilities.showToast("获取相册图片失败,请重新尝试或使用相机", this);
                         }
                     } else if (curState == 1) {
-                        idcardOppositePath = getPhotoPath(data.getData());
+                        idcardOppositePath = ImageUtils.getPath(this, data.getData());
                         Logger.e("反面路径" + idcardPositivePath);
                         if (idcardOppositePath != null) {
                             String[] strings = idcardOppositePath.split("\\.");
                             startUploadIdOpposite(idcardOppositePath, strings[strings.length - 1]);
-                            ivOppositiveIdcard.setImageBitmap(BitmapFactory.decodeFile(idcardOppositePath));
+                            ivOppositiveIdcard.setImageBitmap(ImageUtils.getSmallBitmap(idcardOppositePath));
+                        } else {
+                            Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", this);
+                        }
+                    }
+                }
+                break;
+            case SELECT_PICK_KITKAT:
+                Logger.e("select_pick_kitkat====" + data.getDataString());
+
+                if (resultCode == Activity.RESULT_OK) {
+                    Logger.e("获取照片的路径===" + data.getDataString());
+                    if (curState == 0) {
+                        idcardPositivePath = ImageUtils.getPath(this, data.getData());
+                        Logger.e("正面路径" + idcardPositivePath);
+                        if (idcardPositivePath != null) {
+                            String[] strings = idcardPositivePath.split("\\.");
+                            startUploadIdPositive(idcardPositivePath, strings[strings.length - 1]);
+                            ivPositiveIdcard.setImageBitmap(ImageUtils.getSmallBitmap(idcardPositivePath));
+                        } else {
+                            Utilities.showToast("获取相册图片失败,请重新尝试或使用相机", this);
+                        }
+                    } else if (curState == 1) {
+                        idcardOppositePath = ImageUtils.getPath(this, data.getData());
+                        Logger.e("反面路径" + idcardPositivePath);
+                        if (idcardOppositePath != null) {
+                            String[] strings = idcardOppositePath.split("\\.");
+                            startUploadIdOpposite(idcardOppositePath, strings[strings.length - 1]);
+                            ivOppositiveIdcard.setImageBitmap(ImageUtils.getSmallBitmap(idcardOppositePath));
                         } else {
                             Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", this);
                         }
@@ -593,16 +629,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
 
     private void startUploadIdPositive(String path, String name) {
         startProgress("正在上传");
-        String fileStr = "";
-        try {
-            FileInputStream fis = new FileInputStream(path);
-            byte[] buffer = new byte[fis.available()];
-            while (fis.read(buffer) != -1) {
-                fileStr += Base64.encodeToString(buffer, Base64.DEFAULT);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String fileStr = ImageUtils.bitmapToString(path);
         Requester requester = new Requester();
         requester.cmd = 10013;
         requester.uid = uid;
@@ -643,16 +670,7 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
 
     private void startUploadIdOpposite(String path, String name) {
         startProgress("正在上传");
-        String fileStr = "";
-        try {
-            FileInputStream fis = new FileInputStream(path);
-            byte[] buffer = new byte[fis.available()];
-            while (fis.read(buffer) != -1) {
-                fileStr += Base64.encodeToString(buffer, Base64.DEFAULT);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String fileStr = ImageUtils.bitmapToString(path);
         Requester requester = new Requester();
         requester.cmd = 10013;
         requester.uid = uid;

@@ -66,9 +66,10 @@ public class WorkorderAppointDialog extends DialogFragment {
                         int month = mDatePicker.getMonth();//月份是从0月开始
                         int day = mDatePicker.getDayOfMonth();
                         int hour = mTimePicker.getCurrentHour();
+                        Logger.e("TimePicker选择的时间====="+hour);
                         int minute = mTimePicker.getCurrentMinute();
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, month, day, hour, minute);
                         String dateStr = sdf.format(calendar.getTime());

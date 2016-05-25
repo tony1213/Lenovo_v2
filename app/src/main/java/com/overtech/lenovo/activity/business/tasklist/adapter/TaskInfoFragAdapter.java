@@ -88,7 +88,7 @@ public class TaskInfoFragAdapter extends BaseAdapter {
             }
         } else if (task.taskType.equals(TaskProcess.APPOINT)) {//订单预约时的业务
             vh.mTaskState.setText("预约");
-            if (TextUtils.isEmpty(task.appointment_datetime)) {
+            if (TextUtils.isEmpty(task.appointment_home_datetime)) {
                 vh.mOther.setText("请和报修人员预约");
                 vh.mTaskTime.setText("");
                 vh.mButton.setVisibility(View.VISIBLE);
@@ -99,7 +99,7 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                 vh.mButton.setCompoundDrawables(drawable, null, null, null);
             } else {
                 if (TextUtils.isEmpty(task.home_datetime)) {
-                    vh.mTaskTime.setText("预约时间：" + task.appointment_datetime);
+                    vh.mTaskTime.setText("预约时间：" + task.appointment_home_datetime);
                     vh.mOther.setText("已预约");
                     vh.mButton.setVisibility(View.VISIBLE);
                     vh.mButton.setText("改约");
@@ -108,7 +108,7 @@ public class TaskInfoFragAdapter extends BaseAdapter {
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                     vh.mButton.setCompoundDrawables(drawable, null, null, null);
                 } else {
-                    vh.mTaskTime.setText("预约时间：" + task.appointment_datetime);
+                    vh.mTaskTime.setText("预约时间：" + task.appointment_home_datetime);
                     vh.mOther.setText("已完成");
                     vh.mButton.setVisibility(View.GONE);
                     vh.mButton.setTag("");
@@ -118,7 +118,7 @@ public class TaskInfoFragAdapter extends BaseAdapter {
         } else if (task.taskType.equals(TaskProcess.HOME)) {//到场
             vh.mTaskState.setText("到场");
             if (TextUtils.isEmpty(task.home_datetime)) {
-                vh.mTaskTime.setText("到场时间：" + task.appointment_home_datetime);
+                vh.mTaskTime.setText("");
                 vh.mOther.setText("请按时到场");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("到场");
