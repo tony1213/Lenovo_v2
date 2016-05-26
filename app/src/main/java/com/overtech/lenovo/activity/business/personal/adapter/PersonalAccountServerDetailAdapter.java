@@ -36,9 +36,23 @@ public class PersonalAccountServerDetailAdapter extends RecyclerView.Adapter<Per
         PersonalAccount.Workorder data = datas.get(position);
         holder.workorder_code.setText(data.workorder_code);
         holder.datetime.setText(data.datetime);
-        holder.issue_description.setText(data.issue_type);
+        holder.issue_description.setText(data.issue_description);
         holder.issue_type.setText(data.issue_type);
-        holder.taskType.setText(data.task_typp);
+        if (data.task_type.equals("0")) {
+            holder.taskType.setText("待接单");
+        } else if (data.task_type.equals("1")) {
+            holder.taskType.setText("待预约");
+        } else if (data.task_type.equals("2")) {
+            holder.taskType.setText("等待上门");
+        } else if(data.task_type.equals("3")){
+            holder.taskType.setText("待解决");
+        }else if (data.task_type.equals("4")) {
+            holder.taskType.setText("待关单");
+        } else if (data.task_type.equals("5")) {
+            holder.taskType.setText("待结单");
+        } else {
+            holder.taskType.setText("完成");
+        }
     }
 
     @Override

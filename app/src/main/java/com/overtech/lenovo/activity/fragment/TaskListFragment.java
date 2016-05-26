@@ -508,6 +508,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
         // TODO Auto-generated method stub
         Intent intent = new Intent(getActivity(), TaskInformationActivity.class);
         intent.putExtra("workorder_code", datas.get(position).workorder_code);
+        intent.putExtra("avator_img",datas.get(position).taskLogo);
         startActivity(intent);
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.overtech.lenovo.R;
@@ -40,6 +41,7 @@ public class PersonalAccountDetailActivity extends BaseActivity {
     private Toolbar toolBar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private LinearLayout noPageUI;
     private PersonalAccountDetailAdapter adapter;
     private String uid;
     private UIHandler uiHandler = new UIHandler(this) {
@@ -83,8 +85,15 @@ public class PersonalAccountDetailActivity extends BaseActivity {
                     Utilities.showToast(bean.msg, PersonalAccountDetailActivity.this);
                     break;
                 case StatusCode.PERSONAL_ACCOUNT_DETAIL_SUCCESS:
-                    adapter = new PersonalAccountDetailAdapter(PersonalAccountDetailActivity.this, bean.body.data);
-                    recyclerView.setAdapter(adapter);
+                    if(bean.body==null||bean.body.data==null||bean.body.data.size()==0){
+                        swipeRefreshLayout.setVisibility(View.GONE);
+                        noPageUI.setVisibility(View.VISIBLE);
+                    }else{
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        noPageUI.setVisibility(View.GONE);
+                        adapter = new PersonalAccountDetailAdapter(PersonalAccountDetailActivity.this, bean.body.data);
+                        recyclerView.setAdapter(adapter);
+                    }
                     break;
             }
             if (swipeRefreshLayout.isRefreshing()) {
@@ -105,6 +114,7 @@ public class PersonalAccountDetailActivity extends BaseActivity {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolBar = (Toolbar) findViewById(R.id.tool_bar);
+        noPageUI= (LinearLayout) findViewById(R.id.ll_nopage);
 
         setSupportActionBar(toolBar);
         ActionBar actionBar = getSupportActionBar();

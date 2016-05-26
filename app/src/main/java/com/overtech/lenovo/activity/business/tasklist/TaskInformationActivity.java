@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
@@ -24,6 +25,7 @@ import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
+import com.overtech.lenovo.widget.bitmap.ImageLoader;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -39,14 +41,16 @@ public class TaskInformationActivity extends BaseActivity {
     private TextView tvContractDate;
     private TextView tvContractPartyA;
     private TextView tvContractPartyB;
+    private ImageView ivAvator;
     private String workorder_code;
     private String uid;
+    private String avator;
     private UIHandler uiHandler = new UIHandler(this) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String json = (String) msg.obj;
-            Logger.e("项目说明："+json);
+            Logger.e("项目说明：" + json);
             TaskBean bean = gson.fromJson(json, TaskBean.class);
             if (bean == null) {
                 stopProgress();
@@ -63,9 +67,9 @@ public class TaskInformationActivity extends BaseActivity {
                 StackManager.getStackManager().popAllActivitys();
                 return;
             }
-            if(st==1){
+            if (st == 1) {
                 stopProgress();
-                Utilities.showToast(bean.msg,TaskInformationActivity.this);
+                Utilities.showToast(bean.msg, TaskInformationActivity.this);
                 return;
             }
             switch (msg.what) {
@@ -97,6 +101,7 @@ public class TaskInformationActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         workorder_code = getIntent().getStringExtra("workorder_code");
+        avator = getIntent().getStringExtra("avator_img");
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -117,7 +122,9 @@ public class TaskInformationActivity extends BaseActivity {
         tvContractDate = (TextView) findViewById(R.id.tv_contract_date);
         tvContractPartyA = (TextView) findViewById(R.id.tv_contract_party_a);
         tvContractPartyB = (TextView) findViewById(R.id.tv_contract_party_b);
+        ivAvator = (ImageView) findViewById(R.id.iv_avator);
         initData();
+        ImageLoader.getInstance().displayImage(avator, ivAvator);
     }
 
     private void initData() {

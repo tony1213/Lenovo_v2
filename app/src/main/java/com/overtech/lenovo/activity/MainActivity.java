@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,6 +17,8 @@ import com.overtech.lenovo.activity.fragment.KnowledgeFragment;
 import com.overtech.lenovo.activity.fragment.PersonalFragment;
 import com.overtech.lenovo.activity.fragment.TaskListFragment;
 import com.overtech.lenovo.activity.fragment.callback.FragmentCallback;
+import com.overtech.lenovo.debug.Logger;
+import com.overtech.lenovo.entity.information.Information;
 import com.overtech.lenovo.utils.FragmentUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -109,9 +112,21 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (mCurrentFragment instanceof InformationFragment) {
+            View v = getCurrentFocus();
+            if (Utilities.isShouldHideInput(v, ev)) {
+                Utilities.hideSoftInput(v.getWindowToken(), this);
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (mCurrentFragment instanceof InformationFragment) {
-            if (informationFragment.llCommentUpContainer.getVisibility() == View.VISIBLE) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && informationFragment.llCommentUpContainer.getVisibility() == View.VISIBLE) {
+                Logger.e("main_activity===onKeyDown执行了--");
                 informationFragment.llCommentUpContainer.setVisibility(View.GONE);
                 return true;
             }

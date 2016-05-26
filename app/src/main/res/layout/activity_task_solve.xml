@@ -131,7 +131,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -152,14 +153,15 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_task_info_frag_button_bg"
                         android:text="拍照"
-                        android:visibility="gone"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_large"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <GridView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:numColumns="2" />
+
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/bt_submit_issue"
                     android:layout_width="wrap_content"

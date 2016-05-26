@@ -20,6 +20,6 @@ public class PersonalAccount {
         public String isPay;
         public String issue_type;
         public String issue_description;
-        public String task_typp;
+        public String task_type;
     }
 }

@@ -1,5 +1,6 @@
 package com.overtech.lenovo.activity.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -12,7 +13,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -137,6 +141,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     adapter.notifyDataSetChanged();
                     etComment.setText("");
                     llCommentUpContainer.setVisibility(View.GONE);
+                    Utilities.hideSoftInput(etComment.getWindowToken(),getActivity());
                     break;
                 case StatusCode.INFORMATION_COMMENT_RESPONSE_SUCCESS:
 
@@ -159,13 +164,23 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         uid = ((MainActivity) getActivity()).getUid();
-        actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-        actionBar.show();
-        actionBar.setTitle("");
-        title = (TextView) getActivity().findViewById(R.id.tv_toolbar_title);
-        title.setText("信息");
-        title.setVisibility(View.VISIBLE);
+        initToolbar();
         initRefreshLayout();
+        initRecyclerView();
+        initBottomCommon();
+
+        startProgress("加载中...");
+        initData(curPage);
+    }
+
+    private void initBottomCommon() {
+        llCommentUpContainer = (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
+        etComment = (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
+        btComment = (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
+        btComment.setOnClickListener(this);
+    }
+
+    private void initRecyclerView() {
         mInformation = (RecyclerView) mRootView.findViewById(R.id.recycler_information);
         mInformation.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         adapter = new InformationAdapter(getActivity());
@@ -174,17 +189,23 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void buttonClick(View v, int position, int contentPosition, Information.Comment comment) {
                 // TODO Auto-generated method stub
+                if (v instanceof ImageView) {
+                    Logger.e("buttonClick===imageView" + true);
+                    etComment.setHint("");
+                } else if (v instanceof TextView) {
+                    Logger.e("buttonCLick====textView" + true);
+                    etComment.setHint("回复：" +comment.comment_user);
+                } else {
+                    Logger.e("buttonClick=====都不是");
+                }
                 llCommentUpContainer.setVisibility(View.VISIBLE);
-                etComment.setFocusable(true);
+                etComment.requestFocus();
+//                etComment.setFocusable(true);
+//                etComment.setFocusableInTouchMode(true);
                 etComment.setTag(new Object[]{position, ((InformationAdapter) mInformation.getAdapter()).getItem(position).post_id, comment, contentPosition});
-
+                Utilities.showSoftInput(getActivity());
             }
         });
-        mInformation.setAdapter(adapter);
-        llCommentUpContainer = (LinearLayout) mRootView.findViewById(R.id.ll_comment_upload_container);
-        etComment = (AppCompatEditText) mRootView.findViewById(R.id.et_comment);
-        btComment = (AppCompatButton) mRootView.findViewById(R.id.bt_comment);
-
         mInformation.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -201,12 +222,17 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                 }
             }
         });
+        mInformation.setAdapter(adapter);
 
+    }
 
-        llCommentUpContainer.setVisibility(View.GONE);
-        btComment.setOnClickListener(this);
-        startProgress("加载中...");
-        initData(curPage);
+    private void initToolbar() {
+        actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        actionBar.show();
+        actionBar.setTitle("");
+        title = (TextView) getActivity().findViewById(R.id.tv_toolbar_title);
+        title.setText("信息");
+        title.setVisibility(View.VISIBLE);
     }
 
     private void initRefreshLayout() {

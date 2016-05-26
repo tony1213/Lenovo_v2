@@ -203,13 +203,16 @@ public class KnowledgeFragment extends BaseFragment {
                 if (!TextUtils.isEmpty(query)) {
 //                    searchView.onActionViewCollapsed();
                     initData(10021, null, query);
+                }else{
+                    initData(10021, "0", null);
                 }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                Logger.e("onQueryTextChange==newText===="+newText.length()+"===="+newText);
+                return true;
             }
         });
     }
@@ -220,6 +223,7 @@ public class KnowledgeFragment extends BaseFragment {
             case R.id.menu_contract:
 //                popupWindow.showAtLocation(toolbar, Gravity.NO_GRAVITY, toolbar.getWidth() / 5 * 3, toolbar.getHeight());
                 PopupWindowCompat.showAsDropDown(popupWindow, toolbar, 0, 0, GravityCompat.END);
+                searchView.onActionViewCollapsed();
                 return true;
             default:
 //                Utilities.showToast("默认支持", getActivity());
@@ -234,6 +238,7 @@ public class KnowledgeFragment extends BaseFragment {
         if (!hidden) {
             title.setVisibility(View.VISIBLE);
             title.setText("知识");
+            initContractData();
         } else {
             title.setVisibility(View.GONE);
         }

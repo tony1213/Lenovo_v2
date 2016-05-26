@@ -29,14 +29,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="单        号:"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_workorder_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="92374"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

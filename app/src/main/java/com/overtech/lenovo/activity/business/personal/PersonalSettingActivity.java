@@ -155,8 +155,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     }
                     if (bean.body.isCertificated.equals("0")) {
                         tvCertificateStatus.setText("尚未通过认证，请完善信息进行认证");
+                        tvCertificateStatus.setTextColor(getResources().getColor(R.color.lable_red));
                     } else if (bean.body.isCertificated.equals("1")) {
                         tvCertificateStatus.setText("通过认证日期：" + bean.body.certificate_datetime);
+                        tvCertificateStatus.setTextColor(getResources().getColor(R.color.blue));
                     }
                     etPhone.setText(bean.body.mobile);
                     etQQ.setText(bean.body.qq);
@@ -233,8 +235,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
                     Utilities.showToast(bean.msg, PersonalSettingActivity.this);
                     if (bean.body.isCertificated.equals("0")) {
                         tvCertificateStatus.setText("尚未通过认证，请完善信息进行认证");
+                        tvCertificateStatus.setTextColor(getResources().getColor(R.color.lable_red));
                     } else if (bean.body.isCertificated.equals("1")) {
                         tvCertificateStatus.setText("通过认证时间：" + bean.body.certificate_datetime);
+                        tvCertificateStatus.setTextColor(getResources().getColor(R.color.blue));
                     }
                     etPhone.setEnabled(false);
                     etQQ.setEnabled(false);
