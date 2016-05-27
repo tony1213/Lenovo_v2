@@ -49,16 +49,10 @@ public class ClassifyMoreAdapter extends BaseAdapter {
             hold = (Holder) view.getTag();
         }
         hold.txt.setText(list.get(arg0).subject);
-        hold.txt.setTextColor(0xFF666666);
-        if (arg0 == position) {
-            hold.txt.setTextColor(0xFFFF8C00);
-        }
+        hold.txt.setTextColor(0xaaFF8C00);
         return view;
     }
 
-    public void setSelectItem(int position) {
-        this.position = position;
-    }
 
     private static class Holder {
         TextView txt;

@@ -47,7 +47,7 @@ public class WorkorderReceiveDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("你确定要接此单？")
-                .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (type == WorkorderReceiveDialog.MAINACTIVITY) {
@@ -57,7 +57,7 @@ public class WorkorderReceiveDialog extends DialogFragment {
                         }
                     }
                 })
-                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                .setPositiveButton("接单", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (type == WorkorderReceiveDialog.MAINACTIVITY) {

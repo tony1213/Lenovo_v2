@@ -39,7 +39,7 @@ public class PersonalBirthdayDialog extends DialogFragment {
                         int year = datePicker.getYear();
                         int month = datePicker.getMonth() + 1;
                         int day = datePicker.getDayOfMonth();
-                        ((PersonalSettingActivity) getActivity()).doNegativeClick(year + "-" + month + "-" + day);
+                        ((PersonalSettingActivity) getActivity()).doPositiveClick(year + "-" + month + "-" + day);
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

@@ -22,14 +22,25 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="123dp"
-                    android:background="@mipmap/icon_mine_title_bg">
+                    android:background="@color/black">
 
                     <ImageView
                         android:id="@+id/iv_avator"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_centerInParent="true"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_centerHorizontal="true"
                         android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/iv_avator"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/main_white"
+                        android:padding="2dp"
+                        android:textSize="@dimen/text_size_info" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -82,15 +93,16 @@
                     <android.support.v7.widget.AppCompatButton
                         android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:minHeight="26dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="20dp"
-                        android:paddingLeft="4dp"
-                        android:textSize="@dimen/text_size_task_info"
                         android:background="@drawable/selector_withdraw"
+                        android:minHeight="26dp"
+                        android:paddingLeft="4dp"
                         android:text="提现"
-                        android:textColor="@color/main_white" />
+                        android:textColor="@color/main_white"
+                        android:textSize="@dimen/text_size_task_info"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <LinearLayout

@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.overtech.lenovo.R;
@@ -85,8 +86,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private AppCompatSpinner spIdStyle;
     private AppCompatEditText etIdCard;
 
-    private AppCompatButton btUploadPositive;
-    private AppCompatButton btUploadOppositive;
+    private LinearLayout llUploadPositive;
+    private LinearLayout llUploadOppositive;
     private AppCompatButton btSaveUpload;
     private AppCompatCheckBox cbIdPositive;
     private AppCompatCheckBox cbIdOpposite;
@@ -304,8 +305,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         spIdStyle = (AppCompatSpinner) findViewById(R.id.sp_persoanl_id);
         etIdCard = (AppCompatEditText) findViewById(R.id.et_personal_idcard);
 
-        btUploadPositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_positive);
-        btUploadOppositive = (AppCompatButton) findViewById(R.id.bt_upload_idcard_opposite);
+        llUploadPositive = (LinearLayout) findViewById(R.id.ll_upload_idcard_positive);
+        llUploadOppositive = (LinearLayout) findViewById(R.id.ll_upload_idcard_opposite);
         btSaveUpload = (AppCompatButton) findViewById(R.id.bt_save_upload);
         ivPositiveIdcard = (AppCompatImageView) findViewById(R.id.iv_positive_idcard);
         ivOppositiveIdcard = (AppCompatImageView) findViewById(R.id.iv_oppositive_idcard);
@@ -315,8 +316,8 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         mEditTec.setOnClickListener(this);
         mEditCa.setOnClickListener(this);
         tvBirthday.setOnClickListener(this);
-        btUploadPositive.setOnClickListener(this);
-        btUploadOppositive.setOnClickListener(this);
+        llUploadPositive.setOnClickListener(this);
+        llUploadOppositive.setOnClickListener(this);
         btSaveUpload.setOnClickListener(this);
 
         setSupportActionBar(toolBar);//将toolbar设置成actionbar，清单文件中目前使用的是noactionbar 主题，如果改变后，此处必然会崩掉
@@ -402,11 +403,11 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
 //                PersonalBirthdayDialog birthdayDialog = PersonalBirthdayDialog.newInstance();
 //                birthdayDialog.show(ft, "personal_birthday");
                 break;
-            case R.id.bt_upload_idcard_positive:
+            case R.id.ll_upload_idcard_positive:
                 curState = 0;
                 showPopupWindow();
                 break;
-            case R.id.bt_upload_idcard_opposite:
+            case R.id.ll_upload_idcard_opposite:
                 curState = 1;
                 showPopupWindow();
                 break;
@@ -530,13 +531,10 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
         dimPopupWindow.showAtLocation(getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, getResources().getDimensionPixelOffset(getResources().getIdentifier("navigation_bar_height", "dimen", "android")));
     }
 
-    public void doNegativeClick(String selectTime) {
+    public void doPositiveClick(String selectTime) {
         tvBirthday.setText(selectTime);
     }
 
-    public void doPositiveClick() {
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

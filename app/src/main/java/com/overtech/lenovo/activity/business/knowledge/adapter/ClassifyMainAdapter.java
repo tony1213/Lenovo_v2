@@ -73,7 +73,9 @@ public class ClassifyMainAdapter extends BaseAdapter {
     public void setData(List<Knowledges.KnowledgeAndContract> datas) {
         this.list=datas;
     }
-
+    public List<Knowledges.KnowledgeAndContract> getData(){
+        return list;
+    }
     private static class Holder {
         LinearLayout layout;
         TextView txt;

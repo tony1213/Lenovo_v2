@@ -157,7 +157,7 @@ public class TaskListAdapter extends Adapter<TaskListAdapter.MyViewHolder> {
             holder.taskWaitEvaluate.setVisibility(View.GONE);
         } else if (task.taskType.equals("4")) {
             holder.taskWaitEvaluate.setVisibility(View.VISIBLE);
-            holder.taskWaitEvaluate.setText("等待关单");
+            holder.taskWaitEvaluate.setText(R.string.task_wait_close);
             holder.btTaskType.setVisibility(View.GONE);
             holder.btTaskType.setTag("");
         } else if (task.taskType.equals("5")) {

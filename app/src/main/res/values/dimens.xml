@@ -23,4 +23,6 @@
     <dimen name="toolbat_height">34dp</dimen>
     <dimen name="toolbat_title">15dp</dimen>
     <dimen name="tablayout_height">33dp</dimen>
+
+    <dimen name="setting_item_height">48dp</dimen>
 </resources>

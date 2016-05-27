@@ -6,6 +6,7 @@
     <string name="common_input_username">请输入用户名</string>
     <string name="common_input_password">请输入密码</string>
     <string name="commom_lost_password">忘记密码?</string>
+    <string name="password_hint">6-20位字母或数字</string>
     <string name="common_register_account">注册新账号</string>
     <string name="common_submit">提交</string>
     <!-- App Common -->
@@ -62,12 +63,15 @@
     <string name="tasklist_money">金额:</string>
     <string name="tasklist_wait_evaluate">等待评价</string>
     <string name="tasklist_information">工单信息</string>
-    <string name="information_default1">星巴克门店运维项目3.1正式上线，第一阶段涉及江苏、浙江、安徽三个省，欢迎大家主动承接。请联系QQ:6657468,6657468@qq.com</string>
-    <string name="information_default2">[上海招聘] 招聘T2桌面工程师一名，税前6000，五险一金，2.15到岗。有意愿者请按标准简历模板（见知识库）填写后发至hr@dajutech.com</string>
-    <integer-array name="material_colors">
-        <item>@android:color/holo_red_light</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_blue_light</item>
-        <item>@android:color/holo_orange_light</item>
-    </integer-array>
+    <string name="task_wait_close">待关单</string>
+
+    <string name="task_detail">工单明细</string>
+    <string name="no_more_data">没有更多数据</string>
+    <string name="no_msg">暂无消息</string>
+    <string name="text_valid_msg">只能是字母数字或中文</string>
+    <string name="workorder_code">工单编号：</string>
+    <string name="contract_name">合同名称：</string>
+    <string name="workorder_receive_time">接单时间：</string>
+    <string name="workorder_basic_money">基础金额：</string>
+    <string name="pay_status">支付状态：</string>
 </resources>

@@ -113,12 +113,15 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     if (refreshLayout.isRefreshing()) {
                         adapter.addItem(datas);
                     } else {
+                        if (datas.size() == 0) {
+                            Utilities.showToast(getResources().getString(R.string.no_more_data), getActivity());
+                        }
                         adapter.addMoreItem(datas);
                         adapter.changeLoadMoreStatus(InformationAdapter.PULLUP_LOAD_MORE);
                         Logger.e("INformation Fragment 此时datas的大小" + datas.size());
                     }
 //
-                    curPage = datas.size() / 10;
+                    curPage = datas.size() / 6;
                     if (refreshLayout.isRefreshing()) {
                         refreshLayout.setRefreshing(false);
                     }
@@ -141,7 +144,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     adapter.notifyDataSetChanged();
                     etComment.setText("");
                     llCommentUpContainer.setVisibility(View.GONE);
-                    Utilities.hideSoftInput(etComment.getWindowToken(),getActivity());
+                    Utilities.hideSoftInput(etComment.getWindowToken(), getActivity());
                     break;
                 case StatusCode.INFORMATION_COMMENT_RESPONSE_SUCCESS:
 
@@ -194,7 +197,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     etComment.setHint("");
                 } else if (v instanceof TextView) {
                     Logger.e("buttonCLick====textView" + true);
-                    etComment.setHint("回复：" +comment.comment_user);
+                    etComment.setHint("回复：" + comment.comment_user);
                 } else {
                     Logger.e("buttonClick=====都不是");
                 }
@@ -263,7 +266,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
         requester.uid = uid;
         requester.cmd = 10050;
         requester.body.put("page", String.valueOf(page));
-        requester.body.put("size", "10");
+        requester.body.put("size", "5");
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new com.squareup.okhttp.Callback() {

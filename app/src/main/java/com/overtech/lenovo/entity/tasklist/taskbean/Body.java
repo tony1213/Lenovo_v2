@@ -18,6 +18,7 @@ public class Body {
     public String appointment_datetime;
     public String appointment_home_datetime;
     public String home_datetime;
+    public String issue_description;
     public String solution;
     public String shutdown_datetime;
     public String feedback_solved_datetime;

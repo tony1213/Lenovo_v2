@@ -52,7 +52,7 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
             Logger.e("服务明细====" + json);
             PersonalAccount bean = gson.fromJson(json, PersonalAccount.class);
             if (bean == null) {
-                if(swipeRefreshLayout.isRefreshing()){
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 stopProgress();
@@ -60,7 +60,7 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
             }
             int st = bean.st;
             if (st == -1 || st == -2) {
-                if(swipeRefreshLayout.isRefreshing()){
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 stopProgress();
@@ -80,10 +80,10 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
                     Utilities.showToast(bean.msg, PersonalAccountServerDetailActivity.this);
                     break;
                 case StatusCode.PERSONAL_ACCOUNT_SERVER_SUCCESS:
-                    if(bean.body==null||bean.body.data==null||bean.body.data.size()==0){
+                    if (bean.body == null || bean.body.data == null || bean.body.data.size() == 0) {
                         swipeRefreshLayout.setVisibility(View.GONE);
                         noPageUI.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         swipeRefreshLayout.setVisibility(View.VISIBLE);
                         noPageUI.setVisibility(View.GONE);
                         adapter = new PersonalAccountServerDetailAdapter(PersonalAccountServerDetailActivity.this, bean.body.data);
@@ -91,7 +91,7 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
                     }
                     break;
             }
-            if(swipeRefreshLayout.isRefreshing()){
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
             }
             stopProgress();
@@ -109,12 +109,12 @@ public class PersonalAccountServerDetailActivity extends BaseActivity {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        noPageUI= (LinearLayout) findViewById(R.id.ll_nopage);
+        noPageUI = (LinearLayout) findViewById(R.id.ll_nopage);
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("服务明细");
+        actionBar.setTitle(R.string.task_detail);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

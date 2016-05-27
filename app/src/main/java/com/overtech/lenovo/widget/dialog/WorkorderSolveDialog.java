@@ -7,14 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.business.tasklist.TaskDetailActivity;
-import com.overtech.lenovo.utils.Utilities;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by Overtech on 16/4/21.
@@ -68,7 +64,7 @@ public class WorkorderSolveDialog extends DialogFragment {
                         } else {
                             String des = etIssueDescription.getText().toString().trim();
                             String sol = etSolve.getText().toString().trim();
-                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doSolveNegativeClick(des, sol);
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doSolvePositiveClick(des, sol);
                         }
                     }
                 })

@@ -36,7 +36,7 @@ public class WelcomeActivity extends BaseActivity {
             PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
             String versionName = info.versionName;
             int versionCode = info.versionCode;
-            tvVersion.setText(versionName + versionCode);
+            tvVersion.setText(versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

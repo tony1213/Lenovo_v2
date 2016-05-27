@@ -260,6 +260,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
         initRecyclerView();
         initNewMsg();
         initEvent();
+
     }
 
 
@@ -515,7 +516,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
     /**
      * 接单对话框确认
      */
-    public void doReceiveNegativeClick(final int position) {
+    public void doReceivePositiveClick(final int position) {
         startProgress("请等待接单结果");
         Utilities.showToast("您接单了" + position, getActivity());
         Task task = datas.get(position);
@@ -564,14 +565,13 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
     /**
      * 接单对话框取消
      */
-    public void doReceivePositiveClick(int position) {
-        Utilities.showToast("您取消了", getActivity());
+    public void doReceiveNegativeClick(int position) {
     }
 
     /**
      * 预约对话框确认
      */
-    public void doAppointNegativeClick(final int position, String selectTime) {
+    public void doAppointPositiveClick(final int position, String selectTime) {
         startProgress("预约中");
         Task task = datas.get(position);
         String workorderCode = task.workorder_code;
@@ -619,13 +619,13 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
     /**
      * 预约对话框取消
      */
-    public void doAppointPositiveClick(int position) {
+    public void doAppointNegativeClick(int position) {
     }
 
     /**
      * 到场对话框确认
      */
-    public void doHomeNegativeClick(final int position) {
+    public void doHomePositiveClick(final int position) {
         startProgress("加载中");
         Task task = datas.get(position);
         String workorderCode = task.workorder_code;
@@ -672,8 +672,7 @@ public class TaskListFragment extends BaseFragment implements View.OnClickListen
     /**
      * 到场对话框取消
      */
-    public void doHomePositiveClick(int position) {
-        Utilities.showToast("没有上门", getActivity());
+    public void doHomeNegativeClick(int position) {
     }
 
 

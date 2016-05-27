@@ -21,9 +21,10 @@ public class WorkorderMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context ctx;
     public static final int NORMAL = 0;
     public static final int LOADING_MORE_FOOTER = 1;
-    public static final int LOADING = 0;
-    public static final int RELAX = 1;
-    public int curLoadState;
+    public static final int LOADING = 0x0;
+    public static final int RELAX = 0x1;
+    public static final int NODATA=0x2;
+    public int curLoadState=-1;
 
     public WorkorderMsgAdapter(List<Task> data, Context ctx) {
         this.data = data;
@@ -63,6 +64,8 @@ public class WorkorderMsgAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ((LoadingMoreHolder) holder).tvLoadingMsg.setText("正在加载中...");
             } else if (curLoadState == RELAX) {
                 ((LoadingMoreHolder) holder).tvLoadingMsg.setText("上拉加载更多...");
+            }else if(curLoadState==NODATA){
+                (  (LoadingMoreHolder)holder).tvLoadingMsg.setText("没有更多数据");
             }
         }
     }

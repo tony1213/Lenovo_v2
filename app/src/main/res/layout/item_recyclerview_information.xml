@@ -11,7 +11,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        app:contentPadding="16dp">
+        app:contentPadding="8dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +36,6 @@
                     android:id="@+id/tv_information_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:text="张先生"
                     android:textColor="@color/toolbar_bg"
                     android:textStyle="bold" />
@@ -45,8 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:maxLines="4"
-                    android:text="@string/information_default1" />
+                    android:maxLines="4" />
 
                 <com.overtech.lenovo.widget.ninegrid.NineGridlayout
                     android:id="@+id/ninegrid_information"

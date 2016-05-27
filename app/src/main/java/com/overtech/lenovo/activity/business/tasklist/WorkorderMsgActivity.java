@@ -8,7 +8,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
@@ -41,6 +43,7 @@ public class WorkorderMsgActivity extends BaseActivity {
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private LinearLayout noDataPage;
     private List<Task> data;
     private WorkorderMsgAdapter adapter;
     private String uid;
@@ -80,18 +83,31 @@ public class WorkorderMsgActivity extends BaseActivity {
                     break;
                 case StatusCode.WORKORDER_MSG_SUCCESS:
                     data = bean.body.data;
-                    if (bean.body.msg_latest_datetime != null) {
+                    if (!TextUtils.isEmpty(bean.body.msg_latest_datetime)) {
                         SharePreferencesUtils.put(WorkorderMsgActivity.this, SharedPreferencesKeys.LATEST_MSG_DATETIME, bean.body.msg_latest_datetime);
                     }
                     if (adapter == null) {
                         adapter = new WorkorderMsgAdapter(data, WorkorderMsgActivity.this);
                         recyclerView.setAdapter(adapter);
+                        if(data.size()==0){
+                            adapter.changeLoadingState(WorkorderMsgAdapter.NODATA);
+                            noDataPage.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout.setVisibility(View.GONE);
+                        }else{
+                            noDataPage.setVisibility(View.GONE);
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         if (swipeRefreshLayout.isRefreshing()) {
                             adapter.pulldownFresh(bean.body.data);
                         } else {
-                            adapter.changeLoadingState(WorkorderMsgAdapter.RELAX);
-                            adapter.addMore(bean.body.data);
+                            if (data.size() == 0) {
+                                Utilities.showToast(getResources().getString(R.string.no_more_data), WorkorderMsgActivity.this);
+                                adapter.changeLoadingState(WorkorderMsgAdapter.NODATA);
+                            }else{
+                                adapter.changeLoadingState(WorkorderMsgAdapter.RELAX);
+                                adapter.addMore(bean.body.data);
+                            }
                         }
                     }
                     curPage = (adapter.getItemCount() - 1) / 6;
@@ -115,6 +131,7 @@ public class WorkorderMsgActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.rv_workorder_msg);
+        noDataPage= (LinearLayout) findViewById(R.id.ll_nopage);
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

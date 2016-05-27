@@ -169,7 +169,7 @@ public class StoreInformationFragment extends BaseFragment {
         });
     }
 
-    public void doNegativeClick(String content) {
+    public void doPositiveClick(String content) {
         if (TextUtils.isEmpty(content)) {
             Utilities.showToast("提交的内容为空", getActivity());
             return;

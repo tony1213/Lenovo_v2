@@ -137,7 +137,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -157,7 +157,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -177,7 +177,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -197,7 +197,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -217,12 +217,13 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="70dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:gravity="right"
                             android:text="所在城市"
                             android:textStyle="bold" />
@@ -230,14 +231,15 @@
                         <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/sp_personal_city"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/setting_item_height"
+                            android:layout_gravity="center"
                             android:layout_marginLeft="17dp"
                             android:enabled="false" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -292,7 +294,8 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
+                        android:layout_marginTop="8dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -305,7 +308,7 @@
                         <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/sp_personal_edu"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/setting_item_height"
                             android:layout_marginLeft="17dp"
                             android:enabled="false"
                             android:entries="@array/edu_type" />
@@ -313,7 +316,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -326,7 +329,7 @@
                         <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/sp_personal_english"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/setting_item_height"
                             android:layout_marginLeft="17dp"
                             android:enabled="false"
                             android:entries="@array/english_level" />
@@ -334,7 +337,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -347,14 +350,14 @@
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/et_personal_work_years"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/setting_item_height"
                             android:layout_marginLeft="17dp"
                             android:enabled="false" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -367,7 +370,7 @@
                         <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/sp_personal_identity"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/setting_item_height"
                             android:layout_marginLeft="17dp"
                             android:enabled="false"
                             android:entries="@array/self_orientation" />
@@ -411,7 +414,8 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
+                        android:layout_marginTop="8dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -424,7 +428,7 @@
                         <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/sp_persoanl_id"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/setting_item_height"
                             android:layout_marginLeft="17dp"
                             android:enabled="false"
                             android:entries="@array/id_card_type"
@@ -433,7 +437,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/setting_item_height"
                         android:orientation="horizontal">
 
                         <TextView
@@ -467,6 +471,7 @@
                             android:textStyle="bold" />
 
                         <LinearLayout
+                            android:id="@+id/ll_upload_idcard_positive"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="21dp"
@@ -479,10 +484,10 @@
                                 android:scaleType="centerCrop" />
 
                             <android.support.v7.widget.AppCompatButton
-                                android:id="@+id/bt_upload_idcard_positive"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@mipmap/icon_upload_bg"
+                                android:clickable="false"
                                 android:minHeight="20dp"
                                 android:minWidth="59dp"
                                 android:text="点击上传"
@@ -516,6 +521,7 @@
                             android:textStyle="bold" />
 
                         <LinearLayout
+                            android:id="@+id/ll_upload_idcard_opposite"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="21dp"
@@ -528,10 +534,10 @@
                                 android:scaleType="centerCrop" />
 
                             <android.support.v7.widget.AppCompatButton
-                                android:id="@+id/bt_upload_idcard_opposite"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@mipmap/icon_upload_bg"
+                                android:clickable="false"
                                 android:minHeight="20dp"
                                 android:minWidth="59dp"
                                 android:text="点击上传"

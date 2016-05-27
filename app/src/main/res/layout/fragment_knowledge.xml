@@ -63,7 +63,11 @@
             android:fastScrollEnabled="true"
             android:listSelector="#00ffffff"
             android:scrollbars="none" />
-
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="?android:listDivider"
+            />
         <ListView
             android:id="@+id/classify_morelist"
             android:layout_width="0dp"

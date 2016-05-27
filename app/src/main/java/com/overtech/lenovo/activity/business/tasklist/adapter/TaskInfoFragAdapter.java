@@ -89,8 +89,8 @@ public class TaskInfoFragAdapter extends BaseAdapter {
         } else if (task.taskType.equals(TaskProcess.APPOINT)) {//订单预约时的业务
             vh.mTaskState.setText("预约");
             if (TextUtils.isEmpty(task.appointment_home_datetime)) {
-                vh.mOther.setText("请和报修人员预约");
-                vh.mTaskTime.setText("");
+                vh.mOther.setText("");
+                vh.mTaskTime.setText("请和报修人员预约");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("预约");
                 vh.mButton.setTag("预约");
@@ -118,8 +118,8 @@ public class TaskInfoFragAdapter extends BaseAdapter {
         } else if (task.taskType.equals(TaskProcess.HOME)) {//到场
             vh.mTaskState.setText("到场");
             if (TextUtils.isEmpty(task.home_datetime)) {
-                vh.mTaskTime.setText("");
-                vh.mOther.setText("请按时到场");
+                vh.mTaskTime.setText("请按时到场");
+                vh.mOther.setText("");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("到场");
                 vh.mButton.setTag("到场");
@@ -137,8 +137,8 @@ public class TaskInfoFragAdapter extends BaseAdapter {
         } else if (task.taskType.equals(TaskProcess.SOLUTION)) {
             vh.mTaskState.setText("解决");
             if (TextUtils.isEmpty(task.solution) && TextUtils.isEmpty(task.shutdown_datetime)) {
-                vh.mTaskTime.setText("");
-                vh.mOther.setText("请提交解决方案");
+                vh.mTaskTime.setText("请提交解决方案");
+                vh.mOther.setText("");
                 vh.mButton.setVisibility(View.VISIBLE);
                 vh.mButton.setText("解决方案");
                 vh.mButton.setTag("解决方案");
@@ -160,8 +160,8 @@ public class TaskInfoFragAdapter extends BaseAdapter {
         } else if (task.taskType.equals(TaskProcess.SHUTDOWN)) {
             vh.mTaskState.setText("关单");
             if (TextUtils.isEmpty(task.shutdown_datetime)) {
-                vh.mTaskTime.setText("");
-                vh.mOther.setText("等待关单");
+                vh.mTaskTime.setText("等待关单");
+                vh.mOther.setText("");
                 vh.mButton.setVisibility(View.GONE);
                 vh.mButton.setTag("");
                 vh.mButton.setCompoundDrawables(null, null, null, null);
@@ -174,28 +174,28 @@ public class TaskInfoFragAdapter extends BaseAdapter {
             }
         } else if (task.taskType.equals(TaskProcess.EVALUATE)) {
             vh.mTaskState.setText("评价");
-            vh.mTaskTime.setText("");
-            vh.mOther.setText(task.feedback);
+            vh.mTaskTime.setText(task.feedback);
+            vh.mOther.setText("");
             vh.mButton.setVisibility(View.GONE);
             vh.mButton.setTag("");
             vh.mButton.setCompoundDrawables(null, null, null, null);
         } else if (task.taskType.equals(TaskProcess.ACCOUNT)) {
             if (datas.get(datas.size() - 1).taskType.equals(TaskProcess.ACCOUNT)) {
                 vh.mTaskState.setText("结单");
-                vh.mTaskTime.setText("");
-                vh.mOther.setText("未结单");
+                vh.mTaskTime.setText("未结单");
+                vh.mOther.setText("");
             } else {
                 vh.mTaskState.setText("结单");
-                vh.mTaskTime.setText("");
-                vh.mOther.setText("已结单");
+                vh.mTaskTime.setText("已结单");
+                vh.mOther.setText("");
             }
             vh.mButton.setTag("");
             vh.mButton.setVisibility(View.GONE);
             vh.mButton.setCompoundDrawables(null, null, null, null);
         } else if (task.taskType.equals(TaskProcess.COMPLITE)) {
             vh.mTaskState.setText("完成");
-            vh.mTaskTime.setText("");
-            vh.mOther.setText("工单已完成");
+            vh.mTaskTime.setText("工单已完成");
+            vh.mOther.setText("");
             vh.mButton.setTag("");
             vh.mButton.setVisibility(View.GONE);
             vh.mButton.setCompoundDrawables(null, null, null, null);

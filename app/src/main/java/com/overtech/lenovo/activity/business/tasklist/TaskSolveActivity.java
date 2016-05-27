@@ -29,6 +29,7 @@ import com.overtech.lenovo.entity.ResponseExceptBean;
 import com.overtech.lenovo.entity.tasklist.taskbean.Body;
 import com.overtech.lenovo.entity.tasklist.taskbean.TaskBean;
 import com.overtech.lenovo.http.webservice.UIHandler;
+import com.overtech.lenovo.utils.AppUtils;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
 import com.overtech.lenovo.utils.StackManager;
@@ -96,6 +97,8 @@ public class TaskSolveActivity extends BaseActivity implements View.OnClickListe
                     break;
                 case StatusCode.WORKORDER_SOLVE_ACTION_SUCCESS:
                     Utilities.showToast(bean.msg, TaskSolveActivity.this);
+                    setResult(Activity.RESULT_OK);
+                    finish();
                     break;
             }
             stopProgress();
@@ -111,6 +114,8 @@ public class TaskSolveActivity extends BaseActivity implements View.OnClickListe
     protected void afterCreate(Bundle savedInstanceState) {
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
         workorder_code = getIntent().getStringExtra("workorder_code");
+        issueDescription = getIntent().getStringExtra("issue_description");
+        solve = getIntent().getStringExtra("solve");
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         collapsingToolbarLayout.setTitle("解决方案");
@@ -138,6 +143,8 @@ public class TaskSolveActivity extends BaseActivity implements View.OnClickListe
         tvWorkorderCode.setText(workorder_code);
         btSubmitIssue.setOnClickListener(this);
         btOpenCamera.setOnClickListener(this);
+        etWorkorderIssueDescription.setText(issueDescription);
+        etWorkorderSolve.setText(solve);
     }
 
     @Override
@@ -154,7 +161,10 @@ public class TaskSolveActivity extends BaseActivity implements View.OnClickListe
                     Utilities.showToast("请输入解决方案", this);
                     return;
                 }
-
+                if (!AppUtils.isValidTagAndAlias(issueDescription) || !AppUtils.isValidTagAndAlias(solve)) {
+                    Utilities.showToast(getResources().getString(R.string.text_valid_msg), TaskSolveActivity.this);
+                    return;
+                }
                 upLoading();
                 break;
             case R.id.bt_open_camera:

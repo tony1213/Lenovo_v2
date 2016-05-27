@@ -28,22 +28,22 @@ public class WorkorderStoreRemarkDialog extends DialogFragment {
         final AppCompatEditText editText = new AppCompatEditText(getActivity());
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         editText.setLayoutParams(params);
-        editText.setHint("您对门店的建议");
+        editText.setHint("门店备注");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
                 .setTitle("说说")
                 .setView(editText)
-                .setNegativeButton("提交", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((TaskDetailActivity) getActivity()).storeInfoFrag.doNegativeClick(editText.getText().toString().trim());
-                    }
-                })
-                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                })
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ((TaskDetailActivity) getActivity()).storeInfoFrag.doPositiveClick(editText.getText().toString().trim());
                     }
                 });
 

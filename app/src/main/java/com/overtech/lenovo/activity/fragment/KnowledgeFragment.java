@@ -4,18 +4,18 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -62,6 +62,7 @@ public class KnowledgeFragment extends BaseFragment {
     private List<Knowledges.KnowledgeAndContract> contractDatas;
     private SearchView searchView;
     private PopupWindow popupWindow;
+    private View popupContentView;
     private ListView mainlist;
     private ListView morelist;
     private List<Map<String, Object>> mainList2;
@@ -80,7 +81,7 @@ public class KnowledgeFragment extends BaseFragment {
                 return;
             }
             int st = bean.st;
-            if (st == -2 || st == -1||st==500) {
+            if (st == -2 || st == -1 || st == 500) {
                 stopProgress();
                 if (!isLoginOut) {
                     isLoginOut = true;
@@ -103,6 +104,9 @@ public class KnowledgeFragment extends BaseFragment {
                 case StatusCode.KNOWLEDGE_PUBLIC_SUCCESS:
                     isLoginOut = false;
                     datas = bean.body.data;
+                    if (searchView != null) {
+                        searchView.onActionViewCollapsed();//搜索框关闭
+                    }
                     if (datas == null || datas.size() == 0) {
                         stopProgress();
                         Utilities.showToast("无数据", getActivity());
@@ -120,7 +124,6 @@ public class KnowledgeFragment extends BaseFragment {
                     mainlist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                     if (moreAdapter == null) {
                         moreAdapter = new ClassifyMoreAdapter(getActivity(), datas.get(0).knowledges);
-                        moreAdapter.setSelectItem(0);
                         morelist.setAdapter(moreAdapter);
                     } else {
                         moreAdapter.setData(datas.get(0).knowledges);
@@ -130,18 +133,21 @@ public class KnowledgeFragment extends BaseFragment {
                     break;
                 case StatusCode.KNOWLEDGE_CONTRACT_SUCCESS:
                     isLoginOut = false;
-                    contractDatas = bean.body.data;
-//                    if (adapter == null) {
-//                        adapter = new ContractAdapter(contractDatas, getActivity());
-                    adapter = new ArrayAdapter<Knowledges.KnowledgeAndContract>(getActivity(), android.R.layout.simple_spinner_item, contractDatas);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    lvContracts.setAdapter(adapter);
-//                    } else {
-////                        adapter.setData(contractDatas);
-//                        adapter.
-//                        adapter.notifyDataSetChanged();
-//                    }
 
+                    if (contractDatas != null) {
+                        contractDatas.clear();
+                        contractDatas.addAll(bean.body.data);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        contractDatas = bean.body.data;
+                        adapter = new ArrayAdapter<Knowledges.KnowledgeAndContract>(getActivity(), R.layout.item_listview_contract, contractDatas);
+                        lvContracts.setAdapter(adapter);
+                    }
+                    if (popupWindow == null) {
+                        initPopupWindow();
+                    } else {
+
+                    }
                     break;
                 case StatusCode.KNOWLEDGE_CONTENT_SUCCESS:
                     break;
@@ -159,7 +165,7 @@ public class KnowledgeFragment extends BaseFragment {
     protected void afterCreate(Bundle savedInstanceState) {
         uid = (String) SharePreferencesUtils.get(getActivity(), SharedPreferencesKeys.UID, "");
         initView();
-        initPopupWindow();
+        initPopupContent();
         initData(10021, "0", null);
         initContractData();
     }
@@ -178,23 +184,6 @@ public class KnowledgeFragment extends BaseFragment {
         MenuItem item = menu.findItem(R.id.menu_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setIconified(true);
-//        MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem item) {
-//                Logger.e("onActionExpandListener====Expand");
-//                title.setAlpha(0);
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem item) {
-//                Logger.e("onActionExpandListener=====Collapse");
-//                title.setAlpha(1);
-//                return true;
-//            }
-//        });
-//        title.setVisibility(View.GONE);
-//        title.setText("知识");
         actionBar.show();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -203,7 +192,7 @@ public class KnowledgeFragment extends BaseFragment {
                 if (!TextUtils.isEmpty(query)) {
 //                    searchView.onActionViewCollapsed();
                     initData(10021, null, query);
-                }else{
+                } else {
                     initData(10021, "0", null);
                 }
                 return true;
@@ -211,7 +200,7 @@ public class KnowledgeFragment extends BaseFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Logger.e("onQueryTextChange==newText===="+newText.length()+"===="+newText);
+                Logger.e("onQueryTextChange==newText====" + newText.length() + "====" + newText);
                 return true;
             }
         });
@@ -221,9 +210,12 @@ public class KnowledgeFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_contract:
-//                popupWindow.showAtLocation(toolbar, Gravity.NO_GRAVITY, toolbar.getWidth() / 5 * 3, toolbar.getHeight());
-                PopupWindowCompat.showAsDropDown(popupWindow, toolbar, 0, 0, GravityCompat.END);
-                searchView.onActionViewCollapsed();
+                if (popupWindow != null) {
+                    popupWindow.showAtLocation(toolbar, Gravity.NO_GRAVITY, toolbar.getWidth() / 2, getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android")) + ScreenTools.instance(getActivity()).dip2px(10));
+                } else {
+                    Utilities.showToast("暂无合同数据", getActivity());
+                }
+//                PopupWindowCompat.showAsDropDown(popupWindow, toolbar, 0, 0, GravityCompat.END);
                 return true;
             default:
 //                Utilities.showToast("默认支持", getActivity());
@@ -321,10 +313,9 @@ public class KnowledgeFragment extends BaseFragment {
         });
     }
 
-    private void initPopupWindow() {
-
-        View contentView = getActivity().getLayoutInflater().inflate(R.layout.layout_popupwindow_contract, null);
-        lvContracts = (ListViewCompat) contentView.findViewById(R.id.lv_contracts);
+    private void initPopupContent() {
+        popupContentView = getActivity().getLayoutInflater().inflate(R.layout.layout_popupwindow_contract, null);
+        lvContracts = (ListViewCompat) popupContentView.findViewById(R.id.lv_contracts);
         lvContracts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -333,7 +324,11 @@ public class KnowledgeFragment extends BaseFragment {
                 initData(10021, contractDatas.get(position).contract_code, null);
             }
         });
-        popupWindow = new PopupWindow(contentView, ScreenTools.instance(getActivity()).dip2px(56 * 3), ScreenTools.instance(getActivity()).dip2px(144));
+    }
+
+    private void initPopupWindow() {
+
+        popupWindow = new PopupWindow(popupContentView, ScreenTools.instance(getActivity()).dip2px(56 * 3), ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);//设置焦点，此时的事件交给popupwindow自己处理，
         popupWindow.setOutsideTouchable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));//设置背景点击空白处和back可以让pop消失
@@ -345,9 +340,7 @@ public class KnowledgeFragment extends BaseFragment {
         mainlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                moreAdapter.setData(datas.get(position).knowledges);
-                moreAdapter.setSelectItem(0);
+                moreAdapter.setData(((ClassifyMainAdapter) mainlist.getAdapter()).getData().get(position).knowledges);
                 moreAdapter.notifyDataSetChanged();
                 mainAdapter.setSelectItem(position);
                 mainAdapter.notifyDataSetChanged();
@@ -357,7 +350,6 @@ public class KnowledgeFragment extends BaseFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                moreAdapter.setSelectItem(position);
                 moreAdapter.notifyDataSetChanged();
                 Intent intent = new Intent(getActivity(), KnowledgeDetailActivity.class);
                 intent.putExtra("knowledge_id", (String) moreAdapter.getItem(position));

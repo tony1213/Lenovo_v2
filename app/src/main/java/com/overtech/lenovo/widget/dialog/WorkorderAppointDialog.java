@@ -17,7 +17,6 @@ import com.overtech.lenovo.debug.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Overtech on 16/4/18.
@@ -59,9 +58,21 @@ public class WorkorderAppointDialog extends DialogFragment {
         builder
                 .setView(v)
                 .setTitle("请选择您的上门时间")
-                .setNegativeButton("保存", new DialogInterface.OnClickListener() {
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (type == WorkorderAppointDialog.MAIN_ACTIVITY) {
+                            ((MainActivity) getActivity()).taskListFragment.doAppointNegativeClick(position);
+                        } else {
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointNegativeClick();
+                        }
+
+                    }
+                })
+                .setPositiveButton("保存", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
                         int year = mDatePicker.getYear();
                         int month = mDatePicker.getMonth();//月份是从0月开始
                         int day = mDatePicker.getDayOfMonth();
@@ -76,19 +87,9 @@ public class WorkorderAppointDialog extends DialogFragment {
 
                         Logger.e("======选择的时间" + dateStr);
                         if (type == WorkorderAppointDialog.MAIN_ACTIVITY) {
-                            ((MainActivity) getActivity()).taskListFragment.doAppointNegativeClick(position, dateStr);
+                            ((MainActivity) getActivity()).taskListFragment.doAppointPositiveClick(position, dateStr);
                         } else {
-                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointNegativeClick(dateStr);
-                        }
-                    }
-                })
-                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (type == WorkorderAppointDialog.MAIN_ACTIVITY) {
-                            ((MainActivity) getActivity()).taskListFragment.doAppointPositiveClick(position);
-                        } else {
-                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointPositiveClick();
+                            ((TaskDetailActivity) getActivity()).taskInfoFrag.doAppointPositiveClick(dateStr);
                         }
                     }
                 });

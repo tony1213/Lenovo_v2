@@ -62,6 +62,7 @@ import java.io.IOException;
 public class PersonalFragment extends BaseFragment implements View.OnClickListener {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView mAvator;
+    private TextView tvName;
     private TextView tv_finance;
     private TextView tv_month_workorder_amount;
     private TextView tv_year_workorder_amount;
@@ -120,6 +121,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                                     return "personal fragment";
                                 }
                             }, Config.RGB_565);
+                    tvName.setText(bean.body.name);
                     tv_finance.setText(bean.body.finance);
                     tv_month_workorder_amount.setText(bean.body.month_workorder_amount + "单");
                     tv_year_workorder_amount.setText(bean.body.year_workorder_amount + "单");
@@ -148,6 +150,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         mAvator = (ImageView) mRootView.findViewById(R.id.iv_avator);
+        tvName= (TextView) mRootView.findViewById(R.id.tv_name);
         tv_finance = (TextView) mRootView.findViewById(R.id.tv_finance);
         tv_month_workorder_amount = (TextView) mRootView.findViewById(R.id.tv_month_workorder_amount);
         tv_year_workorder_amount = (TextView) mRootView.findViewById(R.id.tv_year_workorder_amount);

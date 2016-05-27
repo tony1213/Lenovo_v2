@@ -44,7 +44,7 @@ public class WorkorderHomeDialog extends DialogFragment {
         builder
                 .setTitle("提示")
                 .setMessage("你已经到场了吗？")
-                .setNegativeButton("已到场", new DialogInterface.OnClickListener() {
+                .setNegativeButton("尚未到场", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (type == WorkorderHomeDialog.MAIN_ACTIVITY) {
@@ -54,9 +54,11 @@ public class WorkorderHomeDialog extends DialogFragment {
                         }
                     }
                 })
-                .setPositiveButton("尚未到场", new DialogInterface.OnClickListener() {
+                .setPositiveButton("已到场", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+
                         if (type == WorkorderHomeDialog.MAIN_ACTIVITY) {
                             ((MainActivity) getActivity()).taskListFragment.doHomePositiveClick(position);
                         } else {

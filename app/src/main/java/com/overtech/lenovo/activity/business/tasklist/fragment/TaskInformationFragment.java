@@ -66,6 +66,8 @@ public class TaskInformationFragment extends BaseFragment {
     private String repairPersonContactInformation;
     private String workorderCode;
     private String uid;
+    private String issueDescription;
+    private String solve;
     private static final int SOLVE_CODE = 0;
     private boolean isFirstLoading = true;//第一次加载
     private UIHandler uiHandler = new UIHandler(getActivity()) {
@@ -105,52 +107,53 @@ public class TaskInformationFragment extends BaseFragment {
                     tvRepairPersonContactInfo.setText(repairPersonContactInformation);
                     tvRepairAddress.setText(body.repair_address);
                     tvStandardFeeAmount.setText("金额：" + body.standard_fee_amount);
-
+                    issueDescription=body.issue_description;
+                    solve=body.solution;
                     String taskType = body.taskType;
                     //目前时间轴实现思路，根据工单状态自己构造函数，通过listview实现
                     datas.clear();
                     if (taskType.equals("-1")) {//开单
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "","", "", "", "", "");
                         datas.add(task1);
                     } else if (taskType.equals("0")) {//接单
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", "", "", "", "", "", "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "","", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", "", "", "", "","", "", "", "", "");
                         datas.add(task1);
                         datas.add(task2);
                     } else if (taskType.equals("1")) {//预约
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "","", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "","");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                     } else if (taskType.equals("2")) {//到场
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "","", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "","", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                         datas.add(task4);
                     } else if (taskType.equals("3")) {//解决方案
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "","", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "","", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.issue_description,"", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
                         datas.add(task4);
                         datas.add(task5);
                     } else if (taskType.equals("4")) {//待关单
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, "", "");
-                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "","", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "","", "", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime,"", "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "",body.issue_description, body.solution, body.shutdown_datetime, "", "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "","", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
@@ -158,13 +161,13 @@ public class TaskInformationFragment extends BaseFragment {
                         datas.add(task5);
                         datas.add(task6);
                     } else if (taskType.equals("5") && TextUtils.isEmpty(body.feedback)) {//待结单，未评价
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
-                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
-                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "","", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "","", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime,"", "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "",body.issue_description, body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", body.issue_description,"", body.shutdown_datetime, "", "");
+                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "","", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
@@ -173,14 +176,14 @@ public class TaskInformationFragment extends BaseFragment {
                         datas.add(task6);
                         datas.add(task7);
                     } else if (taskType.equals("5") && !TextUtils.isEmpty(body.feedback)) {//待结单，已评价
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
-                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
-                        TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "", "", "", body.feedback);
-                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "","", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "","", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime,"", "", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "",body.issue_description, body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "","", "", body.shutdown_datetime, "", "");
+                        TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "","", "", "", "", body.feedback);
+                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "","", "", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
@@ -190,12 +193,12 @@ public class TaskInformationFragment extends BaseFragment {
                         datas.add(task10);
                         datas.add(task7);
                     } else if (taskType.equals("6")) {
-                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "", "", "", "", "");
-                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "", "", "", "");
-                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "", "", "", "");
-                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
-                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task1 = new TaskProcess("-1", workorderCode, body.workorder_create_datetime, "", "", "", "","", "", "", "", "");
+                        TaskProcess task2 = new TaskProcess("0", "", "", body.confirm_datetime, "", "", "", "","", "", "", "");
+                        TaskProcess task3 = new TaskProcess("1", "", "", "", body.appointment_datetime, body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task4 = new TaskProcess("2", "", "", "", "", body.appointment_home_datetime, body.home_datetime, "","", "", "", "");
+                        TaskProcess task5 = new TaskProcess("3", "", "", "", "", "", "", body.issue_description,body.solution, body.shutdown_datetime, body.feedback_solved_datetime, "");
+                        TaskProcess task6 = new TaskProcess("4", "", "", "", "", "", "", "","", body.shutdown_datetime, "", "");
                         datas.add(task1);
                         datas.add(task2);
                         datas.add(task3);
@@ -203,11 +206,11 @@ public class TaskInformationFragment extends BaseFragment {
                         datas.add(task5);
                         datas.add(task6);
                         if (!TextUtils.isEmpty(body.feedback)) {
-                            TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "", "", "", body.feedback);
+                            TaskProcess task10 = new TaskProcess("10", "", "", "", "", "", "", "","", "", "", body.feedback);
                             datas.add(task10);
                         }
-                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
-                        TaskProcess task8 = new TaskProcess("6", "", "", "", "", "", "", "", body.shutdown_datetime, "", "");
+                        TaskProcess task7 = new TaskProcess("5", "", "", "", "", "", "","", "", body.shutdown_datetime, "", "");
+                        TaskProcess task8 = new TaskProcess("6", "", "", "", "", "", "","", "", body.shutdown_datetime, "", "");
                         datas.add(task7);
                         datas.add(task8);
                     }
@@ -382,6 +385,8 @@ public class TaskInformationFragment extends BaseFragment {
 //        workorderSolveDialog.show(ft, "workorder_solve");
         Intent intent = new Intent(getActivity(), TaskSolveActivity.class);
         intent.putExtra("workorder_code", workorderCode);
+        intent.putExtra("issue-description",issueDescription);
+        intent.putExtra("solve",solve);
         startActivityForResult(intent, SOLVE_CODE);
     }
 
@@ -462,7 +467,7 @@ public class TaskInformationFragment extends BaseFragment {
      * 确认接单
      */
 
-    public void doReceiveNegativeClick() {
+    public void doReceivePositiveClick() {
         startProgress("请等待接单结果");
         Requester requester = new Requester();
         requester.cmd = 10002;
@@ -505,14 +510,13 @@ public class TaskInformationFragment extends BaseFragment {
     /**
      * 取消接单
      */
-    public void doReceivePositiveClick() {
-        Utilities.showToast("你取消了", getActivity());
+    public void doReceiveNegativeClick() {
     }
 
     /**
      * 预约对话框确认
      */
-    public void doAppointNegativeClick(String selectTime) {
+    public void doAppointPositiveClick(String selectTime) {
         startProgress("预约中");
         Requester requester = new Requester();
         requester.cmd = 10002;
@@ -556,14 +560,13 @@ public class TaskInformationFragment extends BaseFragment {
     /**
      * 预约对话框取消
      */
-    public void doAppointPositiveClick() {
-        Utilities.showToast("预约取消了", getActivity());
+    public void doAppointNegativeClick() {
     }
 
     /**
      * 到场对话框确认
      */
-    public void doHomeNegativeClick() {
+    public void doHomePositiveClick() {
         Utilities.showToast("您到场了", getActivity());
         startProgress("加载中");
         Requester requester = new Requester();
@@ -607,14 +610,13 @@ public class TaskInformationFragment extends BaseFragment {
     /**
      * 到场对话框取消
      */
-    public void doHomePositiveClick() {
-        Utilities.showToast("您还没有到场", getActivity());
+    public void doHomeNegativeClick() {
     }
 
     /**
      * 解决方案对话框确认
      */
-    public void doSolveNegativeClick(String issueDescription, String solve) {
+    public void doSolvePositiveClick(String issueDescription, String solve) {
         if (TextUtils.isEmpty(issueDescription) || TextUtils.isEmpty(solve)) {
             Utilities.showToast("解决方案不能为空", getActivity());
         } else {

@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
@@ -52,7 +53,7 @@ public class StoreRepairInformationActivity extends BaseActivity {
             Logger.e("storeRepairInformaition   " + json);
             StoreInfo bean = gson.fromJson(json, StoreInfo.class);
             if (bean == null) {
-                if(swipeRefreshLayout.isRefreshing()){
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 stopProgress();
@@ -78,16 +79,16 @@ public class StoreRepairInformationActivity extends BaseActivity {
                     break;
                 case StatusCode.WORKORDER_STORE_REPAIR_INFO_SUCCESS:
                     datas = bean.body.data;
-                    if(adapter==null){
+                    if (adapter == null) {
                         adapter = new StoreRepairInforAdapter(StoreRepairInformationActivity.this, datas);
                         recyclerView.setAdapter(adapter);
-                    }else{
+                    } else {
                         adapter.setDatas(datas);
                         adapter.notifyDataSetChanged();
                     }
                     break;
             }
-            if(swipeRefreshLayout.isRefreshing()){
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
             }
             stopProgress();
@@ -105,7 +106,7 @@ public class StoreRepairInformationActivity extends BaseActivity {
         branchName = getIntent().getStringExtra("name");
         uid = (String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
         Logger.e("code===" + branchCode + "name===" + branchName);
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_store_repair_infor);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -128,8 +129,18 @@ public class StoreRepairInformationActivity extends BaseActivity {
             }
         });
 
-        startProgress("加载中...");
-        initData();
+//        startProgress("加载中...");
+
+        swipeRefreshLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                swipeRefreshLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                swipeRefreshLayout.setRefreshing(true);
+                Logger.e("mrefreshLayout 刷新了");
+                initData();
+            }
+        });
+
     }
 
     private void initData() {

@@ -8,12 +8,14 @@ android {
         applicationId "com.overtech.lenovo"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 4
-        versionName "官方测试版"
+        versionCode 1
+        versionName "1.0.0"
     }
+
     buildTypes {
+
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
