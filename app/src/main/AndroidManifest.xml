@@ -29,7 +29,7 @@
                 <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
-
+        <meta-data android:name="UMENG_APPKEY" android:value="574bd4b567e58ec9530019ee"/>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="XYvfKQuUDMMwodBroX02SAHCifpPPyN8" />

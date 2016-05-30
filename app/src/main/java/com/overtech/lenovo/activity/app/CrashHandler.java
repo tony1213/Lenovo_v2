@@ -8,22 +8,23 @@ import android.content.Context;
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private Context ctx;
+    private CrashHandler(){}
     public static CrashHandler crashHandler;
 
-    public static CrashHandler getInstance() {
+    public static synchronized CrashHandler getInstance() {
         if (crashHandler == null) {
             crashHandler = new CrashHandler();
         }
         return crashHandler;
     }
 
-    public void init(Context context) {
-        Thread.setDefaultUncaughtExceptionHandler(crashHandler);
+    public void initContext(Context context) {
         ctx = context;
     }
 
     @Override
-    public void uncaughtException(Thread thread, final Throwable ex) {
+    public void uncaughtException(Thread thread, Throwable ex) {
+
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 }

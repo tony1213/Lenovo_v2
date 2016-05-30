@@ -2,6 +2,7 @@ package com.overtech.lenovo.activity.fragment;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.Menu;
@@ -71,10 +73,11 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private DimPopupWindow dimPopupWindow;
     private RatingBar rb_satisfaction;
     private LinearLayout setting;
+    private LinearLayout logout;
     private String uid;
     public final int CAMERA = 0x1;
     public final int SELECT_PICK_KITKAT = 0x2;
-    public final int SELECT_PICK=0x3;
+    public final int SELECT_PICK = 0x3;
     private File camera;
     private Uri cameraUri;
     private String avatorPath;
@@ -131,8 +134,14 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 case StatusCode.PERSONAL_UPLOAD_AVATOR_SUCCESS:
                     Utilities.showToast(bean.msg, getActivity());
                     break;
+                case StatusCode.LOGOUT_SUCCESS:
+                    SharePreferencesUtils.remove(getActivity(), SharedPreferencesKeys.UID);
+                    Intent intentLogout = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intentLogout);
+                    getActivity().finish();
+                    break;
             }
-            if(swipeRefreshLayout.isRefreshing()) {
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
             }
             stopProgress();
@@ -150,7 +159,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     protected void afterCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         mAvator = (ImageView) mRootView.findViewById(R.id.iv_avator);
-        tvName= (TextView) mRootView.findViewById(R.id.tv_name);
+        tvName = (TextView) mRootView.findViewById(R.id.tv_name);
         tv_finance = (TextView) mRootView.findViewById(R.id.tv_finance);
         tv_month_workorder_amount = (TextView) mRootView.findViewById(R.id.tv_month_workorder_amount);
         tv_year_workorder_amount = (TextView) mRootView.findViewById(R.id.tv_year_workorder_amount);
@@ -159,6 +168,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         rb_satisfaction = (RatingBar) mRootView.findViewById(R.id.rb_satisfaction);
         setting = (LinearLayout) mRootView.findViewById(R.id.ll_personal_setting);
         swipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefresh);
+        logout = (LinearLayout) mRootView.findViewById(R.id.ll_logout);
+
         uid = ((MainActivity) getActivity()).getUid();
 
         swipeRefreshLayout.setColorSchemeColors(R.array.material_colors);
@@ -172,6 +183,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mAccountDetail.setOnClickListener(this);
         mAccountServerDetail.setOnClickListener(this);
         setting.setOnClickListener(this);
+        logout.setOnClickListener(this);
         startProgress("加载中");
         startLoading();
     }
@@ -269,9 +281,62 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             case R.id.bt_select_none:
                 dimPopupWindow.dismiss();
                 break;
+            case R.id.ll_logout:
+                showDialog();
+                break;
             default:
                 break;
         }
+    }
+
+    private void showDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Requester requester = new Requester();
+                        requester.cmd = 2;
+                        requester.uid = uid;
+                        Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
+                        Call call = httpEngine.createRequestCall(request);
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Request request, IOException e) {
+                                Message msg = uiHandler.obtainMessage();
+                                RequestExceptBean bean = new RequestExceptBean();
+                                bean.st = 0;
+                                bean.msg = "网络异常";
+                                msg.what = StatusCode.FAILED;
+                                msg.obj = gson.toJson(bean);
+                                uiHandler.sendMessage(msg);
+                            }
+
+                            @Override
+                            public void onResponse(Response response) throws IOException {
+                                Message msg = uiHandler.obtainMessage();
+                                if (response.isSuccessful()) {
+                                    msg.what = StatusCode.LOGOUT_SUCCESS;
+                                    msg.obj = response.body().string();
+                                } else {
+                                    ResponseExceptBean bean = new ResponseExceptBean();
+                                    bean.st = response.code();
+                                    bean.msg = response.message();
+                                    msg.what = StatusCode.SERVER_EXCEPTION;
+                                    msg.obj = gson.toJson(bean);
+                                }
+                                uiHandler.sendMessage(msg);
+                            }
+                        });
+
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setTitle("退出?").show();
     }
 
     private void openPhoto() {
@@ -318,11 +383,11 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case SELECT_PICK_KITKAT:
                 if (resultCode == Activity.RESULT_OK) {
-                    avatorPath = ImageUtils.getPath(getActivity(),data.getData());
+                    avatorPath = ImageUtils.getPath(getActivity(), data.getData());
                     if (avatorPath != null) {
                         String[] strings = avatorPath.split("\\.");
                         startUploadAvator(avatorPath, strings[strings.length - 1]);
-                        Bitmap bitmap =ImageUtils.getSmallBitmap(avatorPath);
+                        Bitmap bitmap = ImageUtils.getSmallBitmap(avatorPath);
                         mAvator.setImageBitmap(ImageUtils.toRoundBitmap(bitmap));
                     } else {
                         Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", getActivity());
@@ -331,11 +396,11 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case SELECT_PICK:
                 if (resultCode == Activity.RESULT_OK) {
-                    avatorPath = ImageUtils.getPath(getActivity(),data.getData());
+                    avatorPath = ImageUtils.getPath(getActivity(), data.getData());
                     if (avatorPath != null) {
                         String[] strings = avatorPath.split("\\.");
                         startUploadAvator(avatorPath, strings[strings.length - 1]);
-                        Bitmap bitmap =ImageUtils.getSmallBitmap(avatorPath);
+                        Bitmap bitmap = ImageUtils.getSmallBitmap(avatorPath);
                         mAvator.setImageBitmap(ImageUtils.toRoundBitmap(bitmap));
                     } else {
                         Utilities.showToast("获取相册图片失败，请重新尝试或使用相机", getActivity());

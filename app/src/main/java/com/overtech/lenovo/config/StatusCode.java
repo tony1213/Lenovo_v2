@@ -13,6 +13,7 @@ public class StatusCode {
     public static final int FINDBACK_RESET_PASSWORD_SUCCESS = 0x6;
     public static final int LOGIN_SUCCESS=0x7;
     public static final int LATEST_MSG_DATETIME_SUCCESS=0x8;
+    public static final int LOGOUT_SUCCESS=0x9;
 
     public static final int WORKORDER_ALL_SUCCESS = 0x10;
     public static final int WORKORDER_RECEIVE_SUCCESS = 0x11;

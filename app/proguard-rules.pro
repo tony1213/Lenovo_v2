@@ -16,3 +16,9 @@
 #   public *;
 #}
 -dontwarn okio.**
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keep public class [com.overtech.lenovo].R$*{
+public static final int *;
+}
