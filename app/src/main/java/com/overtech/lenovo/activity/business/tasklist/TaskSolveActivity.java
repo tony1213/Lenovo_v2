@@ -116,6 +116,7 @@ public class TaskSolveActivity extends BaseActivity implements View.OnClickListe
         workorder_code = getIntent().getStringExtra("workorder_code");
         issueDescription = getIntent().getStringExtra("issue_description");
         solve = getIntent().getStringExtra("solve");
+        Logger.e("issue-description====" + issueDescription + "solve===" + solve);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         collapsingToolbarLayout.setTitle("解决方案");

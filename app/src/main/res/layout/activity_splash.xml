@@ -11,11 +11,11 @@
     <Button
         android:id="@+id/btn_splash_next"
         style="@style/CommonUIButton"
-        android:layout_width="200dp"
-        android:layout_height="45dp"
+        android:layout_width="186dp"
+        android:layout_height="37dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/shape_button_orange"
+        android:background="@drawable/shape_button_blue"
         android:text="@string/splash_in"
         android:visibility="visible" />
 </RelativeLayout>

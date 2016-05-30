@@ -385,7 +385,7 @@ public class TaskInformationFragment extends BaseFragment {
 //        workorderSolveDialog.show(ft, "workorder_solve");
         Intent intent = new Intent(getActivity(), TaskSolveActivity.class);
         intent.putExtra("workorder_code", workorderCode);
-        intent.putExtra("issue-description",issueDescription);
+        intent.putExtra("issue_description",issueDescription);
         intent.putExtra("solve",solve);
         startActivityForResult(intent, SOLVE_CODE);
     }

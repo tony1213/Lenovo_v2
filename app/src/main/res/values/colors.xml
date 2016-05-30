@@ -101,6 +101,7 @@
     <!-- 门店信息备注消息背景色 -->
     <color name="store_remark_bg">#F0EFED</color>
     <color name="black">#000000</color>
+    <color name="splash_blue">#4d72FF</color>
     <integer-array name="material_colors">
         <item>@android:color/holo_red_light</item>
         <item>@android:color/holo_green_light</item>
