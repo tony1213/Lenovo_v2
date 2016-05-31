@@ -9,5 +9,6 @@ public class Common {
     public Body body;
     public class Body{
         public String sessionId;
+        public int uid;
     }
 }

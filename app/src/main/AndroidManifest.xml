@@ -13,7 +13,8 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+
     <application
         android:name=".activity.app.CustomApplication"
         android:allowBackup="true"
@@ -29,10 +30,16 @@
                 <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
-        <meta-data android:name="UMENG_APPKEY" android:value="574bd4b567e58ec9530019ee"/>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="574bd4b567e58ec9530019ee" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="XYvfKQuUDMMwodBroX02SAHCifpPPyN8" />
+            android:value="tXqGxCjtGAGFvakl3iKfNZH1goLlPI2Y" />
         <!-- http://lbsyun.baidu.com/apiconsole/key -->
         <activity
             android:name=".activity.business.common.WelcomeActivity"

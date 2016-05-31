@@ -24,6 +24,7 @@ import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.entity.RequestExceptBean;
 import com.overtech.lenovo.entity.Requester;
 import com.overtech.lenovo.entity.ResponseExceptBean;
+import com.overtech.lenovo.entity.common.Common;
 import com.overtech.lenovo.http.webservice.UIHandler;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
@@ -33,9 +34,6 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -52,41 +50,32 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         public void handleMessage(Message msg) {
             String json = (String) msg.obj;
             Logger.e("登陆传过来的信息===" + json);
-            JSONObject jsonObject = null;
-            int st = -100;
-            String info = null;
-            try {
-                jsonObject = new JSONObject(json);
-                st = jsonObject.getInt("st");
-                info = jsonObject.getString("msg");
-            } catch (JSONException e) {
-                Utilities.showToast(getResources().getString(R.string.common_no_data), LoginActivity.this);
+            Common bean = gson.fromJson(json, Common.class);
+            if (bean == null) {
+                Utilities.showToast("登录失败", LoginActivity.this);
+                stopProgress();
+                return;
+            }
+            int st = bean.st;
+            if (st != 0) {
+                Utilities.showToast(bean.msg, LoginActivity.this);
                 stopProgress();
                 return;
             }
 
             switch (msg.what) {
                 case StatusCode.FAILED:
-                    Utilities.showToast(info, LoginActivity.this);
+                    Utilities.showToast(bean.msg, LoginActivity.this);
                     break;
                 case StatusCode.SERVER_EXCEPTION:
-                    Utilities.showToast(info, LoginActivity.this);
+                    Utilities.showToast(bean.msg, LoginActivity.this);
                     break;
                 case StatusCode.LOGIN_SUCCESS:
-                    if (st == 0) {
-                        try {
-                            JSONObject body = jsonObject.getJSONObject("body");
-                            SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, body.getInt("uid") + "");
-                            Intent intent = new Intent();
-                            intent.setClass(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } catch (JSONException e) {
-                            Utilities.showToast(getResources().getString(R.string.common_no_data), LoginActivity.this);
-                        }
-                    } else {
-                        Utilities.showToast(info, LoginActivity.this);
-                    }
+                    SharePreferencesUtils.put(LoginActivity.this, SharedPreferencesKeys.UID, bean.body.uid + "");
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
             }
             stopProgress();

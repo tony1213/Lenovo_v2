@@ -121,7 +121,8 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                         Logger.e("INformation Fragment 此时datas的大小" + datas.size());
                     }
 //
-                    curPage = datas.size() / 6;
+                    curPage = (adapter.getItemCount() - 1) / 6;
+
                     if (refreshLayout.isRefreshing()) {
                         refreshLayout.setRefreshing(false);
                     }
@@ -221,6 +222,7 @@ public class InformationFragment extends BaseFragment implements View.OnClickLis
                     if (lastPosition == adapter.getItemCount() - 1) {
                         adapter.changeLoadMoreStatus(InformationAdapter.LOADING_MORE);
                         initData(++curPage);
+                        Logger.e("curpage======" + curPage);
                     }
                 }
             }

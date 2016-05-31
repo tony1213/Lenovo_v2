@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * 工单消息
  * Created by Overtech on 16/4/29.
  */
 public class WorkorderMsgActivity extends BaseActivity {
@@ -110,7 +111,7 @@ public class WorkorderMsgActivity extends BaseActivity {
                             }
                         }
                     }
-                    curPage = (adapter.getItemCount() - 1) / 6;
+                    curPage = (adapter.getItemCount() - 1) / 11;
                     break;
             }
             if (swipeRefreshLayout.isRefreshing()) {
@@ -178,7 +179,7 @@ public class WorkorderMsgActivity extends BaseActivity {
         requester.uid = uid;
         requester.cmd = 10040;
         requester.body.put("page", page + "");
-        requester.body.put("size", "5");
+        requester.body.put("size", "10");
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new com.squareup.okhttp.Callback() {

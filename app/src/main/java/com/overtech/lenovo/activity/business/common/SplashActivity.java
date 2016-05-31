@@ -31,6 +31,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     // 定义一个ArrayList来存放View
     private ArrayList<View> views;
     private Button mBtnGoMain;
+    private LinearLayout indicator;
     // 引导图片资源
     private static final int[] pics = {R.mipmap.splash_1, R.mipmap.splash_2, R.mipmap.splash_3, R.mipmap.splash_4};
 
@@ -43,7 +44,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     protected void afterCreate(Bundle savedInstanceState) {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mBtnGoMain = (Button) findViewById(R.id.btn_splash_next);
-
+        indicator = (LinearLayout) findViewById(R.id.ll_indicator);
         views = new ArrayList<View>();
         LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -67,8 +68,17 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 //        Logger.e("position:" + position + "====>" + "positionOffset:" + positionOffset + "=====>" + "positionOffsetPixels:" + positionOffsetPixels);
         if (position == pics.length - 1) {
             mBtnGoMain.setVisibility(View.VISIBLE);
+            indicator.setVisibility(View.GONE);
         } else {
             mBtnGoMain.setVisibility(View.GONE);
+            indicator.setVisibility(View.VISIBLE);
+        }
+        for (int i = 0; i < pics.length; i++) {
+            if (i == position) {
+                ((ImageView) indicator.getChildAt(i)).setImageResource(R.mipmap.icon_adv_point_pre);
+            } else {
+                ((ImageView) indicator.getChildAt(i)).setImageResource(R.mipmap.icon_adv_point);
+            }
         }
     }
 
@@ -87,7 +97,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_splash_next:
-                SharePreferencesUtils.put(this, SharedPreferencesKeys.FIRSTLOGIN,false);
+                SharePreferencesUtils.put(this, SharedPreferencesKeys.FIRSTLOGIN, false);
                 Intent intent = new Intent();
                 intent.setClass(this, LoginActivity.class);
                 startActivity(intent);

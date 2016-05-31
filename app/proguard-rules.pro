@@ -16,9 +16,29 @@
 #   public *;
 #}
 -dontwarn okio.**
--keepclassmembers class * {
-   public <init> (org.json.JSONObject);
+-keep class com.google.**{
+<fields>;
+<methods>;
+}
+-keep class com.google.gson.**{
+*;
 }
 -keep public class [com.overtech.lenovo].R$*{
 public static final int *;
 }
+-keep class com.overtech.lenovo.entity.*{
+*;
+}
+-keep class com.overtech.lenovo.widget.*{
+*;
+}
+#-libraryjars libs/BaiduLBS_Android.jar
+-keep class com.baidu.**{
+*;
+}
+-keepattributes Signature
+-keepattributes InnerClasser
+-keep class android.net.http.*
+-dontnote android.net.http.*
+-keep class org.apache.http.*
+-dontnote  org.apache.http.*

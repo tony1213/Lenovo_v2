@@ -1,118 +1,88 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/bg_signin"
     android:orientation="vertical">
-    <ImageView
-        android:layout_width="67dp"
-        android:layout_height="52dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="96dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:text="大聚服务"
-        android:typeface="sans"
-        android:textColor="@color/main_white"
-        android:textSize="27sp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="DA JU SERVICE"
-        android:typeface="sans"
-        android:layout_marginTop="10dp"
-        android:textSize="27sp"
-        android:textColor="@color/main_white"
-        />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="6dp"
-        android:text="网聚IT人才，助力客户业务发展"
-        android:textColor="@color/main_white"
-        android:textSize="14sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/logo"
+        android:orientation="vertical">
 
+        <com.overtech.lenovo.widget.EditTextWithDelete
+            android:id="@+id/et_login_username"
+            android:layout_width="@dimen/login_input_width"
+            android:layout_height="@dimen/login_input_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="286dp"
+            android:background="@drawable/shape_bg_white_stroke_no_solid"
+            android:drawableLeft="@mipmap/account_login_username"
+            android:drawablePadding="12dp"
+            android:hint="@string/common_input_username"
+            android:paddingLeft="12dp"
+            android:singleLine="true"
+            android:textColorHint="@color/main_white" />
 
-    <com.overtech.lenovo.widget.EditTextWithDelete
-        android:id="@+id/et_login_username"
-        android:layout_width="@dimen/login_input_width"
-        android:layout_height="@dimen/login_input_height"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="55dp"
-        android:background="@drawable/shape_bg_white_stroke_no_solid"
-        android:drawableLeft="@mipmap/account_login_username"
-        android:drawablePadding="12dp"
-        android:hint="@string/common_input_username"
-        android:paddingLeft="12dp"
-        android:singleLine="true"
-        android:textColorHint="@color/main_white" />
+        <com.overtech.lenovo.widget.EditTextWithDelete
+            android:id="@+id/et_login_password"
+            android:layout_width="@dimen/login_input_width"
+            android:layout_height="@dimen/login_input_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="21dp"
+            android:background="@drawable/shape_bg_white_stroke_no_solid"
+            android:drawableLeft="@mipmap/account_login_password"
+            android:drawablePadding="12dp"
+            android:hint="@string/common_input_password"
+            android:inputType="textPassword"
+            android:maxLength="18"
+            android:paddingLeft="12dp"
+            android:singleLine="true"
+            android:textColorHint="@color/main_white" />
 
-
-    <com.overtech.lenovo.widget.EditTextWithDelete
-        android:id="@+id/et_login_password"
-        android:layout_width="@dimen/login_input_width"
-        android:layout_height="@dimen/login_input_height"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="21dp"
-        android:background="@drawable/shape_bg_white_stroke_no_solid"
-        android:drawableLeft="@mipmap/account_login_password"
-        android:drawablePadding="12dp"
-        android:hint="@string/common_input_password"
-        android:inputType="textPassword"
-        android:maxLength="18"
-        android:paddingLeft="12dp"
-        android:singleLine="true"
-        android:textColorHint="@color/main_white" />
-
-    <ToggleButton
-        android:id="@+id/tb_change_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/selector_toggle_button"
-        android:checked="false"
-        android:text=""
-        android:textOff=""
-        android:textOn=""
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="@dimen/login_input_width"
-        android:layout_height="@dimen/login_input_height"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="21dp"
-        android:textSize="16dp"
-        android:background="@drawable/shape_input"
-        android:text="@string/commom_login"
-        android:textColor="@color/black" />
-
-    <RelativeLayout
-        android:layout_width="@dimen/login_input_width"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="14dp">
-
-        <TextView
-            android:id="@+id/tv_lost_password"
-            style="@style/tv_list_white_style"
-            android:text="@string/commom_lost_password" />
-
-        <TextView
-            android:id="@+id/tv_register_account"
-            style="@style/tv_list_white_style"
+        <ToggleButton
+            android:id="@+id/tb_change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="@string/common_register_account" />
-    </RelativeLayout>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_toggle_button"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn=""
+            android:visibility="gone" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="@dimen/login_input_width"
+            android:layout_height="@dimen/login_input_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="21dp"
+            android:background="@drawable/shape_input"
+            android:text="@string/commom_login"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+        <RelativeLayout
+            android:layout_width="@dimen/login_input_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp">
+
+            <TextView
+                android:id="@+id/tv_lost_password"
+                style="@style/tv_list_white_style"
+                android:text="@string/commom_lost_password" />
+
+            <TextView
+                android:id="@+id/tv_register_account"
+                style="@style/tv_list_white_style"
+                android:layout_alignParentRight="true"
+                android:text="@string/common_register_account" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
