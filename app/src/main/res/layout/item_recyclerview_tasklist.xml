@@ -3,15 +3,14 @@
     android:id="@+id/rl_task_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="8dp"
-    android:background="@color/main_white">
+    android:background="@color/main_white"
+    android:paddingLeft="8dp">
 
     <ImageView
         android:id="@+id/iv_task_logo"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginTop="20dp"
-        android:src="@mipmap/icon_tasklist_default1" />
+        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:id="@+id/tasklist_detail"
@@ -123,8 +122,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:orientation="vertical">
 

@@ -31,6 +31,7 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 
@@ -85,10 +86,10 @@ public class PersonalAccountDetailActivity extends BaseActivity {
                     Utilities.showToast(bean.msg, PersonalAccountDetailActivity.this);
                     break;
                 case StatusCode.PERSONAL_ACCOUNT_DETAIL_SUCCESS:
-                    if(bean.body==null||bean.body.data==null||bean.body.data.size()==0){
+                    if (bean.body == null || bean.body.data == null || bean.body.data.size() == 0) {
                         swipeRefreshLayout.setVisibility(View.GONE);
                         noPageUI.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         swipeRefreshLayout.setVisibility(View.VISIBLE);
                         noPageUI.setVisibility(View.GONE);
                         adapter = new PersonalAccountDetailAdapter(PersonalAccountDetailActivity.this, bean.body.data);
@@ -114,7 +115,7 @@ public class PersonalAccountDetailActivity extends BaseActivity {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolBar = (Toolbar) findViewById(R.id.tool_bar);
-        noPageUI= (LinearLayout) findViewById(R.id.ll_nopage);
+        noPageUI = (LinearLayout) findViewById(R.id.ll_nopage);
 
         setSupportActionBar(toolBar);
         ActionBar actionBar = getSupportActionBar();
@@ -173,5 +174,17 @@ public class PersonalAccountDetailActivity extends BaseActivity {
                 uiHandler.sendMessage(msg);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

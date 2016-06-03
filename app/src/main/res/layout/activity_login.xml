@@ -3,19 +3,24 @@
     android:layout_height="match_parent"
     android:background="@mipmap/bg_signin"
     android:orientation="vertical">
-
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/logo"
-        android:orientation="vertical">
+        android:src="@mipmap/logo"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        >
 
         <com.overtech.lenovo.widget.EditTextWithDelete
             android:id="@+id/et_login_username"
             android:layout_width="@dimen/login_input_width"
             android:layout_height="@dimen/login_input_height"
+            android:layout_marginTop="120dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="286dp"
             android:background="@drawable/shape_bg_white_stroke_no_solid"
             android:drawableLeft="@mipmap/account_login_username"
             android:drawablePadding="12dp"

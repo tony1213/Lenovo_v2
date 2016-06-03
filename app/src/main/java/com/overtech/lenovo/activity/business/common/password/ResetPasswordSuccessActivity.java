@@ -11,6 +11,7 @@ import com.overtech.lenovo.R;
 import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.common.LoginActivity;
 import com.overtech.lenovo.utils.Utilities;
+import com.umeng.analytics.MobclickAgent;
 
 /*
 *@author Tony
@@ -45,5 +46,16 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

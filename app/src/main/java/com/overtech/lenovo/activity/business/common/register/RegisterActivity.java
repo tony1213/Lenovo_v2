@@ -34,6 +34,7 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 
@@ -58,7 +59,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 return;
             }
             Common bean = gson.fromJson(json, Common.class);
-            int st=bean.st;
+            int st = bean.st;
             switch (msg.what) {
                 case StatusCode.FAILED:
                     Utilities.showToast(bean.msg, RegisterActivity.this);
@@ -68,14 +69,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     break;
                 case StatusCode.SMS_CODE_RESPONSE_SUCCESS:
                     Utilities.showToast(bean.msg, RegisterActivity.this);
-                    if(st==0) {
+                    if (st == 0) {
                         sessionId = bean.body.sessionId;
                     }
                     break;
                 case StatusCode.REGISTER_RESPONSE_SUCCESS:
-                    Utilities.showToast(bean.msg,RegisterActivity.this);
-                    if(st==0){
-                        Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_LONG).show();
+                    Utilities.showToast(bean.msg, RegisterActivity.this);
+                    if (st == 0) {
+                        Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_LONG).show();
                         finish();
                     }
                     break;
@@ -105,14 +106,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         cbPrivacy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     btRegisterUpload.setEnabled(true);
-                }else{
+                } else {
                     btRegisterUpload.setEnabled(false);
                 }
             }
         });
-        timer=new SMSCodeCountDownTimer(60*1000,1000,btGetSmsCode);//为获取验证码注册计时器
+        timer = new SMSCodeCountDownTimer(60 * 1000, 1000, btGetSmsCode);//为获取验证码注册计时器
     }
 
     @Override
@@ -135,30 +136,30 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 showPrivacyPop();
                 break;
             case R.id.bt_register_upload:
-                String ph=etPhone.getText().toString().trim();
-                if(TextUtils.isEmpty(ph)){
-                    Utilities.showToast("手机号不能为空",this);
+                String ph = etPhone.getText().toString().trim();
+                if (TextUtils.isEmpty(ph)) {
+                    Utilities.showToast("手机号不能为空", this);
                     return;
                 }
-                if(!Utilities.isMobileNO(ph)){
-                    Utilities.showToast("手机号格式不对",this);
+                if (!Utilities.isMobileNO(ph)) {
+                    Utilities.showToast("手机号格式不对", this);
                     return;
                 }
-                String code=etSmsCode.getText().toString().trim();
-                if(TextUtils.isEmpty(code)){
-                    Utilities.showToast("验证码不能为空",this);
+                String code = etSmsCode.getText().toString().trim();
+                if (TextUtils.isEmpty(code)) {
+                    Utilities.showToast("验证码不能为空", this);
                     return;
                 }
-                String pwd=etPwd.getText().toString().trim();
-                if(TextUtils.isEmpty(pwd)){
-                    Utilities.showToast("密码不能为空",this);
+                String pwd = etPwd.getText().toString().trim();
+                if (TextUtils.isEmpty(pwd)) {
+                    Utilities.showToast("密码不能为空", this);
                     return;
                 }
-                if(pwd.length()<=5){
-                    Utilities.showToast("密码长度不能小于6位",this);
+                if (pwd.length() <= 5) {
+                    Utilities.showToast("密码长度不能小于6位", this);
                     return;
                 }
-                startUploadRegisterInfo(ph,code,pwd);
+                startUploadRegisterInfo(ph, code, pwd);
                 break;
         }
     }
@@ -166,11 +167,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void startUploadRegisterInfo(String phone, String code, String pwd) {
         startProgress("注册中...");
         Requester requester = new Requester();
-        requester.cmd =4;
+        requester.cmd = 4;
         requester.body.put("phone", phone);
         requester.body.put("sms_code", code);
-        requester.body.put("pwd",pwd);
-        requester.body.put("sessionId",sessionId);
+        requester.body.put("pwd", pwd);
+        requester.body.put("sessionId", sessionId);
         Request request = httpEngine.createRequest(SystemConfig.IP, gson.toJson(requester));
         Call call = httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -211,7 +212,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             int width = wm.getDefaultDisplay().getWidth();
             int height = wm.getDefaultDisplay().getHeight();
             View contentView = getLayoutInflater().inflate(R.layout.popup_privacy_content, null);
-            privacyPopup.setWidth(width / 4*3);
+            privacyPopup.setWidth(width / 4 * 3);
             privacyPopup.setHeight(height / 2);
             privacyPopup.setContentView(contentView);
             privacyPopup.setOutsideTouchable(true);
@@ -263,5 +264,17 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     protected void onDestroy() {
         super.onDestroy();
         timer.cancel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

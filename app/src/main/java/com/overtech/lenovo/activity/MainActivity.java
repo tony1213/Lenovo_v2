@@ -26,6 +26,7 @@ import com.overtech.lenovo.utils.StackManager;
 import com.overtech.lenovo.utils.Utilities;
 import com.overtech.lenovo.widget.tabview.TabView;
 import com.overtech.lenovo.widget.tabview.TabView.OnTabChangeListener;
+import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends BaseActivity implements OnTabChangeListener, FragmentCallback {
     private Toolbar toolbar;
@@ -146,5 +147,17 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener, F
 
     public String getUid() {
         return uid;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

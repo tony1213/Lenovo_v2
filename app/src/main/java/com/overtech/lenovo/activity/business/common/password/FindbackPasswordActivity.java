@@ -25,6 +25,7 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 
@@ -68,7 +69,7 @@ public class FindbackPasswordActivity extends BaseActivity implements View.OnCli
                     Utilities.showToast(bean.msg, FindbackPasswordActivity.this);
                     if (st == 0) {
                         Intent intent = new Intent(FindbackPasswordActivity.this, ResetPasswordActivity.class);
-                        intent.putExtra("phone",ph);
+                        intent.putExtra("phone", ph);
                         startActivity(intent);
                     }
                     break;
@@ -220,5 +221,17 @@ public class FindbackPasswordActivity extends BaseActivity implements View.OnCli
         super.onBackPressed();
         StackManager.getStackManager().popActivity(this);
         timer.cancel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

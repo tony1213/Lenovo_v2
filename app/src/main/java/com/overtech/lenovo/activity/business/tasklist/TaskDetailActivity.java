@@ -22,6 +22,7 @@ import com.overtech.lenovo.activity.business.tasklist.fragment.StoreInformationF
 import com.overtech.lenovo.activity.business.tasklist.fragment.TaskInformationFragment;
 import com.overtech.lenovo.debug.Logger;
 import com.overtech.lenovo.utils.StackManager;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,5 +121,16 @@ public class TaskDetailActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         StackManager.getStackManager().popActivity(this);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

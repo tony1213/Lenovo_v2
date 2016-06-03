@@ -15,6 +15,7 @@ import com.overtech.lenovo.activity.base.BaseActivity;
 import com.overtech.lenovo.activity.business.tasklist.adapter.ViewPagerAdapter;
 import com.overtech.lenovo.utils.SharePreferencesUtils;
 import com.overtech.lenovo.utils.SharedPreferencesKeys;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -104,5 +105,16 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 finish();
                 break;
         }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

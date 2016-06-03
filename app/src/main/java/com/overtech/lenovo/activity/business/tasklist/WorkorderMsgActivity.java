@@ -32,6 +32,7 @@ import com.overtech.lenovo.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 import java.util.List;
@@ -90,11 +91,11 @@ public class WorkorderMsgActivity extends BaseActivity {
                     if (adapter == null) {
                         adapter = new WorkorderMsgAdapter(data, WorkorderMsgActivity.this);
                         recyclerView.setAdapter(adapter);
-                        if(data.size()==0){
+                        if (data.size() == 0) {
                             adapter.changeLoadingState(WorkorderMsgAdapter.NODATA);
                             noDataPage.setVisibility(View.VISIBLE);
                             swipeRefreshLayout.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             noDataPage.setVisibility(View.GONE);
                             swipeRefreshLayout.setVisibility(View.VISIBLE);
                         }
@@ -105,7 +106,7 @@ public class WorkorderMsgActivity extends BaseActivity {
                             if (data.size() == 0) {
                                 Utilities.showToast(getResources().getString(R.string.no_more_data), WorkorderMsgActivity.this);
                                 adapter.changeLoadingState(WorkorderMsgAdapter.NODATA);
-                            }else{
+                            } else {
                                 adapter.changeLoadingState(WorkorderMsgAdapter.RELAX);
                                 adapter.addMore(bean.body.data);
                             }
@@ -132,7 +133,7 @@ public class WorkorderMsgActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         recyclerView = (RecyclerView) findViewById(R.id.rv_workorder_msg);
-        noDataPage= (LinearLayout) findViewById(R.id.ll_nopage);
+        noDataPage = (LinearLayout) findViewById(R.id.ll_nopage);
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -212,5 +213,17 @@ public class WorkorderMsgActivity extends BaseActivity {
                 uiHandler.sendMessage(msg);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

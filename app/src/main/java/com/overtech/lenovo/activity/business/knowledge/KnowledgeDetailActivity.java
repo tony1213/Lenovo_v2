@@ -45,6 +45,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.internal.Util;
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -200,9 +201,21 @@ public class KnowledgeDetailActivity extends BaseActivity {
                     mDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
                     mDrawable.setLevel(1);
                 }
-                 CharSequence t=container.getText();
+                CharSequence t = container.getText();
                 container.setText(t);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

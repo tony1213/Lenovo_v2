@@ -34,7 +34,7 @@ public class CustomApplication extends Application {
 //        crashHandler =CrashHandler.getInstance();
 //        crashHandler.initContext(getApplicationContext());
 //        Thread.setDefaultUncaughtExceptionHandler(crashHandler);//友盟帮助做了，自己可以先不处理
-        MobclickAgent.setCatchUncaughtExceptions(true);
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
     class MyBDLocaitonListener implements BDLocationListener {

@@ -50,5 +50,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.umeng.analytics:analytics:6.0.1'
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
