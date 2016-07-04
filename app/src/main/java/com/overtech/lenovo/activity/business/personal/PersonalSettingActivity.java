@@ -97,15 +97,16 @@ public class PersonalSettingActivity extends BaseActivity implements OnClickList
     private DimPopupWindow dimPopupWindow;
     private int curState;
     /**
-     * 打开本地相册的requestcode.
-     */
-    public final int PHOTO = 0x1;
-    /**
      * 打开照相机的requestcode.
      */
     private final int CAMERA = 0x2;
-
+    /**
+     * 打开本地图册的requestcode
+     */
     private final int SELECT_PICK = 0x3;
+    /**
+     * android kitkat版本打开图册 requestcode
+     */
     private final int SELECT_PICK_KITKAT = 0x4;
     private File outFile;
     private Uri cameraUri;
